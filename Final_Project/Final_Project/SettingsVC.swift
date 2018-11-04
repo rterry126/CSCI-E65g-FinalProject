@@ -16,31 +16,33 @@ class SettingsVC: UITableViewController {
     
     @IBOutlet weak var tableViewSettings: UITableView!
     
-    enum TableSection: Int {
-        case playerInfo = 0, boardSettings, total
-    }
+//    enum TableSection: Int {
+//        case playerInfo = 0, boardSettings, total
+//    }
     
-    let healthyFoods = ["Apple", "Orange", "Pear", "Grapefruit", "Potato", "Tomato", "Leek", "Tangerine"]
+//    let healthyFoods = ["Apple", "Orange", "Pear", "Grapefruit", "Potato", "Tomato", "Leek", "Tangerine"]
     
-    let settingsItems = ["Player Names": TableSection.playerInfo, "Colors": .playerInfo, "Board Size": .boardSettings]
+//    let settingsItems = ["Player Names": TableSection.playerInfo, "Colors": .playerInfo, "Board Size": .boardSettings]
+    
+    // Start with brute force, then use enums...
+    let settingsItems = [["Player Names", "Colors"], ["Board Size", "Game Name"]]
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return TableSection.total.rawValue
+        return settingsItems.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingsItems.filter{$0.value.rawValue == section}.count
-//        return healthyFoods.count
+//        return settingsItems.filter{$0.value.rawValue == section}.count
         
+        return settingsItems[section].count
         
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsItemCell", for: indexPath)
-//        cell.textLabel?.text = settingsItems[indexPath.row]
-        let items = Array(settingsItems.filter { $0.value.rawValue == indexPath.row }.keys)
-        cell.textLabel?.text = items[indexPath.row]
+        
+        cell.textLabel?.text = settingsItems[indexPath.section][indexPath.row]
         return cell
     }
     
@@ -48,6 +50,6 @@ class SettingsVC: UITableViewController {
     // Use this to segue to the setting view...
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(setting[indexPath.row])
+        print(settingsItems[indexPath.section][indexPath.row])
     }
 }
