@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CSCI E65g: Lecture 9 Outline</title>
+    <link rel="stylesheet" type="text/css" href="../../css/web.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/logo.css" />
+  </head>
+  
+  <body>
+    <div class="topgraphic logo"></div>
+
+    <div class="main-content">
+      <h2 style="float: left;">CSCI E65g: Mobile Application Development Using Swift and iOS</h2>
+      <h3 style="float: right;">Fall 2018</h3>
+      <div style="clear: both;"></div>
+
+      <h1>Lecture 9 Outline</h1>
+
+      <h2>Expanding the iOS API</h2>
+      <h3>Issued: 2018-10-30</h3>
+
+      <ul>
+	<li>
+	  Doing things all in code vs. Doing things in Storyboard. How to choose?
+	</li>
+	<li>
+	  Hybridizing code and Storyboard:<br />
+	  <code>
+	    <a href="https://developer.apple.com/documentation/uikit/uistoryboard/1616214-instantiateviewcontroller">
+	      instantiateViewController(withIdentifier:)</a></code>,
+	  <code>
+	    <a href="https://developer.apple.com/documentation/uikit/uiviewcontroller/1621413-performsegue">
+	      performSegue(withIdentifier:sender:)</a></code>
+	</li>
+	<li>
+	  Segues: <code><a href="https://developer.apple.com/documentation/uikit/uiviewcontroller/1621380-present">present(_:animated:completion:)</a></code>
+	  / <code><a href="https://developer.apple.com/documentation/uikit/uiviewcontroller/1621505-dismiss">dismiss(animated:completion:)</a></code>
+	  on <code>UIViewController</code>
+	  vs. <code><a href="https://developer.apple.com/documentation/uikit/uinavigationcontroller/1621887-pushviewcontroller">pushViewController(_:animated:)</a></code>
+	  / <code><a href="https://developer.apple.com/documentation/uikit/uinavigationcontroller/1621886-popviewcontroller">popViewController(animated:)</a></code>
+	  on <code>UINavigationController</code>
+	</li>
+	<li>
+	  Color spaces: presenting
+	  and <a href="https://developer.apple.com/documentation/uikit/uicolor/1621931-init">creating
+	  in terms of HSB</a> but
+	  retrieving <a href="https://github.com/harvard-ios/csci-e65g-2018/blob/master/assignments/Assignment7/Assignment7/ColorPicker/Pixel.swift">pixel
+	  data as RGB</a>
+	</li>
+	<li>
+	  Bit-wise operations: <code>|</code> (OR), <code>&</code> (AND), <code>~</code>
+	  (NOT), <code>^</code> (XOR), <code>&lt;&lt;</code> (left-shift), and <code>&gt;&gt;</code>
+	  (right-shift); related: exact-width Integer types
+	</li>
+	<li>
+	  Drawing off-screen images with an image context
+	</li>
+      </ul>
+
+      <h2>Final Project Requirements</h2>
+      
+      <ul>
+	<li>
+	  Tabbed View Controller
+	  <ul>
+	    <li>
+	      Help screen, using
+	      a <a href="https://developer.apple.com/documentation/webkit/wkwebview">WKWebView</a>.
+
+	      <a href="http://www.math.harvard.edu/~knill/mathmovies/m4v/agora3.m4v">Movie link to demonstrate WKWebView sample code</a>
+
+	    </li>
+	    <li>
+	      Top <i>n</i> High Scores in a <code>UITableView</code>, showing player names and
+	      outcome.
+	    </li>
+	    <li>
+	      Game view
+	    </li>
+	  </ul>
+	</li>
+	<li>
+	  Full persistence: Storing the high scores as well
+	</li>
+	<li>
+	  Timed option: Each side has a clock that counts down with a possible loss on time. Time
+	  modeling done in a separate class from game data model: independent of rules of game or
+	  state of grid.
+	</li>
+	<li>
+	  Actual non-trivial game rules enforced by App Model, of your own choosing
+	</li>
+	<li>
+	  Game logic: New game with UIAlertController checks if game in progress
+	</li>
+	<li>
+	  Network-based two-player mode option, using Firebase and network notifications
+	</li>
+      </ul>
+
+      <h3>override final</h3>
+
+      <p>
+	In the spirit of object-oriented programming (and individual enterprise), you can override
+	any part of the requirements with anything of similar difficulty with staff approval. Please
+	use this week to complete all the assigned reading (to arrive shortly) and write your
+	proposal.
+      </p>
+
+      <h4>Examples:</h4>
+
+      <ul>
+	<li>Drawing into an offscreen bitmap for efficiency</li>
+	<li>Embedding a large gameboard in a UIScrollView</li>
+	<li>3 or 4 player game</li>
+	<li>More complex game piece rendering on a square, perhaps using images<li>
+      </ul>
+      
+    </div>
+  </body>
+</html>
