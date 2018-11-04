@@ -328,7 +328,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="cBL-ps-7iB"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Help" id="hFD-9B-f8A"/>
+                    <tabBarItem key="tabBarItem" title="Help" image="help" selectedImage="help" id="hFD-9B-f8A"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l36-2L-LQp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -367,7 +367,7 @@
         <scene sceneID="WTv-bm-lvX">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PT1-Ds-FCw" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" id="ykN-ul-tcf"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="home" selectedImage="home" id="ykN-ul-tcf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iAC-sn-og1">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -383,6 +383,10 @@
             <point key="canvasLocation" x="-1190" y="136"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="help" width="30" height="30"/>
+        <image name="home" width="30" height="30"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="QU5-yG-gSw"/>
     </inferredMetricsTieBreakers>
