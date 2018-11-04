@@ -16,6 +16,8 @@ class SettingsVC: UITableViewController {
     
     @IBOutlet weak var tableViewSettings: UITableView!
     
+    
+    
 //    enum TableSection: Int {
 //        case playerInfo = 0, boardSettings, total
 //    }
@@ -46,10 +48,17 @@ class SettingsVC: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return " "
+    }
+    
     
     // Use this to segue to the setting view...
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(settingsItems[indexPath.section][indexPath.row])
     }
+    
+    
+    
 }
