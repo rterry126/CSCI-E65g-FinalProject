@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
 		E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1B00AAF218E4A8A0032A66E /* Assets.xcassets */; };
 		E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */; };
 		E1B00AC9218E4A8B0032A66E /* GamePrefModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
 		E1B00A9A218E4A370032A66E /* Final_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Final_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B00AAF218E4A8A0032A66E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
 				E1B00AC0218E4A8A0032A66E /* LaunchScreen.storyboard */,
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
+				E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */,
 				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
 				E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */,
 				E1B00AB5218E4A8A0032A66E /* Protocols.swift */,
@@ -192,6 +195,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */,
 				E1B00AD2218E4A8B0032A66E /* ColorPickerExtensions.swift in Sources */,
 				E1B00AD0218E4A8B0032A66E /* ColorPickerProtocols.swift in Sources */,
 				E1B00ADA218E4A8B0032A66E /* PreferencesVC.swift in Sources */,

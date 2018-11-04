@@ -318,10 +318,10 @@
             </objects>
             <point key="canvasLocation" x="801" y="-1112"/>
         </scene>
-        <!--Help-->
+        <!--HelpVC-->
         <scene sceneID="z7O-Uk-XdD">
             <objects>
-                <viewController id="Pas-wL-067" sceneMemberID="viewController">
+                <viewController id="Pas-wL-067" userLabel="HelpVC" customClass="HelpVC" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hwa-Ti-Jnn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
