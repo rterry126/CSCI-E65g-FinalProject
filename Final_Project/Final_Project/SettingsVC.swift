@@ -13,54 +13,10 @@ import UIKit
 
 class SettingsVC: UITableViewController {
     
-    
-    @IBOutlet weak var tableViewSettings: UITableView!
-    
-    
-    
-//    enum TableSection: Int {
-//        case playerInfo = 0, boardSettings, total
-//    }
-    
-//    let healthyFoods = ["Apple", "Orange", "Pear", "Grapefruit", "Potato", "Tomato", "Leek", "Tangerine"]
-    
-//    let settingsItems = ["Player Names": TableSection.playerInfo, "Colors": .playerInfo, "Board Size": .boardSettings]
-    
-    // Start with brute force, then use enums...
-    let settingsItems = [["Player Names", "Colors"], ["Board Size", "Game Name"]]
-    
-    
-    //Number of subarrays is number of sections
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return settingsItems.count
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return settingsItems.filter{$0.value.rawValue == section}.count
+    override func viewDidLoad() {
         
-        return settingsItems[section].count
-        
+        // Remove empty rows
+        tableView.tableFooterView = UIView()
     }
-    
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "settingsItemCell", for: indexPath)
-        
-        cell.textLabel?.text = settingsItems[indexPath.section][indexPath.row]
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return " "
-    }
-    
-    
-    // Use this to segue to the setting view...
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(settingsItems[indexPath.section][indexPath.row])
-    }
-    
-    
-    
+
 }
