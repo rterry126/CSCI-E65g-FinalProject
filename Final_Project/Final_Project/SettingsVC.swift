@@ -29,6 +29,8 @@ class SettingsVC: UITableViewController {
     // Start with brute force, then use enums...
     let settingsItems = [["Player Names", "Colors"], ["Board Size", "Game Name"]]
     
+    
+    //Number of subarrays is number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
         return settingsItems.count
     }
