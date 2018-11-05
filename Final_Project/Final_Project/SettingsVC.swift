@@ -17,6 +17,7 @@ class SettingsVC: UITableViewController {
         
         // Remove empty rows
         tableView.tableFooterView = UIView()
+//        tableView.backgroundColor = UIColor.red
     }
 
 }
