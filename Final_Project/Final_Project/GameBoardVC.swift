@@ -56,6 +56,7 @@ class GameBoardVC: UIViewController {
     
     
     var timer = Timer()
+    var timer2 = Timer() // Warning timer
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
@@ -154,13 +155,19 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 }
 
 
-func createTimer(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> Timer {
+func createTimer(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> (Timer,Timer) {
     
     let timer = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
     
     timer.tolerance = 0.4
     
-    return timer
+    let timer2 = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
+        
+        AudioServicesPlayAlertSound(SystemSoundID(1103))
+
+    }
+    
+    return (timer, timer2)
 }
 
 
@@ -177,13 +184,14 @@ extension GameBoardVC: GameLogicModelListener {
         
         
         timer.invalidate()
+        timer2.invalidate()
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         print("Model ==> Controller: successful move executed:")
         
         
-        timer = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        (timer, timer2) = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
         
         // First increment count. If moves are remaining then a listener to update the player will be called
@@ -203,6 +211,7 @@ extension GameBoardVC: GameLogicModelListener {
         gameView?.isUserInteractionEnabled = false
         
         timer.invalidate()
+        timer2.invalidate()
         
         updateUI()
         
@@ -352,7 +361,7 @@ extension GameBoardVC {
         updateUI()
         
         
-        timer = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        (timer, timer2) = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
     }
     
@@ -372,7 +381,7 @@ extension GameBoardVC {
     
     @objc func timerFired() {
         
-        AudioServicesPlayAlertSound(SystemSoundID(1052))
+//        AudioServicesPlayAlertSound(SystemSoundID(1052))
         print("played times up tone")
         self.successfulBoardMove()
         
