@@ -50,6 +50,9 @@ class GameBoardVC: UIViewController {
     var numOfGridRows: Int
     var numOfGridColumns: Int
     
+    
+    var timer = Timer()
+    
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
     // without consequences via our preferences setter
@@ -148,11 +151,16 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 //MARK: - GameLogicModel Listener extension
 extension GameBoardVC: GameLogicModelListener {
     
-    func successfulBoardMove() {
+    @objc func successfulBoardMove() {
+        
+        timer.invalidate()
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         print("Model ==> Controller: successful move executed:")
+        
+        
+        timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(successfulBoardMove), userInfo: nil, repeats: false)
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -161,6 +169,7 @@ extension GameBoardVC: GameLogicModelListener {
         // .incrementTotalTurns has two listeners set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
         
+        
     }
     
     func endOfGame() {
@@ -168,6 +177,8 @@ extension GameBoardVC: GameLogicModelListener {
         
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
+        
+        timer.invalidate()
         
         updateUI()
         
@@ -315,6 +326,10 @@ extension GameBoardVC {
         
         // Initialize state of board - colors, game status, etc
         updateUI()
+        
+        
+        timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(successfulBoardMove), userInfo: nil, repeats: false)
+
     }
     
     
