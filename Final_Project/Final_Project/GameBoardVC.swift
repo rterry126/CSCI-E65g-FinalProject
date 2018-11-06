@@ -27,7 +27,11 @@
 
 // Sources - Resetting View Controller - stackoverflow.com/questions/33374272/swift-ios-set-a-new-root-view-controller
 
+// Sources - How to pass #selector to function - https://stackoverflow.com/questions/37022780/pass-a-function-to-a-selector
+// Sources - Audio - https://stackoverflow.com/questions/31126124/using-existing-system-sounds-in-ios-app-swift
+
 import UIKit
+import AVFoundation // Used to notify when timer/turn is about to expire
 
 class GameBoardVC: UIViewController {
     @IBOutlet weak var textPlayer1: UILabel!
@@ -52,6 +56,8 @@ class GameBoardVC: UIViewController {
     
     
     var timer = Timer()
+    // TODO: - Put this timer interval into Preferences
+    let timeToMakeMove = 5.0
     
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
@@ -148,10 +154,27 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 }
 
 
+func createTimer(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> Timer {
+    
+    let timer = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
+    
+    timer.tolerance = 0.4
+    
+    return timer
+}
+
+
+
+
 //MARK: - GameLogicModel Listener extension
 extension GameBoardVC: GameLogicModelListener {
     
+    //TODO: - Is @objc needed??
     @objc func successfulBoardMove() {
+        
+        // Play sound to test/indicate turn is lost
+        // If timer is NOT valid, then it has fired due to time being up
+        
         
         timer.invalidate()
         
@@ -160,7 +183,8 @@ extension GameBoardVC: GameLogicModelListener {
         print("Model ==> Controller: successful move executed:")
         
         
-        timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(successfulBoardMove), userInfo: nil, repeats: false)
+        timer = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -328,7 +352,7 @@ extension GameBoardVC {
         updateUI()
         
         
-        timer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(successfulBoardMove), userInfo: nil, repeats: false)
+        timer = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
     }
     
@@ -343,5 +367,14 @@ extension GameBoardVC {
             // Add our delegate here 
             preferencesVC.delegate = self
         }
+    }
+    
+    
+    @objc func timerFired() {
+        
+        AudioServicesPlayAlertSound(SystemSoundID(1052))
+        print("played times up tone")
+        self.successfulBoardMove()
+        
     }
 }
