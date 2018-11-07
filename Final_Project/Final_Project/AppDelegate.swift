@@ -8,6 +8,7 @@
 // Source - sharing state (i.e. models) between VC - https://code.tutsplus.com/tutorials/the-right-way-to-share-state-between-swift-view-controllers--cms-28474
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        else {
 //            fatalError("Could not initialize GamePrefModel")
 //        }
+        FirebaseApp.configure()
         return true
     }
 
