@@ -13,7 +13,9 @@ import Foundation
 
 class GamePrefModel {
     
-    private weak var _dataListener: GamePrefModelListener?
+    //TODO: - Remove
+    
+//    private weak var _dataListener: GamePrefModelListener?
     
     let defaults = UserDefaults.standard
     
@@ -70,13 +72,15 @@ class GamePrefModel {
             // Persist name anytime it is changed
             defaults.set("\(_playerOneName)", forKey: "\(PrefKeys.Players.playerOne)")
             
-            if let listener = _dataListener {
-                print("Model ==> Controller: calling .namesChanged listener:")
-                listener.namesChanged()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            NotificationCenter.default.post(name: .namesChanged, object: self)
+            
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -87,13 +91,16 @@ class GamePrefModel {
             // Persist name anytime it is changed
             defaults.set("\(_playerTwoName)", forKey: "\(PrefKeys.Players.playerTwo)")
             
-            if let listener = _dataListener {
-                print("Model ==> Controller: calling .namesChanged listener:")
-                listener.namesChanged()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            NotificationCenter.default.post(name: .namesChanged, object: self)
+
+            //TODO: - Delete below
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -107,13 +114,16 @@ class GamePrefModel {
             // Persist color anytime it is changed
             defaults.set(tupleToArray(_playerOneColor) , forKey: "\(PrefKeys.Colors.playerOneColor)")
             
-            if let listener = _dataListener {
-                print("Model ==> Controller: calling .colorChanged listener:")
-                listener.colorsChanged()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            NotificationCenter.default.post(name: .colorsChanged, object: self)
+
+            // TODO: - Delete old obsever code
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .colorChanged listener:")
+//                listener.colorsChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
             
             
         }
@@ -126,13 +136,16 @@ class GamePrefModel {
             // Persist color anytime it is changed
             defaults.set(tupleToArray(_playerTwoColor), forKey: "\(PrefKeys.Colors.playerTwoColor)")
             
-            if let listener = _dataListener {
-                print("Model ==> Controller: calling .colorChanged listener:")
-                listener.colorsChanged()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            NotificationCenter.default.post(name: .colorsChanged, object: self)
+
+            
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .colorChanged listener:")
+//                listener.colorsChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -144,13 +157,16 @@ class GamePrefModel {
             defaults.set("\(_gameName)", forKey: "\(PrefKeys.MiscPrefs.gameName)")
             
             // So we will use the same listener as for the names... No reason to make a separate one.
-            if let listener = _dataListener {
-                print("Model ==> Controller: calling .namesChanged listener:")
-                listener.namesChanged()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            
+            NotificationCenter.default.post(name: .namesChanged, object: self)
+
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -181,19 +197,19 @@ class GamePrefModel {
 //MARK: Extension - Game Model Protocol
 extension GamePrefModel: GamePrefModelProtocol {
     
-    var dataListener: GamePrefModelListener? {
-        get {
-            return _dataListener
-        }
-        set {
-            print("Controller ==> Model: subscribing to model events")
-            // Example of tracking another likely source of errors
-            if newValue == nil {
-                print("Warning: listener was turned off.")
-            }
-            _dataListener = newValue
-        }
-    }
+//    var dataListener: GamePrefModelListener? {
+//        get {
+//            return _dataListener
+//        }
+//        set {
+//            print("Controller ==> Model: subscribing to model events")
+//            // Example of tracking another likely source of errors
+//            if newValue == nil {
+//                print("Warning: listener was turned off.")
+//            }
+//            _dataListener = newValue
+//        }
+//    }
     
     var playerOneName: String {
         get {

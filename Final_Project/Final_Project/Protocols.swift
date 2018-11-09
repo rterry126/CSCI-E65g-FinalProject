@@ -11,20 +11,20 @@ import Foundation
 //Used for delegate for view
 import UIKit
 
-protocol GameLogicModelListener: class {
+protocol GameLogicModelObserver: class {
     func successfulBoardMove() // grid has changed
-    
+
     func endOfGame()
-    
+
     func updatePlayer()
 }
 
-protocol GamePrefModelListener: class {
+protocol GamePrefModelObserver: class {
     func namesChanged()
-    
+
     func colorsChanged()
-    
-    
+
+
 }
 
 
@@ -55,7 +55,7 @@ protocol GameLogicModelProtocol: class, Codable {
 
 protocol GamePrefModelProtocol: class {
     
-    var dataListener: GamePrefModelListener? { get set }
+//    var dataListener: GamePrefModelListener? { get set }
     
     var playerOneName:String { get set }
     var playerTwoName:String { get set }

@@ -87,6 +87,7 @@ enum GameState: String, CaseIterable, Codable {
 typealias HSBColor = (hue: Double, saturation: Double, brightness: Double, alpha: Double)
 typealias GridCoord = (row: Int, column: Int)
 typealias GridLimits = (lower: GridCoord, upper: GridCoord)
+typealias listenerArray = [(name: NSNotification.Name, selector: Selector)]
 
 
 //MARK: - User Defined Operators/Functions
@@ -159,8 +160,7 @@ func arrayToTuple(_ hsbArray: [Double]) -> HSBColor {
     
 }
 
-func createListener(observer: Any, listeners: [(name: NSNotification.Name, selector: Selector)])  {
-//func createListener(observer: Any, selector: Selector, name:NSNotification.Name? )  {
+func createListener(observer: Any, listeners: listenerArray)  {
 
    // Loop through and subscribe to each listener. 'Observer' is the same for each item in the array passed in.
     // However this can be used for different VC's, models, etc...

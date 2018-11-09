@@ -33,7 +33,7 @@ class GameLogicModel: NSObject, Codable {
     }
     
     private var _gameBoard = [[ GridState ]]()
-    private weak var _dataListener: GameLogicModelListener?
+//    private weak var _dataListener: GameLogicModelListener?
     
 
 

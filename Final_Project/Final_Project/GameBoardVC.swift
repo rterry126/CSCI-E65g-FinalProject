@@ -52,9 +52,13 @@ class GameBoardVC: UIViewController {
     
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
+    // 'listenerArray' is type alias
     
-    var listenerArray: [(name: NSNotification.Name, selector: Selector)] = [(.turnCountIncreased, #selector(updatePlayer)),
+    var listenerLogicModel: listenerArray = [(.turnCountIncreased, #selector(updatePlayer)),
                         (.gameState, #selector(endOfGame)),(.moveExecuted, #selector(successfulBoardMove))]
+    
+    var listenerPreferencesModel: listenerArray = [(.namesChanged, #selector(namesChanged)),
+                        (.colorsChanged, #selector(colorsChanged))]
     
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
@@ -152,7 +156,7 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 
 
 //MARK: - GameLogicModel Listener extension
-extension GameBoardVC: GameLogicModelListener {
+extension GameBoardVC: GameLogicModelObserver {
     
     @objc func successfulBoardMove() {
         
@@ -230,13 +234,13 @@ extension GameBoardVC: GameLogicModelListener {
 
 
 //MARK: - GamePrefModel Listener extension
-extension GameBoardVC: GamePrefModelListener {
+extension GameBoardVC: GamePrefModelObserver {
     
-    func namesChanged() {
+    @objc func namesChanged() {
         updateUI()
     }
     
-    func colorsChanged() {
+    @objc func colorsChanged() {
         // So in the game view, the 'board' is normally only set to draw new squares, setNeedsDisplay(rect)
         // vice the whole board. However when colors are changed, this leaves the old and new colors
         // on the board. Call reloadAllSquares (which is really wrapper for setNeedsDisplay() ) so that the whole board will be redrawn with a new color
@@ -295,9 +299,9 @@ extension GameBoardVC {
         gameView.delegate = self
         
         // Pass our listeners and selectors to our helper function to create the listeners
-        createListener(observer: self, listeners: listenerArray)
-        modelGamePrefs.dataListener = self
-        
+        createListener(observer: self, listeners: listenerLogicModel)
+        createListener(observer: self, listeners: listenerPreferencesModel)
+
         
         // Initialize grid in view
         gameView.createGrid()
