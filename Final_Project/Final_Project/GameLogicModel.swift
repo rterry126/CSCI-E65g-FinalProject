@@ -10,6 +10,9 @@
 
 
 import Foundation
+import Firebase
+
+
 
 
 enum GameLogicError: String,Error {
@@ -22,6 +25,9 @@ enum GameLogicError: String,Error {
 
 
 class GameLogicModel: NSObject, Codable {
+    
+    
+    
     
     
     // So Codabel will use the keys below to ONLY code these values
@@ -62,6 +68,8 @@ class GameLogicModel: NSObject, Codable {
         _totalTurns = 0
         _whoseTurn = GridState.playerOne
         _gameState = GameState.ongoing
+        
+        
         super.init()
     }
 
@@ -93,7 +101,10 @@ class GameLogicModel: NSObject, Codable {
     
     private var _totalTurns: Int {
         didSet {
+            
             print("Model ==> Model: didSet(_totalTurns) updated to \(_totalTurns.description)")
+            //TODO: - Test Firebase logging
+//            Analytics.logEvent("_totalTurns", parameters: ["Updated": _totalTurns])
             // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
             //TODO:

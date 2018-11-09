@@ -100,6 +100,7 @@ class GameBoardVC: UIViewController {
     
     func updateUI() {
         
+        
         // Update player colors
         switch modelGameLogic.whoseTurn {
             
