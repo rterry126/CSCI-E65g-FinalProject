@@ -24,7 +24,7 @@ enum GameLogicError: String,Error {
 class GameLogicModel: NSObject, Codable {
     
     
-    // So Codabel will use the keys below to ONLY code these values
+    // So Codable will use the keys below to ONLY code these values
     enum CodingKeys: String, CodingKey {
         case _gameBoard
         case _totalTurns
@@ -33,7 +33,6 @@ class GameLogicModel: NSObject, Codable {
     }
     
     private var _gameBoard = [[ GridState ]]()
-//    private weak var _dataListener: GameLogicModelListener?
     
 
 
@@ -94,7 +93,6 @@ class GameLogicModel: NSObject, Codable {
     private var _totalTurns: Int {
         didSet {
             print("Model ==> Model: didSet(_totalTurns) updated to \(_totalTurns.description)")
-            // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
             //TODO:
             // Changed 11/1/18 - Discovered maxTurns was actually number of moves. Since each turn
@@ -109,15 +107,6 @@ class GameLogicModel: NSObject, Codable {
             else {
                 
                 NotificationCenter.default.post(name: .turnCountIncreased, object: self)
-                //TODO: - Remove this old code once Notifications work
-//                if let listener = _dataListener {
-//                    print("Model ==> Controller: calling .updatePlayer listener:")
-//                    print("Total turns was updated; not end of game.")
-//                    listener.updatePlayer()
-//                }
-//                else {
-//                    print("Warning: game model event occurred with no listener set.")
-//                }
             }
         }
     }
@@ -131,14 +120,6 @@ class GameLogicModel: NSObject, Codable {
         didSet {
             print("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
             NotificationCenter.default.post(name: .gameState, object: self)
-
-            //TODO:- Remove below
-//            if let listener = _dataListener {
-//                listener.endOfGame()
-//            }
-//            else {
-//                print("Warning: game model event occurred with no listener set.")
-//            }
         }
     }
 }
@@ -148,21 +129,7 @@ class GameLogicModel: NSObject, Codable {
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
     
-//    var dataListener: GameLogicModelListener? {
-//        get {
-//            return _dataListener
-//        }
-//        set {
-//            print("Controller ==> Model: subscribing to model events")
-//            // Example of tracking another likely source of errors
-//            if newValue == nil {
-//                print("Warning: listener was turned off.")
-//            }
-//            _dataListener = newValue
-//        }
-//    }
-    
-    
+
     // Size of game board
     var bounds: GridCoord {
         return ( row: _gameBoard.count,  column: _gameBoard[0].count)
@@ -216,15 +183,6 @@ extension GameLogicModel: GameLogicModelProtocol {
         // Notify controller that successful move was executed
         NotificationCenter.default.post(name: .moveExecuted, object: self)
 
-        
-//        if let listener = _dataListener {
-//            print("executeMove listener firing and calling .successfulBoardMove")
-//            listener.successfulBoardMove()
-//
-//        }
-//        else {
-//            print("Warning: successful board move event occurred with no listener set.")
-//        }
         
         print("Player who just moved was \(ID)")
         print("move at \(coordinates)")

@@ -7,9 +7,8 @@
 ////
 //
 import Foundation
+import UIKit //Used for delegate for view
 
-//Used for delegate for view
-import UIKit
 
 protocol GameLogicModelObserver: class {
     func successfulBoardMove() // grid has changed
@@ -18,6 +17,7 @@ protocol GameLogicModelObserver: class {
 
     func updatePlayer()
 }
+
 
 protocol GamePrefModelObserver: class {
     func namesChanged()
@@ -31,10 +31,6 @@ protocol GamePrefModelObserver: class {
 
 
 protocol GameLogicModelProtocol: class, Codable {
-    
-    //TODO: - Remove listener below
-    
-//    var dataListener: GameLogicModelListener? { get set }
     
     var bounds: GridCoord { get }
     
@@ -54,8 +50,6 @@ protocol GameLogicModelProtocol: class, Codable {
 
 
 protocol GamePrefModelProtocol: class {
-    
-//    var dataListener: GamePrefModelListener? { get set }
     
     var playerOneName:String { get set }
     var playerTwoName:String { get set }
