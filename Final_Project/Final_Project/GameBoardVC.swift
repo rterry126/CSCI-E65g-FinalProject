@@ -50,6 +50,12 @@ class GameBoardVC: UIViewController {
     var numOfGridRows: Int
     var numOfGridColumns: Int
     
+    //Listeners and their selectors
+    //Keep them all in one place and then initialize in viewDidLoad via Helper Function
+    
+    var listenerArray: [(name: NSNotification.Name, selector: Selector)] = [(.turnCountIncreased, #selector(updatePlayer)),
+                        (.gameState, #selector(endOfGame)),(.moveExecuted, #selector(successfulBoardMove))]
+    
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
     // without consequences via our preferences setter
@@ -148,7 +154,7 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 //MARK: - GameLogicModel Listener extension
 extension GameBoardVC: GameLogicModelListener {
     
-    func successfulBoardMove() {
+    @objc func successfulBoardMove() {
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
@@ -163,7 +169,7 @@ extension GameBoardVC: GameLogicModelListener {
         
     }
     
-    func endOfGame() {
+    @objc func endOfGame() {
         // Called when num of turns in model is increased to max turns.
         
         // Disable inputs
@@ -210,7 +216,7 @@ extension GameBoardVC: GameLogicModelListener {
     
     
     // Called by .incrementTotalTurns. It's not the end of game so call update player logic
-    func updatePlayer() {
+    @objc func updatePlayer() {
         
         // Simple function that alternates turns and returns whose turn it is
         modelGameLogic.setTurn()
@@ -288,7 +294,8 @@ extension GameBoardVC {
         gameView.dataSource = self
         gameView.delegate = self
         
-        //modelGameLogic.dataListener = self
+        // Pass our listeners and selectors to our helper function to create the listeners
+        createListener(observer: self, listeners: listenerArray)
         modelGamePrefs.dataListener = self
         
         

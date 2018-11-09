@@ -159,4 +159,18 @@ func arrayToTuple(_ hsbArray: [Double]) -> HSBColor {
     
 }
 
+func createListener(observer: Any, listeners: [(name: NSNotification.Name, selector: Selector)])  {
+//func createListener(observer: Any, selector: Selector, name:NSNotification.Name? )  {
+
+   // Loop through and subscribe to each listener. 'Observer' is the same for each item in the array passed in.
+    // However this can be used for different VC's, models, etc...
+    for listener in listeners {
+        
+        NotificationCenter.default.addObserver(observer, selector: listener.selector, name: listener.name, object: nil)
+
+    }
+    
+    
+}
+
  
