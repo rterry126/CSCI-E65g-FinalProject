@@ -107,14 +107,17 @@ class GameLogicModel: NSObject, Codable {
                 _gameState = .completedDraw
             }
             else {
-                if let listener = _dataListener {
-                    print("Model ==> Controller: calling .updatePlayer listener:")
-                    print("Total turns was updated; not end of game.")
-                    listener.updatePlayer()
-                }
-                else {
-                    print("Warning: game model event occurred with no listener set.")
-                }
+                
+                NotificationCenter.default.post(name: .turnCountIncreased, object: self)
+                //TODO: - Remove this old code once Notifications work
+//                if let listener = _dataListener {
+//                    print("Model ==> Controller: calling .updatePlayer listener:")
+//                    print("Total turns was updated; not end of game.")
+//                    listener.updatePlayer()
+//                }
+//                else {
+//                    print("Warning: game model event occurred with no listener set.")
+//                }
             }
         }
     }
@@ -127,12 +130,15 @@ class GameLogicModel: NSObject, Codable {
     private var _gameState: GameState {
         didSet {
             print("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
-            if let listener = _dataListener {
-                listener.endOfGame()
-            }
-            else {
-                print("Warning: game model event occurred with no listener set.")
-            }
+            NotificationCenter.default.post(name: .gameState, object: self)
+
+            //TODO:- Remove below
+//            if let listener = _dataListener {
+//                listener.endOfGame()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
 }
@@ -142,19 +148,19 @@ class GameLogicModel: NSObject, Codable {
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
     
-    var dataListener: GameLogicModelListener? {
-        get {
-            return _dataListener
-        }
-        set {
-            print("Controller ==> Model: subscribing to model events")
-            // Example of tracking another likely source of errors
-            if newValue == nil {
-                print("Warning: listener was turned off.")
-            }
-            _dataListener = newValue
-        }
-    }
+//    var dataListener: GameLogicModelListener? {
+//        get {
+//            return _dataListener
+//        }
+//        set {
+//            print("Controller ==> Model: subscribing to model events")
+//            // Example of tracking another likely source of errors
+//            if newValue == nil {
+//                print("Warning: listener was turned off.")
+//            }
+//            _dataListener = newValue
+//        }
+//    }
     
     
     // Size of game board
@@ -208,14 +214,17 @@ extension GameLogicModel: GameLogicModelProtocol {
         
         
         // Notify controller that successful move was executed
-        if let listener = _dataListener {
-            print("executeMove listener firing and calling .successfulBoardMove")
-            listener.successfulBoardMove()
-            
-        }
-        else {
-            print("Warning: successful board move event occurred with no listener set.")
-        }
+        NotificationCenter.default.post(name: .moveExecuted, object: self)
+
+        
+//        if let listener = _dataListener {
+//            print("executeMove listener firing and calling .successfulBoardMove")
+//            listener.successfulBoardMove()
+//
+//        }
+//        else {
+//            print("Warning: successful board move event occurred with no listener set.")
+//        }
         
         print("Player who just moved was \(ID)")
         print("move at \(coordinates)")

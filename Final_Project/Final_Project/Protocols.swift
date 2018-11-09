@@ -32,7 +32,9 @@ protocol GamePrefModelListener: class {
 
 protocol GameLogicModelProtocol: class, Codable {
     
-    var dataListener: GameLogicModelListener? { get set }
+    //TODO: - Remove listener below
+    
+//    var dataListener: GameLogicModelListener? { get set }
     
     var bounds: GridCoord { get }
     

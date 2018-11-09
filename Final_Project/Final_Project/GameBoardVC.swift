@@ -288,7 +288,7 @@ extension GameBoardVC {
         gameView.dataSource = self
         gameView.delegate = self
         
-        modelGameLogic.dataListener = self
+        //modelGameLogic.dataListener = self
         modelGamePrefs.dataListener = self
         
         
