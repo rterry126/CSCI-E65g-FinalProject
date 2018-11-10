@@ -31,8 +31,8 @@
 // Sources - Audio - https://stackoverflow.com/questions/31126124/using-existing-system-sounds-in-ios-app-swift
 
 import UIKit
-// TODO: - I suspect this is large class. Look at importing only what is needed.
-import AVFoundation // Used to notify when timer/turn is about to expire
+import AVFoundation // Used to notify when timer/turn is about to expire via audio.
+
 
 class GameBoardVC: UIViewController {
     @IBOutlet weak var textPlayer1: UILabel!
@@ -56,8 +56,8 @@ class GameBoardVC: UIViewController {
     var numOfGridColumns: Int
     
     
-    var timer = Timer()
-    var timer2 = Timer() // Warning timer
+    var timerMove = Timer()
+    var timerWarning = Timer() // Warning timer
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
@@ -156,20 +156,21 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     }
 }
 
-
-func createTimer(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> (Timer,Timer) {
+// A move timer and a 2 second (untile move expires) timer are created and returned via tuple.
+// Purpose of timerWarning is to play audio alert so it's action is 'hardcoded' in the closure.
+func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> (Timer,Timer) {
     
-    let timer = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
+    let timerMove = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
     
-    timer.tolerance = 0.4
-    
-    let timer2 = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
-        
+    let timerWarning = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
         AudioServicesPlayAlertSound(SystemSoundID(1103))
-
     }
     
-    return (timer, timer2)
+    // Supposedly if timing isn't critical this is energy efficient.
+    timerMove.tolerance = 0.4
+    timerWarning.tolerance = 0.2
+    
+    return (timerMove, timerWarning)
 }
 
 
@@ -179,21 +180,26 @@ func createTimer(timeToMakeMove timeInterval: TimeInterval, target: Any, functio
 extension GameBoardVC: GameLogicModelListener {
     
     //TODO: - Is @objc needed??
-    @objc func successfulBoardMove() {
-        
-        // Play sound to test/indicate turn is lost
-        // If timer is NOT valid, then it has fired due to time being up
+    func successfulBoardMove() {
         
         
-        timer.invalidate()
-        timer2.invalidate()
+        // A couple of possibilities here:
+        // 1. Player makes move within alloted time AND before warning. Invalidate BOTH timers since
+        // they aren't needed.
+        // 2. Play makes move within alloted time but NOT before warning sound. timerWarning is already
+        // invalid (it doesn't repeat) but need to invalidate timerMove.
+        // 3. Player does NOT make move in time. This functions is triggered by timerMove. Both
+        // timers are invalid so code below does nothing.
+        
+        timerMove.invalidate()
+        timerWarning.invalidate()
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         print("Model ==> Controller: successful move executed:")
         
         
-        (timer, timer2) = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        (timerMove, timerWarning) = createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
         
         // First increment count. If moves are remaining then a listener to update the player will be called
@@ -212,8 +218,9 @@ extension GameBoardVC: GameLogicModelListener {
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
-        timer.invalidate()
-        timer2.invalidate()
+        // Kill/delete the move timers as they are no longer needed.
+        timerMove.invalidate()
+        timerWarning.invalidate()
         
         updateUI()
         
@@ -362,8 +369,8 @@ extension GameBoardVC {
         // Initialize state of board - colors, game status, etc
         updateUI()
         
-        
-        (timer, timer2) = createTimer(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        // TODO: - This is initial timer creation. Should be put in a 'Start Game' function at some point.
+        (timerMove, timerWarning) = createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
     }
     
@@ -380,10 +387,11 @@ extension GameBoardVC {
         }
     }
     
-    
+    // This just serves as a function to pass in .successfulBoardMove to create the timers.
+    // There are 2 separate locatins where the timers are created: 1) When the game first starts
+    // 2) After each move (they are non-repeating timers). Instead of hard coding the selector or
+    // what action I wanted to happen upon expiration, I just pass in this function.
     @objc func timerFired() {
-        
-//        AudioServicesPlayAlertSound(SystemSoundID(1052))
         print("played times up tone")
         self.successfulBoardMove()
         
