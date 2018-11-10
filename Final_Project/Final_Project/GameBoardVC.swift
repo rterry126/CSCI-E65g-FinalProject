@@ -50,14 +50,14 @@ class GameBoardVC: UIViewController {
     var numOfGridRows: Int
     var numOfGridColumns: Int
     
-    //Listeners and their selectors
+    //Observers and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
-    // 'listenerArray' is type alias
+    // 'observerArray' is type alias
     
-    var listenerLogicModel: listenerArray = [(.turnCountIncreased, #selector(updatePlayer)),
+    var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
                         (.gameState, #selector(endOfGame)),(.moveExecuted, #selector(successfulBoardMove))]
     
-    var listenerPreferencesModel: listenerArray = [(.namesChanged, #selector(namesChanged)),
+    var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                         (.colorsChanged, #selector(colorsChanged))]
     
     //MARK: - Init()
@@ -155,7 +155,7 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 }
 
 
-//MARK: - GameLogicModel Listener extension
+//MARK: - GameLogicModel Observer extension
 extension GameBoardVC: GameLogicModelObserver {
     
     @objc func successfulBoardMove() {
@@ -164,11 +164,11 @@ extension GameBoardVC: GameLogicModelObserver {
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         print("Model ==> Controller: successful move executed:")
         
-        // First increment count. If moves are remaining then a listener to update the player will be called
-        // Otherwise, if last move, a listener to execute end of game routines will be called
+        // First increment count. If moves are remaining then a observer to update the player will be called
+        // Otherwise, if last move, a observer to execute end of game routines will be called
         modelGameLogic.incrementTotalTurns()
         
-        // .incrementTotalTurns has two listeners set 1) if it's end of game, then that function is run
+        // .incrementTotalTurns has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
         
     }
@@ -233,7 +233,7 @@ extension GameBoardVC: GameLogicModelObserver {
 
 
 
-//MARK: - GamePrefModel Listener extension
+//MARK: - GamePrefModel Observer extension
 extension GameBoardVC: GamePrefModelObserver {
     
     @objc func namesChanged() {
@@ -298,9 +298,9 @@ extension GameBoardVC {
         gameView.dataSource = self
         gameView.delegate = self
         
-        // Pass our listeners and selectors to our helper function to create the listeners
-        createListener(observer: self, listeners: listenerLogicModel)
-        createListener(observer: self, listeners: listenerPreferencesModel)
+        // Pass our observers and selectors to our helper function to create the observers
+        createObserver(observer: self, listeners: observerLogicModel)
+        createObserver(observer: self, listeners: observerPreferencesModel)
 
         
         // Initialize grid in view

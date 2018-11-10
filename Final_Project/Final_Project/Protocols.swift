@@ -23,18 +23,12 @@ protocol GamePrefModelObserver: class {
     func namesChanged()
 
     func colorsChanged()
-
-
 }
 
 
 
 
 protocol GameLogicModelProtocol: class, Codable {
-    
-    //TODO: - Remove listener below
-    
-//    var dataListener: GameLogicModelListener? { get set }
     
     var bounds: GridCoord { get }
     
@@ -55,8 +49,6 @@ protocol GameLogicModelProtocol: class, Codable {
 
 protocol GamePrefModelProtocol: class {
     
-//    var dataListener: GamePrefModelListener? { get set }
-    
     var playerOneName:String { get set }
     var playerTwoName:String { get set }
     
@@ -76,11 +68,7 @@ protocol GamePrefModelProtocol: class {
 
 // Source - Protocols were copied from pickerView and modified accordingly
 // NSObjectProtocol - from what I read, it's not necessary but there is no downside to having it conform
-
-// TODO:- add @objc and then refactor function arguments and returns so that they can be represented
-// Obj-C. This will let us set the protocol methods to 'Optional'.
-
-/*@objc*/ protocol GameGridViewDataSource : NSObjectProtocol {
+protocol GameGridViewDataSource : NSObjectProtocol {
     
     // returns the # of rows in each component..
     @available(iOS 2.0, *)

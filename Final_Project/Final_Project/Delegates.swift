@@ -55,7 +55,7 @@ extension GameBoardVC: GameGridViewDelegate {
         
         // So .executeMove throws several errors (out of turn, square occupied, etc)
         do {
-            // listener implanted in .executeMove
+            // observer implanted in .executeMove
             try modelGameLogic.executeMove(playerID: modelGameLogic.whoseTurn, moveCoordinates: (location.row, location.column))
             
             // Update the board state. Ideally I'd like to do this in updateUI, however not sure how to

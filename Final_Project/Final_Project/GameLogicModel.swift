@@ -33,9 +33,7 @@ class GameLogicModel: NSObject, Codable {
     }
     
     private var _gameBoard = [[ GridState ]]()
-//    private weak var _dataListener: GameLogicModelListener?
     
-
 
     // Set game state from persisted data IF it exists
     required init(from decoder: Decoder) throws {
@@ -94,7 +92,6 @@ class GameLogicModel: NSObject, Codable {
     private var _totalTurns: Int {
         didSet {
             print("Model ==> Model: didSet(_totalTurns) updated to \(_totalTurns.description)")
-            // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
             //TODO:
             // Changed 11/1/18 - Discovered maxTurns was actually number of moves. Since each turn
@@ -109,15 +106,7 @@ class GameLogicModel: NSObject, Codable {
             else {
                 
                 NotificationCenter.default.post(name: .turnCountIncreased, object: self)
-                //TODO: - Remove this old code once Notifications work
-//                if let listener = _dataListener {
-//                    print("Model ==> Controller: calling .updatePlayer listener:")
-//                    print("Total turns was updated; not end of game.")
-//                    listener.updatePlayer()
-//                }
-//                else {
-//                    print("Warning: game model event occurred with no listener set.")
-//                }
+                
             }
         }
     }
@@ -132,13 +121,6 @@ class GameLogicModel: NSObject, Codable {
             print("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
             NotificationCenter.default.post(name: .gameState, object: self)
 
-            //TODO:- Remove below
-//            if let listener = _dataListener {
-//                listener.endOfGame()
-//            }
-//            else {
-//                print("Warning: game model event occurred with no listener set.")
-//            }
         }
     }
 }
@@ -147,21 +129,6 @@ class GameLogicModel: NSObject, Codable {
 
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
-    
-//    var dataListener: GameLogicModelListener? {
-//        get {
-//            return _dataListener
-//        }
-//        set {
-//            print("Controller ==> Model: subscribing to model events")
-//            // Example of tracking another likely source of errors
-//            if newValue == nil {
-//                print("Warning: listener was turned off.")
-//            }
-//            _dataListener = newValue
-//        }
-//    }
-    
     
     // Size of game board
     var bounds: GridCoord {
@@ -178,7 +145,7 @@ extension GameLogicModel: GameLogicModelProtocol {
     
     
     // Or above like I previously thought on gameState. It will also change with successful move.
-    // Logic - if it doesn't throw an error then it was successful. Listeners will carry the rest??
+    // Logic - if it doesn't throw an error then it was successful. Observers will carry the rest??
     func executeMove(playerID ID: GridState, moveCoordinates coordinates: GridCoord) throws  {
         /*
          1. Check if game is over
@@ -187,9 +154,9 @@ extension GameLogicModel: GameLogicModelProtocol {
          4. Check if valid location, i.e. unoccupied.
          
          IF all above is OK
-         1. Listener updates
-         2. Move - Set listener to update
-         3. Check end of game - set listener to update
+         1. Observer updates
+         2. Move - Set observer to update
+         3. Check end of game - set Observer to update
          
          
          */
@@ -217,22 +184,13 @@ extension GameLogicModel: GameLogicModelProtocol {
         NotificationCenter.default.post(name: .moveExecuted, object: self)
 
         
-//        if let listener = _dataListener {
-//            print("executeMove listener firing and calling .successfulBoardMove")
-//            listener.successfulBoardMove()
-//
-//        }
-//        else {
-//            print("Warning: successful board move event occurred with no listener set.")
-//        }
-        
         print("Player who just moved was \(ID)")
         print("move at \(coordinates)")
         print("turns \(_totalTurns)")
     }
     
     
-    // Called by listener in GameViewController successfulBoardMove
+    // Called by observer in GameViewController successfulBoardMove
     func incrementTotalTurns() {
         print("Controller ==> Model: incrementTotalTurns:")
         _totalTurns += 1
