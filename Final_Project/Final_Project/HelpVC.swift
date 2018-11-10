@@ -14,19 +14,15 @@ import WebKit  // WKWebView
 
 class HelpVC: UIViewController, WKUIDelegate {
     
-//    var webView: WKWebView!
-    
-    private static let myURL = URL(string:"https://www.apple.com")
+    let myURL = URL(string:"https://storage.googleapis.com/rterry126_helpfiles/help.html")
 //    private static let myLocalURL = Bundle.main.url(forResource: "Help_file_backup", withExtension: "html")
     
     
-    
     private lazy var webView: WKWebView = {
-//        Util.log("Enter property init")
         let wv = WKWebView()
-//        wv.navigationDelegate = self
         return wv
     }()
+    
     
     override func loadView() {
         let webConfiguration = WKWebViewConfiguration()
@@ -36,23 +32,11 @@ class HelpVC: UIViewController, WKUIDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        print(HelpVC.myLocalURL)
         
-//        let myRequest = URLRequest(url: myURL!)
-//        webView.load(myRequest)
-        
-        if let url = HelpVC.myURL {
-            webView.load(URLRequest(url: url))
-        }
-//        else {
-////            webView.load(URLRequest(url: HelpVC.myLocalURL!))
-//            if let url = HelpVC.myLocalURL {
-//                print(url)
-//                webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
-//            }
-//
-//        }
-    }}
+        let myRequest = URLRequest(url: myURL!)
+        webView.load(myRequest)
+    }
+}
 
 /* Want fallback to local file OR local HTML string if network or website is unreachable.
  
