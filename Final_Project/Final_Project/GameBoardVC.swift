@@ -74,8 +74,10 @@ class GameBoardVC: UIViewController {
     
     //MARK:- Model Instance Created
    // Lazy because the rows/columns aren't necessarily available yet. Not sure if there is a better way...
-    lazy var modelGameLogic: GameLogicModelProtocol =
-        GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
+//    lazy var modelGameLogic: GameLogicModelProtocol =
+//        GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
+    lazy var modelGameLogic = GameLogicModel.instance
+    
     
     var modelGamePrefs: GamePrefModelProtocol = {
         print("Controller ==> Preferences Model: instantiate")
@@ -258,26 +260,30 @@ extension GameBoardVC {
         //TODO: - Not sure of the sequencing here. Does this write over default init if below exists?
         // OR if it doesn't exist below is default init() triggered?
         // Try to restore saved game state
-        do {
-            let restoredObject = try Persistence.restore()
-            guard let mdo = restoredObject as? GameLogicModelProtocol else {
-                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
-                return
-            }
-            // Let's try setting a reference to our restored state
-            modelGameLogic = mdo
-            
-            print("Success: in restoring game state")
-        }
-        catch let e {
-            print("Restore failed: \(e).")
-            
-            // So evidently if it fails here to restore saved model it uses the default init()
-            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+        
+        modelGameLogic.initializeGameBoard(rows: numOfGridRows, cols: numOfGridColumns)
 
-//            var modelGameLogic: GameLogicModelProtocol =
-//                GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-        }
+        // Below commented on 11/9 when implementing singleton pattern
+//        do {
+//            let restoredObject = try Persistence.restore()
+//            guard let mdo = restoredObject as? GameLogicModelProtocol else {
+//                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
+//                return
+//            }
+//            // Let's try setting a reference to our restored state
+//            modelGameLogic = mdo
+//
+//            print("Success: in restoring game state")
+//        }
+//        catch let e {
+//            print("Restore failed: \(e).")
+//
+//            // So evidently if it fails here to restore saved model it uses the default init()
+//            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+//
+////            var modelGameLogic: GameLogicModelProtocol =
+////                GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
+//        }
 
         
         
@@ -315,14 +321,16 @@ extension GameBoardVC {
         // viewable board overlying an occupied board. This forces the view to go over each square
         // and determine it's color. Last minute to get the restore working; where it fits in MVC
         // not fully thought out
-        for y in 0..<numOfGridRows {
-            for x in 0..<numOfGridColumns {
-                gameView.changeGridState(x: x, y: y)
-            }
-        }
         
-        // Now that I've told it above what colors belong to each square set a 'needs update'
-        gameView.reloadAllSquares()
+        //commented 11/9
+//        for y in 0..<numOfGridRows {
+//            for x in 0..<numOfGridColumns {
+//                gameView.changeGridState(x: x, y: y)
+//            }
+//        }
+//
+//        // Now that I've told it above what colors belong to each square set a 'needs update'
+//        gameView.reloadAllSquares()
         
         // Initialize state of board - colors, game status, etc
         updateUI()

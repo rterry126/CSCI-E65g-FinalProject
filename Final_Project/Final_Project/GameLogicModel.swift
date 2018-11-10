@@ -23,6 +23,16 @@ enum GameLogicError: String,Error {
 
 class GameLogicModel: NSObject, Codable {
     
+    static let instance = GameLogicModel()
+    
+    override private init() {
+        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: 2), count: 2)
+        _totalTurns = 0
+        _whoseTurn = GridState.playerOne
+        _gameState = GameState.ongoing
+        super.init()
+    }
+    
     
     // So Codabel will use the keys below to ONLY code these values
     enum CodingKeys: String, CodingKey {
@@ -35,33 +45,33 @@ class GameLogicModel: NSObject, Codable {
     private var _gameBoard = [[ GridState ]]()
     
 
-    // Set game state from persisted data IF it exists
-    required init(from decoder: Decoder) throws {
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
-        let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
-        let totalTurnsVal: Int = try container.decode(Int.self, forKey: ._totalTurns) // extracting the data
-        let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
-        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
-        
-        // Now set the 4 items that we decided were important enough to save
-        _gameBoard = gameBoardVal
-        _totalTurns = totalTurnsVal
-        _whoseTurn = whoseTurnVal
-        _gameState = gameStateVal
-        
-        super.init()
-    }
-    
-    
-    // This is our default init IF game state isn't saved/persisted
-    init(numOfRows rows: Int, numOfColumns columns: Int) {
-        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: columns), count: rows)
-        _totalTurns = 0
-        _whoseTurn = GridState.playerOne
-        _gameState = GameState.ongoing
-        super.init()
-    }
+//    // Set game state from persisted data IF it exists
+//    required init(from decoder: Decoder) throws {
+//
+//        let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
+//        let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
+//        let totalTurnsVal: Int = try container.decode(Int.self, forKey: ._totalTurns) // extracting the data
+//        let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
+//        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
+//
+//        // Now set the 4 items that we decided were important enough to save
+//        _gameBoard = gameBoardVal
+//        _totalTurns = totalTurnsVal
+//        _whoseTurn = whoseTurnVal
+//        _gameState = gameStateVal
+//
+//        super.init()
+//    }
+//
+//
+//    // This is our default init IF game state isn't saved/persisted
+//    init(numOfRows rows: Int, numOfColumns columns: Int) {
+//        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: columns), count: rows)
+//        _totalTurns = 0
+//        _whoseTurn = GridState.playerOne
+//        _gameState = GameState.ongoing
+//        super.init()
+//    }
 
     
     // Public gameBoard
@@ -129,6 +139,13 @@ class GameLogicModel: NSObject, Codable {
 
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
+    
+    
+    func initializeGameBoard(rows: Int, cols: Int) {
+        
+        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: rows), count: cols)
+
+    }
     
     // Size of game board
     var bounds: GridCoord {
