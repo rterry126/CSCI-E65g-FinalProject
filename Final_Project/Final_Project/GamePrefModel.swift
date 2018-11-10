@@ -13,7 +13,9 @@ import Foundation
 
 class GamePrefModel {
     
-   
+    //TODO: - Remove
+    
+//    private weak var _dataListener: GamePrefModelListener?
     
     let defaults = UserDefaults.standard
     
@@ -71,6 +73,14 @@ class GamePrefModel {
             defaults.set("\(_playerOneName)", forKey: "\(PrefKeys.Players.playerOne)")
             
             NotificationCenter.default.post(name: .namesChanged, object: self)
+            
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -82,6 +92,15 @@ class GamePrefModel {
             defaults.set("\(_playerTwoName)", forKey: "\(PrefKeys.Players.playerTwo)")
             
             NotificationCenter.default.post(name: .namesChanged, object: self)
+
+            //TODO: - Delete below
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -96,6 +115,17 @@ class GamePrefModel {
             defaults.set(tupleToArray(_playerOneColor) , forKey: "\(PrefKeys.Colors.playerOneColor)")
             
             NotificationCenter.default.post(name: .colorsChanged, object: self)
+
+            // TODO: - Delete old obsever code
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .colorChanged listener:")
+//                listener.colorsChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
+            
+            
         }
     }
     
@@ -107,6 +137,15 @@ class GamePrefModel {
             defaults.set(tupleToArray(_playerTwoColor), forKey: "\(PrefKeys.Colors.playerTwoColor)")
             
             NotificationCenter.default.post(name: .colorsChanged, object: self)
+
+            
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .colorChanged listener:")
+//                listener.colorsChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -120,6 +159,14 @@ class GamePrefModel {
             // So we will use the same listener as for the names... No reason to make a separate one.
             
             NotificationCenter.default.post(name: .namesChanged, object: self)
+
+//            if let listener = _dataListener {
+//                print("Model ==> Controller: calling .namesChanged listener:")
+//                listener.namesChanged()
+//            }
+//            else {
+//                print("Warning: game model event occurred with no listener set.")
+//            }
         }
     }
     
@@ -150,6 +197,19 @@ class GamePrefModel {
 //MARK: Extension - Game Model Protocol
 extension GamePrefModel: GamePrefModelProtocol {
     
+//    var dataListener: GamePrefModelListener? {
+//        get {
+//            return _dataListener
+//        }
+//        set {
+//            print("Controller ==> Model: subscribing to model events")
+//            // Example of tracking another likely source of errors
+//            if newValue == nil {
+//                print("Warning: listener was turned off.")
+//            }
+//            _dataListener = newValue
+//        }
+//    }
     
     var playerOneName: String {
         get {
