@@ -7,11 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+<<<<<<< HEAD
 		13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */; };
 		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
 		E10BAA81218F2B3600FDCC27 /* Help_file_backup.html in Resources */ = {isa = PBXBuildFile; fileRef = E10BAA80218F2B3500FDCC27 /* Help_file_backup.html */; };
 		E1915B272195AAEA00730B95 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1915B262195AAEA00730B95 /* Notifications.swift */; };
 		E19C77DE219690E50026856A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E19C77DD219690E50026856A /* GoogleService-Info.plist */; };
+=======
+		DEB754829ABFA92401B3902A /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B00C109E3D12A69B573B6889 /* Pods_Final_Project.framework */; };
+		E10BAAAD2192852400FDCC27 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E10BAAAC2192852400FDCC27 /* GoogleService-Info.plist */; };
+>>>>>>> Timer_testing
 		E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1B00AAF218E4A8A0032A66E /* Assets.xcassets */; };
 		E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */; };
 		E1B00AC9218E4A8B0032A66E /* GamePrefModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */; };
@@ -36,12 +41,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+<<<<<<< HEAD
 		716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
 		E10BAA80218F2B3500FDCC27 /* Help_file_backup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Help_file_backup.html; sourceTree = "<group>"; };
 		E1915B262195AAEA00730B95 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		E19C77DD219690E50026856A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+=======
+		49516BE6F23DF6E2E3D8203A /* Pods-Final_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.debug.xcconfig"; sourceTree = "<group>"; };
+		B00C109E3D12A69B573B6889 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E10BAAAC2192852400FDCC27 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+>>>>>>> Timer_testing
 		E1B00A9A218E4A370032A66E /* Final_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Final_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B00AAF218E4A8A0032A66E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
@@ -65,7 +76,11 @@
 		E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameLogicModel.swift; sourceTree = "<group>"; };
 		E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardVC.swift; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.release.xcconfig"; sourceTree = "<group>"; };
+=======
+		F0AE3AAAF7EE5987D0FC965B /* Pods-Final_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.release.xcconfig"; sourceTree = "<group>"; };
+>>>>>>> Timer_testing
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,13 +88,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
 				13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */,
+=======
+				DEB754829ABFA92401B3902A /* Pods_Final_Project.framework in Frameworks */,
+>>>>>>> Timer_testing
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+<<<<<<< HEAD
 		6BA7F9B08EB4E29688DB1B2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +113,13 @@
 			children = (
 				716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */,
 				FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */,
+=======
+		061A42F92C2364C9AEE6E138 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				49516BE6F23DF6E2E3D8203A /* Pods-Final_Project.debug.xcconfig */,
+				F0AE3AAAF7EE5987D0FC965B /* Pods-Final_Project.release.xcconfig */,
+>>>>>>> Timer_testing
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -102,8 +129,13 @@
 			children = (
 				E1B00A9C218E4A370032A66E /* Final_Project */,
 				E1B00A9B218E4A370032A66E /* Products */,
+<<<<<<< HEAD
 				D802641DAF8CD65ABA2C27DC /* Pods */,
 				6BA7F9B08EB4E29688DB1B2E /* Frameworks */,
+=======
+				061A42F92C2364C9AEE6E138 /* Pods */,
+				EAD9CB6DF0429685252C10B5 /* Frameworks */,
+>>>>>>> Timer_testing
 			);
 			sourceTree = "<group>";
 		};
@@ -120,6 +152,7 @@
 			children = (
 				E1B00AB6218E4A8A0032A66E /* AppDelegate.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
+				E10BAA80218F2B3500FDCC27 /* Help_file_backup.html */,
 				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
 				E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */,
@@ -128,7 +161,11 @@
 				E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */,
 				E1915B262195AAEA00730B95 /* Notifications.swift */,
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
+<<<<<<< HEAD
 				E19C77DD219690E50026856A /* GoogleService-Info.plist */,
+=======
+				E10BAAAC2192852400FDCC27 /* GoogleService-Info.plist */,
+>>>>>>> Timer_testing
 				E1B00AC0218E4A8A0032A66E /* LaunchScreen.storyboard */,
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
 				E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */,
@@ -155,6 +192,14 @@
 			path = ColorPicker;
 			sourceTree = "<group>";
 		};
+		EAD9CB6DF0429685252C10B5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B00C109E3D12A69B573B6889 /* Pods_Final_Project.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -162,11 +207,19 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1B00AAC218E4A380032A66E /* Build configuration list for PBXNativeTarget "Final_Project" */;
 			buildPhases = (
+<<<<<<< HEAD
 				88405A9A69609C7FA99B7B50 /* [CP] Check Pods Manifest.lock */,
 				E1B00A96218E4A370032A66E /* Sources */,
 				E1B00A97218E4A370032A66E /* Frameworks */,
 				E1B00A98218E4A370032A66E /* Resources */,
 				E11AD768326CDA6602FC711A /* [CP] Embed Pods Frameworks */,
+=======
+				666C41EAB9F0AD77642FAA2A /* [CP] Check Pods Manifest.lock */,
+				E1B00A96218E4A370032A66E /* Sources */,
+				E1B00A97218E4A370032A66E /* Frameworks */,
+				E1B00A98218E4A370032A66E /* Resources */,
+				0F7086F984893549868AC007 /* [CP] Embed Pods Frameworks */,
+>>>>>>> Timer_testing
 			);
 			buildRules = (
 			);
@@ -217,7 +270,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1B00AD6218E4A8B0032A66E /* LaunchScreen.storyboard in Resources */,
+<<<<<<< HEAD
+				E10BAA81218F2B3600FDCC27 /* Help_file_backup.html in Resources */,
+				E19C77DE219690E50026856A /* GoogleService-Info.plist in Resources */,
+=======
 				E10BAAAD2192852400FDCC27 /* GoogleService-Info.plist in Resources */,
+>>>>>>> Timer_testing
 				E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */,
 				E1B00AD7218E4A8B0032A66E /* Main.storyboard in Resources */,
 			);
@@ -226,6 +284,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+<<<<<<< HEAD
 		88405A9A69609C7FA99B7B50 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -249,6 +308,9 @@
 			showEnvVarsInLog = 0;
 		};
 		E11AD768326CDA6602FC711A /* [CP] Embed Pods Frameworks */ = {
+=======
+		0F7086F984893549868AC007 /* [CP] Embed Pods Frameworks */ = {
+>>>>>>> Timer_testing
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -288,6 +350,31 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+<<<<<<< HEAD
+=======
+		666C41EAB9F0AD77642FAA2A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Final_Project-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+>>>>>>> Timer_testing
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -439,7 +526,11 @@
 		};
 		E1B00AAD218E4A380032A66E /* Debug */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = 716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */;
+=======
+			baseConfigurationReference = 49516BE6F23DF6E2E3D8203A /* Pods-Final_Project.debug.xcconfig */;
+>>>>>>> Timer_testing
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -460,7 +551,11 @@
 		};
 		E1B00AAE218E4A380032A66E /* Release */ = {
 			isa = XCBuildConfiguration;
+<<<<<<< HEAD
 			baseConfigurationReference = FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */;
+=======
+			baseConfigurationReference = F0AE3AAAF7EE5987D0FC965B /* Pods-Final_Project.release.xcconfig */;
+>>>>>>> Timer_testing
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
