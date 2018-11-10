@@ -61,6 +61,16 @@ class GameBoardVC: UIViewController {
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
+    //Listeners and their selectors
+    //Keep them all in one place and then initialize in viewDidLoad via Helper Function
+    // 'listenerArray' is type alias
+    
+    var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
+                                             (.gameState, #selector(endOfGame)),(.moveExecuted, #selector(successfulBoardMove))]
+    
+    var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
+                                                   (.colorsChanged, #selector(colorsChanged))]
+    
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
     // without consequences via our preferences setter
@@ -248,23 +258,25 @@ extension GameBoardVC: GameLogicModelObserver {
         // which causes it to reload. This is what I want, as viewDidLoad will run again and
         // the default initialization will be run.
         
-        let alert = UIAlertController(title: "Shall we play a game?", message: "", preferredStyle: .alert)
+        // commented out on 11/10. Initializing new game code has been modifed due to singleton/Firebase
         
+//        let alert = UIAlertController(title: "Shall we play a game?", message: "", preferredStyle: .alert)
+//
 //        if let gameBoardVC =  window?.rootViewController?.children[0] as? GameBoardVC {
-            //            gameBoardVC.modelGamePrefs = GamePrefModel()
-            //        }
-        // .destructive to color 'Yes' in red...
-        alert.addAction(UIAlertAction(title: "Yes", style: .default , handler: {
-            action in
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as! GameBoardVC
-            let navigationController = UINavigationController(rootViewController: nextViewController)
-            let appdelegate = UIApplication.shared.delegate as! AppDelegate
-            appdelegate.window!.rootViewController = navigationController
-            
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        self.present(alert, animated: true)
+//            //            gameBoardVC.modelGamePrefs = GamePrefModel()
+//            //        }
+//        // .destructive to color 'Yes' in red...
+//        alert.addAction(UIAlertAction(title: "Yes", style: .default , handler: {
+//            action in
+//            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+//            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as! GameBoardVC
+//            let navigationController = UINavigationController(rootViewController: nextViewController)
+//            let appdelegate = UIApplication.shared.delegate as! AppDelegate
+//            appdelegate.window!.rootViewController = navigationController
+//
+//        }))
+//        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+//        self.present(alert, animated: true)
         
         
     }

@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */; };
 		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
-		E10BAA81218F2B3600FDCC27 /* Help_file_backup.html in Resources */ = {isa = PBXBuildFile; fileRef = E10BAA80218F2B3500FDCC27 /* Help_file_backup.html */; };
+		E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E178D864219734D700DA4E93 /* GoogleService-Info.plist */; };
 		E1915B272195AAEA00730B95 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1915B262195AAEA00730B95 /* Notifications.swift */; };
-		E19C77DE219690E50026856A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E19C77DD219690E50026856A /* GoogleService-Info.plist */; };
 		E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1B00AAF218E4A8A0032A66E /* Assets.xcassets */; };
 		E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */; };
 		E1B00AC9218E4A8B0032A66E /* GamePrefModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */; };
@@ -39,9 +38,8 @@
 		716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
-		E10BAA80218F2B3500FDCC27 /* Help_file_backup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Help_file_backup.html; sourceTree = "<group>"; };
+		E178D864219734D700DA4E93 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E1915B262195AAEA00730B95 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
-		E19C77DD219690E50026856A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E1B00A9A218E4A370032A66E /* Final_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Final_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B00AAF218E4A8A0032A66E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
@@ -128,7 +126,7 @@
 				E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */,
 				E1915B262195AAEA00730B95 /* Notifications.swift */,
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
-				E19C77DD219690E50026856A /* GoogleService-Info.plist */,
+				E178D864219734D700DA4E93 /* GoogleService-Info.plist */,
 				E1B00AC0218E4A8A0032A66E /* LaunchScreen.storyboard */,
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
 				E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */,
@@ -217,7 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1B00AD6218E4A8B0032A66E /* LaunchScreen.storyboard in Resources */,
-				E10BAAAD2192852400FDCC27 /* GoogleService-Info.plist in Resources */,
+				E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */,
 				E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */,
 				E1B00AD7218E4A8B0032A66E /* Main.storyboard in Resources */,
 			);
