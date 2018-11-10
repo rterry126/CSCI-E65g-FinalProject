@@ -179,7 +179,6 @@ func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functi
 //MARK: - GameLogicModel Listener extension
 extension GameBoardVC: GameLogicModelListener {
     
-    //TODO: - Is @objc needed??
     func successfulBoardMove() {
         
         
@@ -198,13 +197,18 @@ extension GameBoardVC: GameLogicModelListener {
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         print("Model ==> Controller: successful move executed:")
         
+       
+        // Set timers for next move. If end of game then these will be invalidated in endOfGame. Could
+        // complicate this by having endOfGame return a bool, move this below .incrementTotalTurns
+        // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
+        // cleaner
         
         (timerMove, timerWarning) = createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
-
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
         modelGameLogic.incrementTotalTurns()
+        
         
         // .incrementTotalTurns has two listeners set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
@@ -219,6 +223,8 @@ extension GameBoardVC: GameLogicModelListener {
         gameView?.isUserInteractionEnabled = false
         
         // Kill/delete the move timers as they are no longer needed.
+        // Could possibly delete these if 'in game' timer creation was moved from successfulBoardMove
+        // but how it's coded now is simple and it works.
         timerMove.invalidate()
         timerWarning.invalidate()
         
@@ -391,6 +397,8 @@ extension GameBoardVC {
     // There are 2 separate locatins where the timers are created: 1) When the game first starts
     // 2) After each move (they are non-repeating timers). Instead of hard coding the selector or
     // what action I wanted to happen upon expiration, I just pass in this function.
+    
+    // @objc required because this is passed to #selector
     @objc func timerFired() {
         print("played times up tone")
         self.successfulBoardMove()
