@@ -23,7 +23,7 @@ enum GameLogicError: String,Error {
 
 class GameLogicModel: NSObject, Codable {
     
-    static let instance = GameLogicModel()
+    static let instance: GameLogicModelProtocol = GameLogicModel()
     
     override private init() {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: 2), count: 2)

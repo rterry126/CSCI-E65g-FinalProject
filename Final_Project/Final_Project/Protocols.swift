@@ -30,6 +30,8 @@ protocol GamePrefModelObserver: class {
 
 protocol GameLogicModelProtocol: class, Codable {
     
+    func initializeGameBoard(rows: Int, cols: Int) // Added when changing model to singleton
+    
     var bounds: GridCoord { get }
     
     var whoseTurn: GridState { get }

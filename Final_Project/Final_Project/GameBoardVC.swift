@@ -76,7 +76,7 @@ class GameBoardVC: UIViewController {
    // Lazy because the rows/columns aren't necessarily available yet. Not sure if there is a better way...
 //    lazy var modelGameLogic: GameLogicModelProtocol =
 //        GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-    lazy var modelGameLogic = GameLogicModel.instance
+    lazy var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
     
     var modelGamePrefs: GamePrefModelProtocol = {
