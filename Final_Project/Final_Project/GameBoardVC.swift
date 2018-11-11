@@ -299,6 +299,7 @@ extension GameBoardVC: GameLogicModelObserver {
 //MARK: - GamePrefModel Observer extension
 extension GameBoardVC: GamePrefModelObserver {
     
+    
     @objc func namesChanged() {
         updateUI()
     }
@@ -308,6 +309,7 @@ extension GameBoardVC: GamePrefModelObserver {
         // vice the whole board. However when colors are changed, this leaves the old and new colors
         // on the board. Call reloadAllSquares (which is really wrapper for setNeedsDisplay() ) so that the whole board will be redrawn with a new color
         
+        //TODO: - Look at replacing this with an observer in the view for colors changed
         gameView?.reloadAllSquares()
         updateUI()
     }
