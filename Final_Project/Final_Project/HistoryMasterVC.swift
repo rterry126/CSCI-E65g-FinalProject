@@ -11,6 +11,13 @@ import UIKit
 // This is mostly code from the restaurant bill table view controller modified for this use.
 
 class GameHistoryTableViewCell: UITableViewCell {
+    @IBOutlet weak var dateTime: UILabel!
+    @IBOutlet weak var playerOneName: UILabel!
+    @IBOutlet weak var playerTwoName: UILabel!
+    @IBOutlet weak var playerOneScore: UILabel!
+    @IBOutlet weak var playerTwoScore: UILabel!
+    
+    
   
 }
 
@@ -44,6 +51,7 @@ class HistoryMasterViewController: UIViewController {
     // MARK: - Outlets
     
     @IBOutlet weak var gameHistoryTableView: UITableView!
+    
     
     
     
