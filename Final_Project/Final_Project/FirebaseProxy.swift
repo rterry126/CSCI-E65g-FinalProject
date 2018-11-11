@@ -9,7 +9,15 @@ import Firebase
 
 class MinimalFirebaseProxy {
     
-    private let _db: Firestore = {
+
+    static var db: Firestore {
+        get {
+            return self._db
+        }
+    }
+    
+    // Static added by Robert
+    static private let _db: Firestore = {
         
         // Locally bound to where it's needed. Keep related things close together!
         

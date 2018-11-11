@@ -20,14 +20,42 @@ class GameHistoryModel  {
      simply download the entire history in it's model and the table can access this directly??
  
 */
-//    private var _playerOneName: String
-//    private var _playerTwoName: String
-//
-//    private var _playerOneScore: Int
-//    private var _playerTwoScore: Int
-//
-//    private var _gameDate: Date
 
+    
+    struct Game {
+        
+        var playerOneName: String
+        var _layerTwoName: String
+
+        var playerOneScore: Int
+        var playerTwoScore: Int
+
+        var gameDate: Date
+    }
+    
+    var history: [Game] = []
+    
+    var db = MinimalFirebaseProxy.db
+    
+    func retrieveHistory() {
+    
+        db.collection("history_test").getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+        //                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
+        //                    let date: Date = timestamp.dateValue()
+        //                    print("\(date)")
+                    
+                   
+        
+                }
+            }
+        }
+    }
 
 
 
