@@ -6,6 +6,7 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
+// Sources - Date Formatting - https://stackoverflow.com/questions/35700281/date-format-in-swift
 
 import UIKit
 import Firebase
@@ -14,6 +15,7 @@ import Firebase
 
 class GameHistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var dateTime: UILabel!
+    @IBOutlet weak var time: UILabel!
     @IBOutlet weak var playerOneName: UILabel!
     @IBOutlet weak var playerTwoName: UILabel!
     @IBOutlet weak var playerOneScore: UILabel!
@@ -56,6 +58,9 @@ class HistoryMasterViewController: UIViewController {
                 print("Error fetching documents results: \(error!)")
                 return
             }
+            
+//            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
+//            let date: Date = timestamp.dateValue()
             
             let results = snapshot.documents.map { (document) -> Game in
                 if let game = Game(dictionary: document.data(), id: document.documentID) {
@@ -156,7 +161,25 @@ extension HistoryMasterViewController: UITableViewDataSource {
 
         let item = game[indexPath.row]
         
-        print("printing from dequeue cell \(item.playerOneName)")
+
+        // Setup formatting for game Date and Time
+        let dateFormatter = DateFormatter()
+        let timeFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.dateFormat = "MM/dd/yy"
+        timeFormatter.dateFormat = "HH:mm"
+        
+        // Firestore stores as a 'Timestamp'. Game date/time is stored in model as type 'Any' so
+        // I need to cast first to a Timestamp here and then convert to Swift Date object
+        if let timestamp = item.gameDate as? Timestamp {
+            let date: Date = timestamp.dateValue()
+            
+            cell.dateTime.text = dateFormatter.string(from: date)
+            cell.time.text = timeFormatter.string(from: date)
+            
+        }
+        
+        
         cell.playerOneName.text = item.playerOneName
         cell.playerOneScore.text = item.playerOneScore.description
         cell.playerTwoName.text = item.playerOneName

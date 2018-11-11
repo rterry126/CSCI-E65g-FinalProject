@@ -43,7 +43,8 @@ struct Game {
     var playerTwoName: String
     var playerOneScore: Int
     var playerTwoScore: Int
-//    var gameDate: Date
+    var gameDate: Any // Native type is Firestore Timestamp, which isn't available here unless import Firestore
+    
     var id: String
     
     var dictionary: [String: Any] {
@@ -51,9 +52,9 @@ struct Game {
             "playerOneName": playerOneName,
             "playerTwoName": playerTwoName,
             "playerOneScore": playerOneScore,
-            "playerTwoScore": playerTwoScore
+            "playerTwoScore": playerTwoScore,
             
-//            "created_at": gameDate
+            "created_at": gameDate
         ]
     }
 }
@@ -61,13 +62,15 @@ struct Game {
 
 extension Game {
     init?(dictionary: [String : Any], id: String) {
+        
         guard   let playerOneName = dictionary["playerOneName"] as? String,
             let playerOneScore = dictionary["playerOneScore"] as? Int,
             let playerTwoName = dictionary["playerTwoName"] as? String,
-            let playerTwoScore = dictionary["playerTwoScore"] as? Int
+            let playerTwoScore = dictionary["playerTwoScore"] as? Int,
+            let gameDate = dictionary["created_at"]
             else { return nil }
         
-        self.init(playerOneName: playerOneName, playerTwoName: playerTwoName, playerOneScore: playerOneScore, playerTwoScore: playerTwoScore, id: id)
+        self.init(playerOneName: playerOneName, playerTwoName: playerTwoName, playerOneScore: playerOneScore, playerTwoScore: playerTwoScore, gameDate: gameDate, id: id)
     }
 }
     
