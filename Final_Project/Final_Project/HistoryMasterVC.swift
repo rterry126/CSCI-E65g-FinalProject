@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 // This is mostly code from the restaurant bill table view controller modified for this use.
 
@@ -25,13 +26,68 @@ class GameHistoryTableViewCell: UITableViewCell {
 //MARK: -
 class HistoryMasterViewController: UIViewController {
     
-    let tableSections = 1
+    private var documents: [DocumentSnapshot] = []
+    public var game: [Game] = []
+    private var listener : ListenerRegistration!
+    
+    fileprivate func baseQuery() -> Query {
+        return Firestore.firestore().collection("history_test").limit(to: 10)
+    }
+    
+    fileprivate var query: Query? {
+        didSet {
+            if let listener = listener {
+                listener.remove()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+        self.query = baseQuery()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        self.listener =  query?.addSnapshotListener { (documents, error) in
+            guard let snapshot = documents else {
+                print("Error fetching documents results: \(error!)")
+                return
+            }
+            
+            let results = snapshot.documents.map { (document) -> Game in
+                if let game = Game(dictionary: document.data(), id: document.documentID) {
+                    print("History \(game.id) => \(game.playerOneName )")
+                    return game
+                }
+                else {
+                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+                }
+            }
+            
+            self.game = results
+            self.documents = snapshot.documents
+            self.gameHistoryTableView.reloadData()
+            
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.listener.remove()
+    }
+    
+    
+    
+    /******************************************/
+    
+    let tableSections = 1
+    
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//
+//    }
     
     //MARK: - Properties
     
@@ -51,9 +107,6 @@ class HistoryMasterViewController: UIViewController {
     // MARK: - Outlets
     
     @IBOutlet weak var gameHistoryTableView: UITableView!
-    
-    
-    
     
     
     // MARK: - Actions
@@ -79,7 +132,7 @@ extension HistoryMasterViewController: UITableViewDataSource {
     func tableView(_ gameHistoryTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Number of history items needed
-        return 5 // Placeholder for now
+        return game.count
     }
     
     
@@ -98,10 +151,14 @@ extension HistoryMasterViewController: UITableViewDataSource {
         // Tried to pass in an IndexPath but
         
         //TODO: - Here is where we set the individual values for the cell: Date, Player Names, score, etc
-//        let menuItem = myRestaurantBill.item(at: indexPath).description
-//        let itemQuantity = myRestaurantBill.item(at: indexPath).quantity
+
+        let item = game[indexPath.row]
         
-        
+        print("printing from dequeue cell \(item.playerOneName)")
+        cell.playerOneName.text = item.playerOneName
+        cell.playerOneScore.text = item.playerOneScore.description
+        cell.playerTwoName.text = "player two name"
+
         // Customize its appearance according to our data model
         
         //TODO: - See if this is needed or is above enough

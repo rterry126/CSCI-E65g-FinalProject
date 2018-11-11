@@ -8,8 +8,24 @@
 
 import Foundation
 
-class GameHistoryModel  {
+
     
+
+
+//
+//extension Task{
+//    init?(dictionary: [String : Any], id: String) {
+//        guard   let name = dictionary["name"] as? String,
+//            let done = dictionary["done"] as? Bool
+//            else { return nil }
+//
+//        self.init(name: name, done: done, id: id)
+//    }
+//}
+
+//TODO: - Eventually make this a class
+//class GameHistoryModel  {
+
 /*
      Class Requirements:
      
@@ -21,42 +37,62 @@ class GameHistoryModel  {
  
 */
 
+struct Game {
     
-    struct Game {
-        
-        var playerOneName: String
-        var _layerTwoName: String
-
-        var playerOneScore: Int
-        var playerTwoScore: Int
-
-        var gameDate: Date
+    var playerOneName: String
+//    var playerTwoName: String
+    var playerOneScore: Int
+//    var playerTwoScore: Int
+//    var gameDate: Date
+    var id: String
+    
+    var dictionary: [String: Any] {
+        return [
+            "playerOneName": playerOneName,
+//            "playerTwoName": playerTwoName,
+            "playerOneScore": playerOneScore
+//            "playerTwoScore": playerTwoScore,
+            
+//            "created_at": gameDate
+        ]
     }
-    
-    var history: [Game] = []
-    
-    var db = MinimalFirebaseProxy.db
-    
-    func retrieveHistory() {
-    
-        db.collection("history_test").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            }
-            else {
-                for document in querySnapshot!.documents {
-                    print("\(document.documentID) => \(document.data())")
-        //                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
-        //                    let date: Date = timestamp.dateValue()
-        //                    print("\(date)")
-                    
-                   
-        
-                }
-            }
-        }
-    }
-
-
-
 }
+
+
+extension Game {
+    init?(dictionary: [String : Any], id: String) {
+        guard   let playerOneName = dictionary["playerOneName"] as? String,
+            let playerOneScore = dictionary["playerOneScore"] as? Int
+            else { return nil }
+        
+        self.init(playerOneName: playerOneName, playerOneScore: playerOneScore, id: id)
+    }
+}
+    
+//    var history: [Game] = []
+//
+//    var db = MinimalFirebaseProxy.db
+//
+//    func retrieveHistory() {
+//
+//        db.collection("history_test").getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//            }
+//            else {
+//                for document in querySnapshot!.documents {
+//                    print("\(document.documentID) => \(document.data())")
+//        //                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
+//        //                    let date: Date = timestamp.dateValue()
+//        //                    print("\(date)")
+//
+//
+//
+//                }
+//            }
+//        }
+//    }
+
+
+
+//}
