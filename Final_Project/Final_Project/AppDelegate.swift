@@ -30,13 +30,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
         FirebaseApp.configure()
         let db = Firestore.firestore()
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
+        
+        
+        // Setup test data
+        let playerOneName = "John"
+        let playerTwoName = "Susan"
+        let playerOneScore = 5
+        let playerTwoScore = 2
         
         // Add a new document with a generated ID
         var ref: DocumentReference? = nil
-        ref = db.collection("users").addDocument(data: [
-            "first": "Ada",
-            "last": "Lovelace",
-            "born": 1815
+        ref = db.collection("history_test").addDocument(data: [
+            "playerOneName": playerOneName,
+            "playerTwoName": playerTwoName,
+            "playerOneScore": playerOneScore,
+            "playerTwoScore": playerTwoScore,
+            "created_at": NSDate()
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
@@ -46,11 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Add a second document with a generated ID.
-        ref = db.collection("users").addDocument(data: [
-            "first": "Alan",
-            "middle": "Mathison",
-            "last": "Turing",
-            "born": 1912
+        ref = db.collection("history_test").addDocument(data: [
+            "playerOneName": "Timothy",
+            "playerTwoName": "Jean",
+            "playerOneScore": 6,
+            "playerTwoScore": 0,
+            "created_at": NSDate()
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
@@ -59,12 +72,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        db.collection("users").getDocuments() { (querySnapshot, err) in
+        db.collection("history_test").getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
                     print("\(document.documentID) => \(document.data())")
+//                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
+//                    let date: Date = timestamp.dateValue()
+//                    print("\(date)")
+                    
                 }
             }
         }
