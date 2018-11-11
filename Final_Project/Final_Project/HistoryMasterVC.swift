@@ -31,6 +31,9 @@ class HistoryMasterViewController: UIViewController {
     
     private var documents: [DocumentSnapshot] = []
     public var game: [Game] = []
+    
+    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
+    // It automatically updates
     private var listener : ListenerRegistration!
     
     //TODO:- Revisit fileprivate
@@ -182,7 +185,7 @@ extension HistoryMasterViewController: UITableViewDataSource {
         
         cell.playerOneName.text = item.playerOneName
         cell.playerOneScore.text = item.playerOneScore.description
-        cell.playerTwoName.text = item.playerOneName
+        cell.playerTwoName.text = item.playerTwoName
         cell.playerTwoScore.text = item.playerTwoScore.description
 
 

@@ -326,9 +326,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TKY-0p-qv5">
-                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TKY-0p-qv5">
+                                <rect key="frame" x="0.0" y="75" width="375" height="543"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="historyCell" rowHeight="87" id="ORB-lL-hwv" userLabel="historyCell" customClass="GameHistoryTableViewCell" customModule="Final_Project" customModuleProvider="target">
@@ -339,9 +338,9 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Slr-6S-QLx">
-                                                    <rect key="frame" x="8" y="19" width="64" height="21"/>
+                                                    <rect key="frame" x="8" y="19" width="70" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="64" id="Yba-pb-VLg"/>
+                                                        <constraint firstAttribute="width" constant="70" id="Yba-pb-VLg"/>
                                                         <constraint firstAttribute="height" constant="21" id="mNV-JG-p2q"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -349,7 +348,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="glD-a2-gVd">
-                                                    <rect key="frame" x="94" y="19" width="100" height="21"/>
+                                                    <rect key="frame" x="100" y="19" width="100" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="aL5-Ve-eus"/>
                                                     </constraints>
@@ -358,7 +357,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yor-aJ-I1r">
-                                                    <rect key="frame" x="214" y="19" width="100" height="21"/>
+                                                    <rect key="frame" x="220" y="19" width="100" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="u9C-he-Ce0"/>
                                                     </constraints>
@@ -367,7 +366,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lEJ-cy-l8e">
-                                                    <rect key="frame" x="94" y="50" width="42" height="21"/>
+                                                    <rect key="frame" x="100" y="50" width="42" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="42" id="FK0-Xf-2yq"/>
                                                     </constraints>
@@ -376,7 +375,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1n-BQ-ME1">
-                                                    <rect key="frame" x="214" y="50" width="42" height="21"/>
+                                                    <rect key="frame" x="220" y="50" width="42" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="42" id="hs4-eU-aaH"/>
                                                     </constraints>
@@ -427,8 +426,26 @@
                                     <outlet property="delegate" destination="xIt-VK-hfW" id="Eah-Zx-Rv0"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a56-UJ-bz1">
+                                <rect key="frame" x="16" y="20" width="343" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="nim-ex-z72"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="bottom" secondItem="Kaa-rt-nmk" secondAttribute="bottom" id="KSb-cl-Rx5"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="OZp-cQ-UUL"/>
+                            <constraint firstItem="a56-UJ-bz1" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="P2U-DS-Izx"/>
+                            <constraint firstItem="a56-UJ-bz1" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" constant="16" id="Xgy-v4-JYo"/>
+                            <constraint firstItem="Kaa-rt-nmk" firstAttribute="trailing" secondItem="a56-UJ-bz1" secondAttribute="trailing" constant="16" id="am9-J6-qsY"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" constant="55" id="gA3-xJ-Ugw"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="sSw-D9-lic"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Kaa-rt-nmk"/>
                     </view>
                     <tabBarItem key="tabBarItem" systemItem="history" id="opc-Jm-eQE"/>
