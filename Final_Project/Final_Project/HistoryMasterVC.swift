@@ -5,6 +5,7 @@
 //  Created by Robert Terry on 11/10/18.
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
+// Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 
 import UIKit
 import Firebase
@@ -30,8 +31,9 @@ class HistoryMasterViewController: UIViewController {
     public var game: [Game] = []
     private var listener : ListenerRegistration!
     
+    //TODO:- Revisit fileprivate
     fileprivate func baseQuery() -> Query {
-        return Firestore.firestore().collection("history_test").limit(to: 10)
+        return Firestore.firestore().collection("history_test").order(by: "created_at").limit(to: 10)
     }
     
     fileprivate var query: Query? {
@@ -157,7 +159,9 @@ extension HistoryMasterViewController: UITableViewDataSource {
         print("printing from dequeue cell \(item.playerOneName)")
         cell.playerOneName.text = item.playerOneName
         cell.playerOneScore.text = item.playerOneScore.description
-        cell.playerTwoName.text = "player two name"
+        cell.playerTwoName.text = item.playerOneName
+        cell.playerTwoScore.text = item.playerTwoScore.description
+
 
         // Customize its appearance according to our data model
         
@@ -178,18 +182,31 @@ extension HistoryMasterViewController: UITableViewDataSource {
     
     
     // Source cited
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//
+//            //TODO: So delete from database and if successful then remove from table
+//
+////            let itemToDelete = myRestaurantBill.item(at: indexPath).description
+////            let success = myRestaurantBill.removeAllItems(name: itemToDelete)
+////            if success != 0{
+////                itemOrderedTableView.deleteRows(at: [indexPath], with: .left)
+//                updateUI()
+////                }
+//        }
+//    }
+    
+    // Delete History
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            
-            //TODO: So delete from database and if successful then remove from table
-            
-//            let itemToDelete = myRestaurantBill.item(at: indexPath).description
-//            let success = myRestaurantBill.removeAllItems(name: itemToDelete)
-//            if success != 0{
-//                itemOrderedTableView.deleteRows(at: [indexPath], with: .left)
-                updateUI()
-//                }
+        
+        if (editingStyle == .delete){
+            let item = game[indexPath.row]
+            _ = Firestore.firestore().collection("history_test").document(item.id).delete()
         }
+        
     }
     
     

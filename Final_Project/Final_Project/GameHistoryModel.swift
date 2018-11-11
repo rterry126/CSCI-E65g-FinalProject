@@ -40,18 +40,18 @@ import Foundation
 struct Game {
     
     var playerOneName: String
-//    var playerTwoName: String
+    var playerTwoName: String
     var playerOneScore: Int
-//    var playerTwoScore: Int
+    var playerTwoScore: Int
 //    var gameDate: Date
     var id: String
     
     var dictionary: [String: Any] {
         return [
             "playerOneName": playerOneName,
-//            "playerTwoName": playerTwoName,
-            "playerOneScore": playerOneScore
-//            "playerTwoScore": playerTwoScore,
+            "playerTwoName": playerTwoName,
+            "playerOneScore": playerOneScore,
+            "playerTwoScore": playerTwoScore
             
 //            "created_at": gameDate
         ]
@@ -62,10 +62,12 @@ struct Game {
 extension Game {
     init?(dictionary: [String : Any], id: String) {
         guard   let playerOneName = dictionary["playerOneName"] as? String,
-            let playerOneScore = dictionary["playerOneScore"] as? Int
+            let playerOneScore = dictionary["playerOneScore"] as? Int,
+            let playerTwoName = dictionary["playerTwoName"] as? String,
+            let playerTwoScore = dictionary["playerTwoScore"] as? Int
             else { return nil }
         
-        self.init(playerOneName: playerOneName, playerOneScore: playerOneScore, id: id)
+        self.init(playerOneName: playerOneName, playerTwoName: playerTwoName, playerOneScore: playerOneScore, playerTwoScore: playerTwoScore, id: id)
     }
 }
     
