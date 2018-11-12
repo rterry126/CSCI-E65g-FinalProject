@@ -153,6 +153,7 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
         print("Saving after each turn \(modelGameLogic)")
         //Returns an optional
         if let data = modelGameLogic.toJSONData() {
+            
         
             do {
                 try Persistence.save(data)

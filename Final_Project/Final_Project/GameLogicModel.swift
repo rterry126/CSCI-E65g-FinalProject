@@ -38,7 +38,8 @@ class GameLogicModel: NSObject, Codable {
     
     
     // So Codabel will use the keys below to ONLY code these values
-    enum CodingKeys: String, CodingKey {
+    // CaseIterable added to know what values to save to Firestore
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case _gameBoard
         case _totalTurns
         case _whoseTurn
