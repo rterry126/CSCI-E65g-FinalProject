@@ -327,7 +327,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TKY-0p-qv5">
-                                <rect key="frame" x="0.0" y="75" width="375" height="543"/>
+                                <rect key="frame" x="0.0" y="65" width="375" height="553"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="historyCell" rowHeight="87" id="ORB-lL-hwv" userLabel="historyCell" customClass="GameHistoryTableViewCell" customModule="Final_Project" customModuleProvider="target">
@@ -411,6 +411,7 @@
                                                 <constraint firstItem="glD-a2-gVd" firstAttribute="leading" secondItem="Slr-6S-QLx" secondAttribute="trailing" constant="22" id="yxZ-JB-MWj"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.94786241319444442" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="dateTime" destination="Slr-6S-QLx" id="43J-Zw-fbE"/>
                                             <outlet property="playerOneName" destination="glD-a2-gVd" id="xVC-4g-F3M"/>
@@ -426,21 +427,24 @@
                                     <outlet property="delegate" destination="xIt-VK-hfW" id="Eah-Zx-Rv0"/>
                                 </connections>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gqa-XE-D1i">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <items>
-                                    <navigationItem title="History" id="gDm-4U-nO9"/>
-                                </items>
-                            </navigationBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cdi-pb-UJ1">
+                                <rect key="frame" x="0.0" y="20" width="375" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="G0n-9v-Pzu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="gqa-XE-D1i" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="7Is-ch-BBy"/>
+                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="1bg-8S-ZWy"/>
+                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="CBI-hs-P1T"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="bottom" secondItem="Kaa-rt-nmk" secondAttribute="bottom" id="KSb-cl-Rx5"/>
-                            <constraint firstItem="gqa-XE-D1i" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="MhJ-Vn-8aN"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="OZp-cQ-UUL"/>
-                            <constraint firstItem="gqa-XE-D1i" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="fdr-42-ec6"/>
-                            <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" constant="55" id="gA3-xJ-Ugw"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Cdi-pb-UJ1" secondAttribute="bottom" id="Sgg-En-H5f"/>
+                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="fSx-k3-bKf"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="sSw-D9-lic"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Kaa-rt-nmk"/>
