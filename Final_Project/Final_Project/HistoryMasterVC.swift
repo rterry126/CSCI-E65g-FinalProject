@@ -38,7 +38,7 @@ class HistoryMasterViewController: UIViewController {
     
     //TODO:- Revisit fileprivate
     fileprivate func baseQuery() -> Query {
-        return Firestore.firestore().collection("history_test").order(by: "created_at").limit(to: 10)
+        return Firestore.firestore().collection("history_test").order(by: "created_at", descending: true ).limit(to: 10)
     }
     
     fileprivate var query: Query? {
@@ -51,6 +51,9 @@ class HistoryMasterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.leftBarButtonItem = editButtonItem
+
         self.query = baseQuery()
     }
     

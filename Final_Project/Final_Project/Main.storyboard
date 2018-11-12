@@ -330,11 +330,11 @@
                                 <rect key="frame" x="0.0" y="75" width="375" height="543"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="historyCell" rowHeight="87" id="ORB-lL-hwv" userLabel="historyCell" customClass="GameHistoryTableViewCell" customModule="Final_Project" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="historyCell" rowHeight="87" id="ORB-lL-hwv" userLabel="historyCell" customClass="GameHistoryTableViewCell" customModule="Final_Project" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="87"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ORB-lL-hwv" id="vVB-Y0-iel">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="86.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="86.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Slr-6S-QLx">
@@ -426,23 +426,20 @@
                                     <outlet property="delegate" destination="xIt-VK-hfW" id="Eah-Zx-Rv0"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a56-UJ-bz1">
-                                <rect key="frame" x="16" y="20" width="343" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="nim-ex-z72"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gqa-XE-D1i">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="History" id="gDm-4U-nO9"/>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="gqa-XE-D1i" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="7Is-ch-BBy"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="bottom" secondItem="Kaa-rt-nmk" secondAttribute="bottom" id="KSb-cl-Rx5"/>
+                            <constraint firstItem="gqa-XE-D1i" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="MhJ-Vn-8aN"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="OZp-cQ-UUL"/>
-                            <constraint firstItem="a56-UJ-bz1" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="P2U-DS-Izx"/>
-                            <constraint firstItem="a56-UJ-bz1" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" constant="16" id="Xgy-v4-JYo"/>
-                            <constraint firstItem="Kaa-rt-nmk" firstAttribute="trailing" secondItem="a56-UJ-bz1" secondAttribute="trailing" constant="16" id="am9-J6-qsY"/>
+                            <constraint firstItem="gqa-XE-D1i" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="fdr-42-ec6"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" constant="55" id="gA3-xJ-Ugw"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="sSw-D9-lic"/>
                         </constraints>
