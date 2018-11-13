@@ -35,43 +35,6 @@ class MinimalFirebaseProxy {
 //            }
 //        }
         
-        // Basic writes
-        
-        let collection = Firestore.firestore().collection("history_test")
-        
-        let restaurant = Restaurant(
-            name: name,
-            category: category,
-            city: city,
-            price: price,
-            ratingCount: 10,
-            averageRating: 0,
-            photo: photo
-        )
-        
-        let restaurantRef = collection.addDocument(data: restaurant.dictionary)
-        
-        let batch = Firestore.firestore().batch()
-        guard let user = Auth.auth().currentUser else { continue }
-        var average: Float = 0
-        for _ in 0 ..< 10 {
-            let rating = Int(arc4random_uniform(5) + 1)
-            average += Float(rating) / 10
-            let text = rating > 3 ? "good" : "food was too spicy"
-            let review = Review(rating: rating,
-                                userID: user.uid,
-                                username: user.displayName ?? "Anonymous",
-                                text: text,
-                                date: Date())
-            let ratingRef = restaurantRef.collection("ratings").document()
-            batch.setData(review.dictionary, forDocument: ratingRef)
-        }
-        batch.updateData(["avgRating": average], forDocument: restaurantRef)
-        batch.commit(completion: { (error) in
-            guard let error = error else { return }
-            print("Error generating reviews: \(error). Check your Firestore permissions.")
-        })
-        
     }
     
     // Static added by Robert

@@ -321,11 +321,6 @@ extension GameBoardVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //TODO: - Not sure of the sequencing here. Does this write over default init if below exists?
-        // OR if it doesn't exist below is default init() triggered?
-        // Try to restore saved game state
-        
-        modelGameLogic.initializeGameBoard(rows: numOfGridRows, cols: numOfGridColumns)
 
         // Below commented on 11/9 when implementing singleton pattern
 //        do {

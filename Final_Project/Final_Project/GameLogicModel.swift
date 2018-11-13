@@ -23,10 +23,32 @@ enum GameLogicError: String,Error {
 
 class GameLogicModel: NSObject, Codable {
     
+    // Create Singleton instance
     static let instance: GameLogicModelProtocol = GameLogicModel()
     
+    //TODO: Look at other instances which conform to more restrictive protocols, i.e. read only???
+    
+    // Used to retrieve game board size. It has to be set internally vice from an external initializer.
+    let defaults = UserDefaults.standard
+    
+    
+    
     override private init() {
-        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: 2), count: 2)
+        
+        //Board Size, retrieve from preferences
+        // Returns 0 if key is non-existent
+        // Sets to default value stored in enum if key is non existent
+        var _numRows = defaults.integer(forKey: "\(PrefKeys.BoardSize.rows)")
+        if _numRows == 0 {
+            _numRows = PrefKeys.BoardSize.rows.rawValue
+        }
+        
+        var _numColumns = defaults.integer(forKey: "\(PrefKeys.BoardSize.columns)")
+        if _numColumns == 0 {
+            _numColumns = PrefKeys.BoardSize.columns.rawValue
+        }
+        
+        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _totalTurns = 0
         _whoseTurn = GridState.playerOne
         _gameState = GameState.ongoing
@@ -36,8 +58,7 @@ class GameLogicModel: NSObject, Codable {
     
     
     
-    
-    // So Codabel will use the keys below to ONLY code these values
+    // So Codeabel will use the keys below to ONLY code these values
     // CaseIterable added to know what values to save to Firestore
     enum CodingKeys: String, CodingKey, CaseIterable {
         case _gameBoard
@@ -116,9 +137,9 @@ class GameLogicModel: NSObject, Codable {
             // should count as 2 moves, double _maxTurns. Refactor in the future to address correctly
             if oldValue == (_maxTurns) * 2 - 1 {
                 
-                // Should the 'model' set the game state at end or should that be passed in?
+                
                 // So result is hard coded for now
-                //TODO: future implementation
+                //TODO: future implementation let the game playing logic set this...
                 _gameState = .completedDraw
             }
             else {
@@ -148,12 +169,6 @@ class GameLogicModel: NSObject, Codable {
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
     
-    
-    func initializeGameBoard(rows: Int, cols: Int) {
-        
-        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: rows), count: cols)
-
-    }
     
     // Size of game board
     var bounds: GridCoord {
