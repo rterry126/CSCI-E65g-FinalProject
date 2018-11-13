@@ -57,6 +57,8 @@ class HistoryMasterViewController: UIViewController {
         
         // TODO - Move to Proxy
         self.listener =  query?.addSnapshotListener { (documents, error) in
+            
+            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
             guard let snapshot = documents else {
                 print("Error fetching documents results: \(error!)")
                 return
@@ -65,6 +67,7 @@ class HistoryMasterViewController: UIViewController {
 //            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
 //            let date: Date = timestamp.dateValue()
             
+            // Basically go through the sequence and pull out the data...
             let results = snapshot.documents.map { (document) -> Game in
                 if let game = Game(dictionary: document.data(), id: document.documentID) {
                     print("History \(game.id) => \(game.playerOneName )")
@@ -76,7 +79,10 @@ class HistoryMasterViewController: UIViewController {
             }
             
             self.game = results
-            self.documents = snapshot.documents
+            
+            // 11/13 - Not sure this does anything. Legacy code from tutorial???
+//            self.documents = snapshot.documents
+            
             self.gameHistoryTableView.reloadData()
             
         }
