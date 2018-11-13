@@ -74,30 +74,72 @@ extension Game {
     }
 }
     
-//    var history: [Game] = []
-//
-//    var db = MinimalFirebaseProxy.db
-//
-//    func retrieveHistory() {
-//
-//        db.collection("history_test").getDocuments() { (querySnapshot, err) in
-//            if let err = err {
-//                print("Error getting documents: \(err)")
-//            }
-//            else {
-//                for document in querySnapshot!.documents {
-//                    print("\(document.documentID) => \(document.data())")
-//        //                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
-//        //                    let date: Date = timestamp.dateValue()
-//        //                    print("\(date)")
-//
-//
-//
-//                }
-//            }
-//        }
-//    }
+struct Restaurant {
+    
+    var playerOneName: String
+    var playerTwoName: String
+    var playerOneScore: Int
+    var playerTwoScore: Int
+    var gameDate: Any // Native type is Firestore Timestamp, which isn't available here unless import Firestore
+    
+    
+    var dictionary: [String: Any] {
+        return [
+            "playerOneName": playerOneName,
+            "playerTwoName": playerTwoName,
+            "playerOneScore": playerOneScore,
+            "playerTwoScore": playerTwoScore,
+            "created_at": gameDate
+//            "avgRating": averageRating,
+            
+        ]
+    }
+    
+}
+
+extension Restaurant {
+    
+ 
+    
+    init?(dictionary: [String : Any]) {
+        guard let playerOneName = dictionary["playerOneName"] as? String,
+            let playerTwoName = dictionary["playerTwoName"] as? String,
+            let playerOneScore = dictionary["playerOneScore"] as? Int,
+            let playerTwoScore = dictionary["playerTwoScore"] as? Int,
+            let gameDate = dictionary["created_at"] as? Any
+//            let averageRating = dictionary["avgRating"] as? Float,
+//            let photo = (dictionary["photo"] as? String).flatMap(URL.init(string:))
+            else { return nil }
+        
+        self.init(playerOneName: playerOneName,
+                  playerTwoName: playerTwoName,
+                  playerOneScore: playerOneScore,
+                  playerTwoScore: playerTwoScore,
+                  gameDate: gameDate)
+//                  averageRating: averageRating,
+//                  photo: photo)
+    }
+    
+}
+
+struct Review {
+    
+    var rating: Int // Can also be enum
+    var userID: String
+    var username: String
+    var text: String
+    var date: Date
+    
+    var dictionary: [String: Any] {
+        return [
+            "rating": rating,
+            "userId": userID,
+            "userName": username,
+            "text": text,
+            "date": date
+        ]
+    }
+    
+}
 
 
-
-//}

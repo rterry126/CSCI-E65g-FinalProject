@@ -41,13 +41,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let playerOneScore = 5
         let playerTwoScore = 2
         
+        let gameBoard = [["Player One","Empty","Empty","Player One","Empty"],
+                         ["Empty","Player Two","Player One","Empty","Empty"],
+                         ["Player One","Empty","Player Two","Empty","Empty"],
+                         ["Empty","Empty","Player Two","Player One","Empty"],
+                         ["Empty","Empty","Empty","Player Two","Empty"]]
+        
         // Add a new document with a generated ID
         var ref: DocumentReference? = nil
+        
         ref = db.collection("history_test").addDocument(data: [
             "playerOneName": playerOneName,
             "playerTwoName": playerTwoName,
             "playerOneScore": playerOneScore,
             "playerTwoScore": playerTwoScore,
+            "gameBoard": [
+                "0": gameBoard[0],
+                "1": gameBoard[1],
+                "2": gameBoard[2],
+                "3": gameBoard[3],
+                "4": gameBoard[4]
+            ],
             "created_at": NSDate()
         ]) { err in
             if let err = err {
@@ -57,20 +71,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        // Add a second document with a generated ID.
-        ref = db.collection("history_test").addDocument(data: [
-            "playerOneName": "Timothy",
-            "playerTwoName": "Jean",
-            "playerOneScore": 6,
-            "playerTwoScore": 0,
-            "created_at": NSDate()
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                print("Document added with ID: \(ref!.documentID)")
-            }
-        }
+//        // Add a second document with a generated ID.
+//        ref = db.collection("history_test").addDocument(data: [
+//            "playerOneName": "Timothy",
+//            "playerTwoName": "Jean",
+//            "playerOneScore": 6,
+//            "playerTwoScore": 0,
+//            "created_at": NSDate()
+//        ]) { err in
+//            if let err = err {
+//                print("Error adding document: \(err)")
+//            } else {
+//                print("Document added with ID: \(ref!.documentID)")
+//            }
+//        }
         
         db.collection("history_test").getDocuments() { (querySnapshot, err) in
             if let err = err {
