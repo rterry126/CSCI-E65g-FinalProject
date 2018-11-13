@@ -29,7 +29,7 @@ class GameHistoryTableViewCell: UITableViewCell {
 class HistoryMasterViewController: UIViewController {
     
     private var documents: [DocumentSnapshot] = []
-    public var game: [Game] = []
+    public var games: [Game] = []
     
     // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
     // It automatically updates
@@ -78,7 +78,7 @@ class HistoryMasterViewController: UIViewController {
                 }
             }
             
-            self.game = results
+            self.games = results
             
             // 11/13 - Not sure this does anything. Legacy code from tutorial???
 //            self.documents = snapshot.documents
@@ -99,25 +99,9 @@ class HistoryMasterViewController: UIViewController {
     
     let tableSections = 1
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//
-//    }
-    
-    //MARK: - Properties
-    
-    // LInk to history model here!!
-    //var myMenu: MenuProtocol = RestaurantMenu()
-    
-    
-    
     //MARK: - Methods
     
-    func updateUI() {
-        
-        
-    }
+    func updateUI() {}
     
     
     // MARK: - Outlets
@@ -140,7 +124,7 @@ extension HistoryMasterViewController: UITableViewDataSource {
     func tableView(_ gameHistoryTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Number of history items retrieved
-        return game.count
+        return games.count
     }
     
     
@@ -155,8 +139,8 @@ extension HistoryMasterViewController: UITableViewDataSource {
             fatalError("Cannot create custom table view cell!")
         }
         
-        // 2) Get each history item
-        let item = game[indexPath.row]
+        // 2) Get each game history (single game)
+        let singleGame = games[indexPath.row]
         
 
         // Setup formatting for game Date and Time
@@ -170,17 +154,17 @@ extension HistoryMasterViewController: UITableViewDataSource {
         
         // Firestore stores as a 'Timestamp'. Game date/time is stored in model as type 'Any' so
         // I need to cast first to a Timestamp here and then convert to Swift Date object
-        if let timestamp = item.gameDate as? Timestamp {
+        if let timestamp = singleGame.gameDate as? Timestamp {
             let date: Date = timestamp.dateValue()
             
             cell.dateTime.text = dateFormatter.string(from: date)
             cell.time.text = timeFormatter.string(from: date)
         }
         
-        cell.playerOneName.text = item.playerOneName
-        cell.playerOneScore.text = item.playerOneScore.description
-        cell.playerTwoName.text = item.playerTwoName
-        cell.playerTwoScore.text = item.playerTwoScore.description
+        cell.playerOneName.text = singleGame.playerOneName
+        cell.playerOneScore.text = singleGame.playerOneScore.description
+        cell.playerTwoName.text = singleGame.playerTwoName
+        cell.playerTwoScore.text = singleGame.playerTwoScore.description
 
 
         // Return it to iOS to render
@@ -197,8 +181,8 @@ extension HistoryMasterViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if (editingStyle == .delete){
-            let item = game[indexPath.row]
-            _ = Firestore.firestore().collection("history_test").document(item.id).delete()
+            let singeGameToDelete = games[indexPath.row]
+            _ = Firestore.firestore().collection("history_test").document(singeGameToDelete.id).delete()
         }
     }
 }
