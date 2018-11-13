@@ -7,8 +7,8 @@
 import Firebase
 
 
-//class MinimalFirebaseProxy {
-//    
+class MinimalFirebaseProxy {
+//
 //
 //    static var db: Firestore {
 //        get {
@@ -139,9 +139,8 @@ import Firebase
 //            self.activeRootObj = rootCollectionRef.document(rootID)
 //            
 //        }
-<<<<<<< HEAD
-        
-    }
+
+//    }
     
     // Static added by Robert
     static private let _db: Firestore = {
@@ -212,9 +211,4 @@ import Firebase
     }
     
 }
-=======
-//        
-//    }
-//    
-//}
->>>>>>> Hardcoded saving game state model. Checked in Firestore console
+

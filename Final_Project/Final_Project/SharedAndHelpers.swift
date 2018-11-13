@@ -160,24 +160,5 @@ func arrayToTuple(_ hsbArray: [Double]) -> HSBColor {
     
 }
 
-func createObserver(observer: Any, listeners: observerArray)  {
-
-   // Loop through and subscribe to each listener. 'Observer' is the same for each item in the array passed in.
-    // However this can be used for different VC's, models, etc...
-    
-    // If array is 'empty' it isn't nil (I tested this) so let's log that an empty array was passed.
-    if listeners.count > 0 {
-        for listener in listeners {
-            NotificationCenter.default.addObserver(observer, selector: listener.selector, name: listener.name, object: nil)
-        }
-    }
-    
-    else {
-        print(String(describing: observer))
-        print("Listener array not set.")
-    }
-    
-    
-}
 
  

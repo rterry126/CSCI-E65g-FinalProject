@@ -31,7 +31,6 @@
 // Sources - Audio - https://stackoverflow.com/questions/31126124/using-existing-system-sounds-in-ios-app-swift
 
 import UIKit
-import AVFoundation // Used to notify when timer/turn is about to expire via audio.
 
 
 class GameBoardVC: UIViewController {
@@ -84,7 +83,7 @@ class GameBoardVC: UIViewController {
     
     
     //MARK:- Model Instance Created
-    var modelGameLogic: GameLogicModelProtocol = SingletonFactory.sharedInstance
+    var modelGameLogic: GameLogicModelProtocol = Factory.sharedInstance
     
 
     
@@ -166,25 +165,6 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     }
 }
 
-// A move timer and a 2 second (untile move expires) timer are created and returned via tuple.
-// Purpose of timerWarning is to play audio alert so it's action is 'hardcoded' in the closure.
-func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> (Timer,Timer) {
-    
-    let timerMove = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
-    
-    let timerWarning = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
-        AudioServicesPlayAlertSound(SystemSoundID(1103))
-    }
-    
-    // Supposedly if timing isn't critical this is energy efficient.
-    timerMove.tolerance = 0.4
-    timerWarning.tolerance = 0.2
-    
-    return (timerMove, timerWarning)
-}
-
-
-
 
 //MARK: - GameLogicModel Observer extension
 extension GameBoardVC: GameLogicModelObserver {
@@ -215,7 +195,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
         // cleaner
         
-        (timerMove, timerWarning) = createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -361,9 +341,9 @@ extension GameBoardVC {
         gameView.dataSource = self
         gameView.delegate = self
         
-        // Pass our observers and selectors to our helper function to create the observers
-        createObserver(observer: self, listeners: observerLogicModel)
-        createObserver(observer: self, listeners: observerPreferencesModel)
+        // Pass our observers and selectors to our factory function to create the observers
+        Factory.createObserver(observer: self, listeners: observerLogicModel)
+        Factory.createObserver(observer: self, listeners: observerPreferencesModel)
 
         
         // Initialize grid in view
@@ -393,7 +373,7 @@ extension GameBoardVC {
         updateUI()
         
         // TODO: - This is initial timer creation. Should be put in a 'Start Game' function at some point.
-        (timerMove, timerWarning) = createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
 
     }
     
