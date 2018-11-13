@@ -7,8 +7,8 @@
 import Firebase
 
 
-//class MinimalFirebaseProxy {
-//    
+class FirebaseProxy {
+//
 //
 //    static var db: Firestore {
 //        get {
@@ -139,10 +139,9 @@ import Firebase
 //            self.activeRootObj = rootCollectionRef.document(rootID)
 //            
 //        }
-<<<<<<< HEAD
-        
-    }
-    
+
+//    }
+
     // Static added by Robert
     static private let _db: Firestore = {
         
@@ -211,10 +210,13 @@ import Firebase
         
     }
     
+    /************** Inbound Firestore Functions (mostly) ****************/
+    
+    static func baseQuery( collection: String, orderBy: String, limit: Int) -> Query {
+        return Firestore.firestore().collection(collection).order(by: orderBy, descending: true ).limit(to: limit)
+    }
+    
+    
+    
 }
-=======
-//        
-//    }
-//    
-//}
->>>>>>> Hardcoded saving game state model. Checked in Firestore console
+
