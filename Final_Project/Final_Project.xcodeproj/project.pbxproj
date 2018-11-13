@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */; };
 		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
+		E1462AFF219A80DA002BFFED /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1462AFE219A80DA002BFFED /* Factory.swift */; };
 		E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1578475219769A900F142CA /* HistoryMasterVC.swift */; };
 		E15784782197778100F142CA /* GameHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15784772197778100F142CA /* GameHistoryModel.swift */; };
 		E157847A21977DF400F142CA /* FirebaseProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E157847921977DF400F142CA /* FirebaseProxy.swift */; };
@@ -41,6 +42,7 @@
 		716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
+		E1462AFE219A80DA002BFFED /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Factory.swift; path = "/Users/robert/Desktop/e65g/final-project-rterry126/Final_Project/Final_Project/Factory.swift"; sourceTree = "<absolute>"; };
 		E1578475219769A900F142CA /* HistoryMasterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMasterVC.swift; sourceTree = "<group>"; };
 		E15784772197778100F142CA /* GameHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHistoryModel.swift; sourceTree = "<group>"; };
 		E157847921977DF400F142CA /* FirebaseProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseProxy.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
 				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
 				E1B00AB5218E4A8A0032A66E /* Protocols.swift */,
+				E1462AFE219A80DA002BFFED /* Factory.swift */,
 				E1B00AC2218E4A8B0032A66E /* SharedAndHelpers.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
 				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
@@ -310,6 +313,7 @@
 				E1B00ACD218E4A8B0032A66E /* AppDelegate.swift in Sources */,
 				E1B00AD8218E4A8B0032A66E /* SharedAndHelpers.swift in Sources */,
 				E1B00AD1218E4A8B0032A66E /* ColorBarView.swift in Sources */,
+				E1462AFF219A80DA002BFFED /* Factory.swift in Sources */,
 				E1B00AD3218E4A8B0032A66E /* Pixel.swift in Sources */,
 				E1B00ACC218E4A8B0032A66E /* Protocols.swift in Sources */,
 				E1B00ACB218E4A8B0032A66E /* Delegates.swift in Sources */,

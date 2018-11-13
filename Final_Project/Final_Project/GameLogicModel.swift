@@ -24,16 +24,43 @@ enum GameLogicError: String,Error {
 class GameLogicModel: NSObject, Codable {
     
     // Create Singleton instance
-    static let instance: GameLogicModelProtocol = GameLogicModel()
+//    static let instance: GameLogicModelProtocol = GameLogicModel()
     
     //TODO: Look at other instances which conform to more restrictive protocols, i.e. read only???
     
     // Used to retrieve game board size. It has to be set internally vice from an external initializer.
     let defaults = UserDefaults.standard
     
+    // So Codeabel will use the keys below to ONLY code these values
+    // CaseIterable added to know what values to save to Firestore
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case _gameBoard
+        case _totalTurns
+        case _whoseTurn
+        case _gameState
+    }
+    
+    // Set game state from persisted data IF it exists
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
+        let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
+        let totalTurnsVal: Int = try container.decode(Int.self, forKey: ._totalTurns) // extracting the data
+        let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
+        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
+        
+        // Now set the 4 items that we decided were important enough to save
+        _gameBoard = gameBoardVal
+        _totalTurns = totalTurnsVal
+        _whoseTurn = whoseTurnVal
+        _gameState = gameStateVal
+        
+        super.init()
+    }
     
     
-    override private init() {
+    // This is our default init IF game state isn't saved/persisted
+    override init() {
         
         //Board Size, retrieve from preferences
         // Returns 0 if key is non-existent
@@ -57,47 +84,8 @@ class GameLogicModel: NSObject, Codable {
     
     
     
-    
-    // So Codeabel will use the keys below to ONLY code these values
-    // CaseIterable added to know what values to save to Firestore
-    enum CodingKeys: String, CodingKey, CaseIterable {
-        case _gameBoard
-        case _totalTurns
-        case _whoseTurn
-        case _gameState
-    }
-    
     private var _gameBoard = [[ GridState ]]()
     
-
-//    // Set game state from persisted data IF it exists
-//    required init(from decoder: Decoder) throws {
-//
-//        let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
-//        let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
-//        let totalTurnsVal: Int = try container.decode(Int.self, forKey: ._totalTurns) // extracting the data
-//        let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
-//        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
-//
-//        // Now set the 4 items that we decided were important enough to save
-//        _gameBoard = gameBoardVal
-//        _totalTurns = totalTurnsVal
-//        _whoseTurn = whoseTurnVal
-//        _gameState = gameStateVal
-//
-//        super.init()
-//    }
-//
-//
-//    // This is our default init IF game state isn't saved/persisted
-//    init(numOfRows rows: Int, numOfColumns columns: Int) {
-//        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: columns), count: rows)
-//        _totalTurns = 0
-//        _whoseTurn = GridState.playerOne
-//        _gameState = GameState.ongoing
-//        super.init()
-//    }
-
     
     // Public gameBoard
     var gameBoard:[[GridState]] {

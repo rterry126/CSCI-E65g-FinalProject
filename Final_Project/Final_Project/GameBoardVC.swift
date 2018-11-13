@@ -84,11 +84,9 @@ class GameBoardVC: UIViewController {
     
     
     //MARK:- Model Instance Created
-   // Lazy because the rows/columns aren't necessarily available yet. Not sure if there is a better way...
-//    lazy var modelGameLogic: GameLogicModelProtocol =
-//        GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-    lazy var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
+    var modelGameLogic: GameLogicModelProtocol = SingletonFactory.sharedInstance
     
+
     
     var modelGamePrefs: GamePrefModelProtocol = {
         print("Controller ==> Preferences Model: instantiate")
@@ -321,7 +319,7 @@ extension GameBoardVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+      
         // Below commented on 11/9 when implementing singleton pattern
 //        do {
 //            let restoredObject = try Persistence.restore()
@@ -340,8 +338,8 @@ extension GameBoardVC {
 //            // So evidently if it fails here to restore saved model it uses the default init()
 //            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
 //
-////            var modelGameLogic: GameLogicModelProtocol =
-////                GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
+//            var modelGameLogic: GameLogicModelProtocol =
+//               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
 //        }
 
         
