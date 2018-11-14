@@ -54,7 +54,8 @@ class HistoryMasterViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+       
+        /**************************************************/
         // TODO - Move to Proxy
         self.listener =  query?.addSnapshotListener { (documents, error) in
             
@@ -86,6 +87,8 @@ class HistoryMasterViewController: UIViewController {
             self.gameHistoryTableView.reloadData()
             
         }
+        
+        /***********************************************/
     }
     
     override func viewWillDisappear(_ animated: Bool) {
