@@ -12,6 +12,18 @@ import UIKit
 
 class HistoryDetailVC: UIViewController {
     
+    @IBOutlet weak var testLabel: UILabel!
+    
+        var username:String = ""
+        
+        
+        override func viewDidLoad()
+        {
+            super.viewDidLoad()
+            print("Detail --> \(username)")
+            
+            testLabel.text = username
+        }
     
     
     

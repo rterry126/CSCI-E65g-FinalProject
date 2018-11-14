@@ -112,13 +112,34 @@ class HistoryMasterViewController: UIViewController {
     @IBOutlet weak var gameHistoryTableView: UITableView!
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let segueId = segue.identifier? else { return }
-        if segueId == "segueHistoryDetail" {
-            guard let profileVC = segue.destination as? ProfileViewController else { return }
-            profileVC.user = sender as? User
+    func prepare(for segue: UIStoryboardSegue, sender: String) {
+            
+        print("Segue desitnation -->  ")
+        if segue.destination is HistoryDetailVC
+        {
+            let vc = segue.destination as? HistoryDetailVC
+            print("Prepare for segue -->  ")
+
+            vc?.username = "Arthur Dent"
         }
     }
+    
+    
+    // MARK: - Segues
+    //TODO: - Source Master-Detail project starter code.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueHistoryDetail" {
+            if let indexPath = gameHistoryTableView.indexPathForSelectedRow {
+                let game = games[indexPath.row].playerOneName
+                let detailVC = /*(segue.destination as! UINavigationController).topViewController*/ segue.destination as? HistoryDetailVC
+                detailVC?.username = game
+//                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+//                controller.navigationItem.leftItemsSupplementBackButton = true
+            }
+        }
+    }
+    
+ 
     
     
 }
@@ -185,12 +206,13 @@ extension HistoryMasterViewController: UITableViewDataSource {
     
     
     // Select a row and segue to the detail page
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        //TODO: - Fix this for better nameing later
-        let tempVariable = games[indexPath.row].id
-        self.performSegue(withIdentifier: "segueHistoryDetail", sender: tempVariable)
-    }
+//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//
+//        //TODO: - Fix this for better nameing later
+//        let tempVariable = games[indexPath.row].playerOneName
+//        print(tempVariable)
+//        self.performSegue(withIdentifier: "segueHistoryDetail", sender: tempVariable)
+//    }
     
     
     // Allow Deletion
