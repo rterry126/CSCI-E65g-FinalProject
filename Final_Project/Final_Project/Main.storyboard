@@ -318,10 +318,10 @@
             </objects>
             <point key="canvasLocation" x="801" y="-1112"/>
         </scene>
-        <!--HistoryVC-->
+        <!--HistoryMasterVC-->
         <scene sceneID="lHT-Fe-JBc">
             <objects>
-                <viewController title="History" id="xIt-VK-hfW" userLabel="HistoryVC" customClass="HistoryMasterViewController" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="History" id="xIt-VK-hfW" userLabel="HistoryMasterVC" customClass="HistoryMasterViewController" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XcO-Rk-qp4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -419,6 +419,7 @@
                                             <outlet property="playerTwoName" destination="Yor-aJ-I1r" id="3lW-7q-8PT"/>
                                             <outlet property="playerTwoScore" destination="g1n-BQ-ME1" id="0cD-5x-xF3"/>
                                             <outlet property="time" destination="mzi-Vc-mK0" id="Aeb-5V-PnT"/>
+                                            <segue destination="g9f-nM-QNm" kind="showDetail" id="Q38-yR-n5c"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -458,6 +459,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bx7-3k-jnL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1452" y="133.5832083958021"/>
+        </scene>
+        <!--HistoryDetailVC-->
+        <scene sceneID="JDL-nk-lM9">
+            <objects>
+                <viewController id="g9f-nM-QNm" userLabel="HistoryDetailVC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gVb-Jv-HI2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="dF6-uK-srq"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VZn-ij-Vzn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1452" y="869"/>
         </scene>
         <!--HelpVC-->
         <scene sceneID="z7O-Uk-XdD">

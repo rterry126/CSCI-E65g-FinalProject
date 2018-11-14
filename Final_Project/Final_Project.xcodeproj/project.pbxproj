@@ -10,6 +10,7 @@
 		13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */; };
 		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
 		E1462B05219B1550002BFFED /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1462B04219B1550002BFFED /* Factory.swift */; };
+		E1462B0B219C83FE002BFFED /* HistoryDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */; };
 		E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1578475219769A900F142CA /* HistoryMasterVC.swift */; };
 		E15784782197778100F142CA /* GameHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15784772197778100F142CA /* GameHistoryModel.swift */; };
 		E157847A21977DF400F142CA /* FirebaseProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E157847921977DF400F142CA /* FirebaseProxy.swift */; };
@@ -43,6 +44,7 @@
 		D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
 		E1462B04219B1550002BFFED /* Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
+		E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailVC.swift; sourceTree = "<group>"; };
 		E1578475219769A900F142CA /* HistoryMasterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMasterVC.swift; sourceTree = "<group>"; };
 		E15784772197778100F142CA /* GameHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHistoryModel.swift; sourceTree = "<group>"; };
 		E157847921977DF400F142CA /* FirebaseProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseProxy.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				E178D864219734D700DA4E93 /* GoogleService-Info.plist */,
 				E1B00AC0218E4A8A0032A66E /* LaunchScreen.storyboard */,
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
+				E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */,
 				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
 				E1462B04219B1550002BFFED /* Factory.swift */,
 				E1B00AB5218E4A8A0032A66E /* Protocols.swift */,
@@ -323,6 +326,7 @@
 				E15784782197778100F142CA /* GameHistoryModel.swift in Sources */,
 				E1B00AD4218E4A8B0032A66E /* 2DOperations.swift in Sources */,
 				E1B00AD5218E4A8B0032A66E /* ColorPickerViewController.swift in Sources */,
+				E1462B0B219C83FE002BFFED /* HistoryDetailVC.swift in Sources */,
 				E1B00AC9218E4A8B0032A66E /* GamePrefModel.swift in Sources */,
 				E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */,
 				E1B00ADB218E4A8B0032A66E /* GameBoardVC.swift in Sources */,

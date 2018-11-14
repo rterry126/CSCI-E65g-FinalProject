@@ -23,8 +23,6 @@ enum GameLogicError: String,Error {
 
 class GameLogicModel: NSObject, Codable {
     
-    // Create Singleton instance
-//    static let instance: GameLogicModelProtocol = GameLogicModel()
     
     //TODO: Look at other instances which conform to more restrictive protocols, i.e. read only???
     
@@ -116,8 +114,7 @@ class GameLogicModel: NSObject, Codable {
         didSet {
             
             print("Model ==> Model: didSet(_totalTurns) updated to \(_totalTurns.description)")
-            //TODO: - Test Firebase logging
-//            Analytics.logEvent("_totalTurns", parameters: ["Updated": _totalTurns])
+            
             // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
             //TODO:
