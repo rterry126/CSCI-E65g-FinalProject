@@ -419,7 +419,7 @@
                                             <outlet property="playerTwoName" destination="Yor-aJ-I1r" id="3lW-7q-8PT"/>
                                             <outlet property="playerTwoScore" destination="g1n-BQ-ME1" id="0cD-5x-xF3"/>
                                             <outlet property="time" destination="mzi-Vc-mK0" id="Aeb-5V-PnT"/>
-                                            <segue destination="g9f-nM-QNm" kind="showDetail" id="Q38-yR-n5c"/>
+                                            <segue destination="g9f-nM-QNm" kind="showDetail" identifier="segueHistoryDetail" id="Q38-yR-n5c"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

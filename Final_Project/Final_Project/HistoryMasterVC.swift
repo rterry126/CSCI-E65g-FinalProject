@@ -112,6 +112,15 @@ class HistoryMasterViewController: UIViewController {
     @IBOutlet weak var gameHistoryTableView: UITableView!
     
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueId = segue.identifier? else { return }
+        if segueId == "segueHistoryDetail" {
+            guard let profileVC = segue.destination as? ProfileViewController else { return }
+            profileVC.user = sender as? User
+        }
+    }
+    
+    
 }
 
 
@@ -172,6 +181,15 @@ extension HistoryMasterViewController: UITableViewDataSource {
 
         // Return it to iOS to render
         return cell
+    }
+    
+    
+    // Select a row and segue to the detail page
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //TODO: - Fix this for better nameing later
+        let tempVariable = games[indexPath.row].id
+        self.performSegue(withIdentifier: "segueHistoryDetail", sender: tempVariable)
     }
     
     
