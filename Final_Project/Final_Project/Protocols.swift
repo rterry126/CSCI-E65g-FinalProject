@@ -11,6 +11,7 @@ import Foundation
 //Used for delegate for view
 import UIKit
 
+
 protocol GameLogicModelObserver: class {
     func successfulBoardMove() // grid has changed
 

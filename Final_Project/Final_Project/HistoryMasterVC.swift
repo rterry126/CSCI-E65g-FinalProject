@@ -71,7 +71,7 @@ class HistoryMasterViewController: UIViewController {
             // Basically go through the sequence and pull out the data...
             let results = snapshot.documents.map { (document) -> Game in
                 if let game = Game(dictionary: document.data(), id: document.documentID) {
-                    print("History \(game.id) => \(game.playerOneName )")
+                    print("History \(game.id) => \(game.playerTwoName )")
                     return game
                 }
                 else {
@@ -112,18 +112,6 @@ class HistoryMasterViewController: UIViewController {
     @IBOutlet weak var gameHistoryTableView: UITableView!
     
     
-    func prepare(for segue: UIStoryboardSegue, sender: String) {
-            
-        print("Segue desitnation -->  ")
-        if segue.destination is HistoryDetailVC
-        {
-            let vc = segue.destination as? HistoryDetailVC
-            print("Prepare for segue -->  ")
-
-            vc?.username = "Arthur Dent"
-        }
-    }
-    
     
     // MARK: - Segues
     //TODO: - Source Master-Detail project starter code.
@@ -131,8 +119,10 @@ class HistoryMasterViewController: UIViewController {
         if segue.identifier == "segueHistoryDetail" {
             if let indexPath = gameHistoryTableView.indexPathForSelectedRow {
                 let game = games[indexPath.row].playerOneName
+//                let game2 = games[indexPath.row].gameBoard
                 let detailVC = /*(segue.destination as! UINavigationController).topViewController*/ segue.destination as? HistoryDetailVC
                 detailVC?.username = game
+//                detailVC?.gameBoard = game2
 //                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 //                controller.navigationItem.leftItemsSupplementBackButton = true
             }

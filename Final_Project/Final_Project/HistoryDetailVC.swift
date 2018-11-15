@@ -14,17 +14,24 @@ class HistoryDetailVC: UIViewController {
     
     @IBOutlet weak var testLabel: UILabel!
     
-        var username:String = ""
+    var username:String = ""
+    // Stub/placeholer to build view
+    let gameBoard = [["Player One","Empty","Empty","Player One","Empty"],
+                     ["Empty","Player Two","Player One","Empty","Empty"],
+                     ["Player One","Empty","Player Two","Empty","Empty"],
+                     ["Empty","Empty","Player Two","Player One","Empty"],
+                     ["Empty","Empty","Empty","Player Two","Empty"]]
+    
+    
         
         
-        override func viewDidLoad()
-        {
+    override func viewDidLoad() {
             super.viewDidLoad()
             print("Detail --> \(username)")
+            print("\(gameBoard)")
             
             testLabel.text = username
-        }
+        
     
-    
-    
+    }
 }
