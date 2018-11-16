@@ -57,7 +57,7 @@ class HistoryMasterViewController: UIViewController {
        
         /**************************************************/
         // TODO - Move to Proxy
-        self.listener =  query?.addSnapshotListener { (documents, error) in
+        self.listener =  query?.addSnapshotListener { ( documents, error) in
             
             // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
             guard let snapshot = documents else {

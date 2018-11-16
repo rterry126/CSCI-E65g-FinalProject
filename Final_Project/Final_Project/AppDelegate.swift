@@ -91,7 +91,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Error getting documents: \(err)")
             } else {
                 for document in querySnapshot!.documents {
-                    print("\(document.documentID) => \(document.data())")
+                    
+                    let dict = document.data() as [String: Any]
+                    if let game = dict["gameBoard"] as? [String: [String]] {
+                        let sortedGame = game.sorted {$0.key < $1.key}
+                        for row in sortedGame {
+                            print(row)
+                        }
+                        print(game.count)
+                        print(game["\(1)"])
+                        print(game)
+
+                    }
+                    
+                    print(type(of: document.data()["gameBoard"]))
+                    print("\(document.documentID) => \(document.data()["gameBoard"])")
+                    //print(document.data()["gameBoard"] as! [String: Any])
+                
+                    
 //                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
 //                    let date: Date = timestamp.dateValue()
 //                    print("\(date)")
