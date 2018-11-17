@@ -28,11 +28,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        else {
 //            fatalError("Could not initialize GamePrefModel")
 //        }
+        print("Did Finish Launching. State is --> \(StateMachine.instance.state)\n")
+       
         FirebaseApp.configure()
         let db = Firestore.firestore()
         let settings = db.settings
         settings.areTimestampsInSnapshotsEnabled = true
         db.settings = settings
+        
+        print("Firebase --> Configured and instantiated")
         
         
         // Setup test data

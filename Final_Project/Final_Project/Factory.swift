@@ -20,6 +20,12 @@ class Factory {
         return instance
     }()
     
+//    private static let stateInstance: StateMachineProtocol = {
+//        let instance = StateMachine()
+//        return instance
+//        
+//    }()
+    
     
 //    private static let _model = GameLogicModel()
 //    

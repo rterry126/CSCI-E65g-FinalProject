@@ -37,6 +37,7 @@
 		E1B00AD9218E4A8B0032A66E /* GameLogicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */; };
 		E1B00ADA218E4A8B0032A66E /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */; };
 		E1B00ADB218E4A8B0032A66E /* GameBoardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */; };
+		E1D832A921A0D8AE00ED51DB /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D832A821A0D8AD00ED51DB /* StateMachine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameLogicModel.swift; sourceTree = "<group>"; };
 		E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardVC.swift; sourceTree = "<group>"; };
+		E1D832A821A0D8AD00ED51DB /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = "/Users/robert/Desktop/e65g/final-project-rterry126/Final_Project/Final_Project/StateMachine.swift"; sourceTree = "<absolute>"; };
 		FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,6 +148,7 @@
 				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
 				E1462B04219B1550002BFFED /* Factory.swift */,
 				E1B00AB5218E4A8A0032A66E /* Protocols.swift */,
+				E1D832A821A0D8AD00ED51DB /* StateMachine.swift */,
 				E1B00AC2218E4A8B0032A66E /* SharedAndHelpers.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
 				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
@@ -329,6 +332,7 @@
 				E1462B0B219C83FE002BFFED /* HistoryDetailVC.swift in Sources */,
 				E1B00AC9218E4A8B0032A66E /* GamePrefModel.swift in Sources */,
 				E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */,
+				E1D832A921A0D8AE00ED51DB /* StateMachine.swift in Sources */,
 				E1B00ADB218E4A8B0032A66E /* GameBoardVC.swift in Sources */,
 				E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */,
 				E157847A21977DF400F142CA /* FirebaseProxy.swift in Sources */,

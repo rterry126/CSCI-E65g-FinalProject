@@ -11,7 +11,13 @@ import Foundation
 //Used for delegate for view
 import UIKit
 
-
+protocol StateMachineProtocol: class {
+    
+    var state: StateMachine.State { get set }
+    //var instance: StateMachineProtocol { get }
+    
+    
+}
 
 
 protocol GameLogicModelObserver: class {
