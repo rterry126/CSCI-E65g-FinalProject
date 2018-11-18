@@ -42,6 +42,48 @@ class FirebaseProxy {
         }
     }
     
+    static func electLeader() {
+        
+        let sfReference = FirebaseProxy.db.collection("elect_leader").document("123456")
+        
+    
+        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
+            let sfDocument: DocumentSnapshot
+            do {
+                try sfDocument = transaction.getDocument(sfReference)
+            } catch let fetchError as NSError {
+                errorPointer?.pointee = fetchError
+                return nil
+            }
+            
+            guard let leaderBit = sfDocument.data()?["leader_bit"] as? Bool else {
+                
+                let error = NSError(
+                    domain: "AppErrorDomain",
+                    code: -1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Unable to retrieve population from snapshot \(sfDocument)"
+                    ]
+                )
+                errorPointer?.pointee = error
+                return nil
+            }
+            if !leaderBit {
+                print("\nUpdated leader bit\n")
+                transaction.updateData(["leader_bit": true], forDocument: sfReference)
+                // Update in model as well
+            }
+            return nil
+        }) { (object, error) in
+            if let error = error {
+                print("Transaction failed: \(error)")
+            } else {
+                print("Transaction successfully committed!")
+            }
+        }
+
+    }
+    
     func requestInitialize() {
         
         let rootCollectionRef: CollectionReference = Firestore.firestore().collection("RootKey")

@@ -19,10 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-     // Create connection to Firebase
+        print("App Delegate running")
+        // Create connection to Firebase
         
         _ = FirebaseProxy.db
         FirebaseProxy.instance.requestInitialize()
+        
+    // Elect leader/Player One
+        FirebaseProxy.electLeader()
         
         
         

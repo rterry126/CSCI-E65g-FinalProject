@@ -90,6 +90,7 @@ class GameBoardVC: UIViewController {
         // VC has loaded so we change state to 2 - initializing
         StateMachine.state = .initializing
         
+        print("View Controller initializing")
         super.init(coder: aDecoder)
     }
     
