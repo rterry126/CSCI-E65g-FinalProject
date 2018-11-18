@@ -15,10 +15,29 @@ import AVFoundation // Used to notify when timer/turn is about to expire via aud
 class Factory {
     
    // Singleton Creation
-    static let sharedInstance: GameLogicModelProtocol = {
-        let instance = GameLogicModel()
-        return instance
+//    static let sharedInstance: GameLogicModelProtocol = {
+//        let instance = GameLogicModel()
+//        return instance
+//    }()
+    
+    
+    private static var _model: GameLogicModelProtocol = {
+        let m: GameLogicModelProtocol
+//        if let obj = Persistence.createModelFromPersistedData() {
+//            m = obj
+//        }
+//        else {
+//            m = Model()
+//        }
+        m = GameLogicModel()
+        return m
     }()
+    
+    public static var sharedModel: GameLogicModelProtocol {
+        get {
+            return _model
+        }
+    }
     
 //    private static let stateInstance: StateMachineProtocol = {
 //        let instance = StateMachine()

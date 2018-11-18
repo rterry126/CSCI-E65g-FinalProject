@@ -19,61 +19,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Because we are using a Navigation controller we need to specify children[0]
-        // to return GameBoardVC. By trial/error, if we move the entry point to this view controller
-        // it's not needed. Not sure if there is a better way....
-//        if let gameBoardVC =  window?.rootViewController?.children[0] as? GameBoardVC {
-//            gameBoardVC.modelGamePrefs = GamePrefModel()
+     // Create connection to Firebase
+        
+        _ = FirebaseProxy.db
+        FirebaseProxy.instance.requestInitialize()
+        
+        
+        
+//        // Setup test data
+//        let playerOneName = "John"
+//        let playerTwoName = "Susan"
+//        let playerOneScore = 5
+//        let playerTwoScore = 2
+//
+//        let gameBoard = [["Player One","Empty","Empty","Player One","Empty"],
+//                         ["Empty","Player Two","Player One","Empty","Empty"],
+//                         ["Player One","Empty","Player Two","Empty","Empty"],
+//                         ["Empty","Empty","Player Two","Player One","Empty"],
+//                         ["Empty","Empty","Empty","Player Two","Empty"]]
+//
+//        // Add a new document with a generated ID
+//        var ref: DocumentReference? = nil
+//
+//        ref = db.collection("history_test").addDocument(data: [
+//            "playerOneName": playerOneName,
+//            "playerTwoName": playerTwoName,
+//            "playerOneScore": playerOneScore,
+//            "playerTwoScore": playerTwoScore,
+//            "gameBoard": [
+//                "0": gameBoard[0],
+//                "1": gameBoard[1],
+//                "2": gameBoard[2],
+//                "3": gameBoard[3],
+//                "4": gameBoard[4]
+//            ],
+//            "created_at": NSDate()
+//        ]) { err in
+//            if let err = err {
+//                print("Error adding document: \(err)")
+//            } else {
+//                print("Document added with ID: \(ref!.documentID)")
+//            }
 //        }
-//        else {
-//            fatalError("Could not initialize GamePrefModel")
-//        }
-        print("Did Finish Launching. State is --> \(StateMachine.instance.state)\n")
-       
-        FirebaseApp.configure()
-        let db = Firestore.firestore()
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
-        
-        print("Firebase --> Configured and instantiated")
-        
-        
-        // Setup test data
-        let playerOneName = "John"
-        let playerTwoName = "Susan"
-        let playerOneScore = 5
-        let playerTwoScore = 2
-        
-        let gameBoard = [["Player One","Empty","Empty","Player One","Empty"],
-                         ["Empty","Player Two","Player One","Empty","Empty"],
-                         ["Player One","Empty","Player Two","Empty","Empty"],
-                         ["Empty","Empty","Player Two","Player One","Empty"],
-                         ["Empty","Empty","Empty","Player Two","Empty"]]
-        
-        // Add a new document with a generated ID
-        var ref: DocumentReference? = nil
-        
-        ref = db.collection("history_test").addDocument(data: [
-            "playerOneName": playerOneName,
-            "playerTwoName": playerTwoName,
-            "playerOneScore": playerOneScore,
-            "playerTwoScore": playerTwoScore,
-            "gameBoard": [
-                "0": gameBoard[0],
-                "1": gameBoard[1],
-                "2": gameBoard[2],
-                "3": gameBoard[3],
-                "4": gameBoard[4]
-            ],
-            "created_at": NSDate()
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                print("Document added with ID: \(ref!.documentID)")
-            }
-        }
         
 //        // Add a second document with a generated ID.
 //        ref = db.collection("history_test").addDocument(data: [
@@ -90,36 +77,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            }
 //        }
         
-        db.collection("history_test").getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    
-                    let dict = document.data() as [String: Any]
-                    if let game = dict["gameBoard"] as? [String: [String]] {
-                        let sortedGame = game.sorted {$0.key < $1.key}
-                        for row in sortedGame {
-                            print(row)
-                        }
-                        print(game.count)
-                        print(game["\(1)"])
-                        print(game)
-
-                    }
-                    
-                    print(type(of: document.data()["gameBoard"]))
-                    print("\(document.documentID) => \(document.data()["gameBoard"])")
-                    //print(document.data()["gameBoard"] as! [String: Any])
-                
-                    
-//                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
-//                    let date: Date = timestamp.dateValue()
-//                    print("\(date)")
-                    
-                }
-            }
-        }
+//        db.collection("history_test").getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting documents: \(err)")
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    
+//                    let dict = document.data() as [String: Any]
+//                    if let game = dict["gameBoard"] as? [String: [String]] {
+//                        let sortedGame = game.sorted {$0.key < $1.key}
+//                        for row in sortedGame {
+//                            print(row)
+//                        }
+//                        print(game.count)
+//                        print(game["\(1)"])
+//                        print(game)
+//
+//                    }
+//                    
+//                    print(type(of: document.data()["gameBoard"]))
+//                    print("\(document.documentID) => \(document.data()["gameBoard"])")
+//                    //print(document.data()["gameBoard"] as! [String: Any])
+//                
+//                    
+////                    let timestamp: Timestamp = document.get("created_at") as! Timestamp
+////                    let date: Date = timestamp.dateValue()
+////                    print("\(date)")
+//                    
+//                }
+//            }
+//        }
         
         return true
     }

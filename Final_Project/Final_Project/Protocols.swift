@@ -13,7 +13,7 @@ import UIKit
 
 protocol StateMachineProtocol: class {
     
-    var state: StateMachine.State { get set }
+    static var state: StateMachine.State { get set }
     //var instance: StateMachineProtocol { get }
     
     
@@ -34,6 +34,11 @@ protocol GamePrefModelObserver: class {
     func colorsChanged()
 }
 
+protocol GameStateMachineObserver: class {
+    
+    func getDatabaseHandle(notification : NSNotification)
+}
+
 
 
 
@@ -52,6 +57,7 @@ protocol GameLogicModelProtocol: class, Codable {
     func setTurn()
     
     var gameState: GameState { get }
+    
     
 }
 

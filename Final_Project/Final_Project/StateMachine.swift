@@ -19,7 +19,15 @@ class StateMachine: StateMachineProtocol {
         return _instance
     }
     
-    var state: State = .uninitialized
+    static var state: State = .uninitialized {
+        didSet {
+            
+            print("State changed --> \(self.state)")
+            
+            NotificationCenter.default.post(name: .stateChanged, object: self, userInfo: ["state": StateMachine.State.RawValue()])
+            
+        }
+    }
     
     enum State: Int {
         

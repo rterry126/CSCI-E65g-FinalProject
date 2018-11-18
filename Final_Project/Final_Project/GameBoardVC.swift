@@ -29,8 +29,10 @@
 
 // Sources - How to pass #selector to function - https://stackoverflow.com/questions/37022780/pass-a-function-to-a-selector
 // Sources - Audio - https://stackoverflow.com/questions/31126124/using-existing-system-sounds-in-ios-app-swift
+// Sources - passing userinfo via notifications - https://stackoverflow.com/questions/24892454/how-to-access-a-dictionary-passed-via-nsnotification-using-swift
 
 import UIKit
+import Firebase
 
 
 class GameBoardVC: UIViewController {
@@ -60,6 +62,9 @@ class GameBoardVC: UIViewController {
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
+//    // Get handle to this later in the 'initializing' state
+//    var fireStoreDB: Firestore
+    
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
     // 'listenerArray' is type alias
@@ -70,6 +75,9 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(getDatabaseHandle(notification:)))]
+    
+    
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
     // without consequences via our preferences setter
@@ -77,20 +85,25 @@ class GameBoardVC: UIViewController {
         //MARK: - Set size of game grid...
         self.numOfGridRows = modelGamePrefs.numRows
         self.numOfGridColumns = modelGamePrefs.numColumns
+        
+        //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
+        // VC has loaded so we change state to 2 - initializing
+        StateMachine.state = .initializing
+        
         super.init(coder: aDecoder)
     }
     
     
     
-    //MARK:- Model Instance Created
-    var modelGameLogic: GameLogicModelProtocol = Factory.sharedInstance
-    
-
+    //MARK:- Instances Created
+    var modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
     
     var modelGamePrefs: GamePrefModelProtocol = {
         print("Controller ==> Preferences Model: instantiate")
         return GamePrefModel()
     }()
+    
+    
     
     
     // Set a light gray for empty. Scale is 0.0 to 1.0 for these RGB values so divide by 255 to
@@ -165,9 +178,30 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     }
 }
 
+//MARK: - GameStateMachineObserver extension
+extension GameBoardVC: GameStateMachineObserver {
+
+    @objc func getDatabaseHandle(notification : NSNotification) {
+
+//        if let info = notification.userInfo as? Dictionary<String,Int> {
+//            // Check if value present before using it
+//            if let s = info["state"] {
+//                print(s)
+//                if s == 2 { // If we are in initializing state then get handle to Firestore
+//                    fireStoreDB = FirebaseProxy.db
+//                }
+//            }
+//        }
+//        else {
+//            print("no value for key\n")
+//        }
+    }
+}
+
 
 //MARK: - GameLogicModel Observer extension
 extension GameBoardVC: GameLogicModelObserver {
+    
     
     @objc func successfulBoardMove() {
         
@@ -322,14 +356,19 @@ extension GameBoardVC {
 //               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
 //        }
 
+        // State 0 - Unitialized
         
+        // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
+        let gameView = GameBoardView() // Object palette
+        
+        // Disable inputs on startup
+        gameView.isUserInteractionEnabled = false
         
         
         // Initialize the game state label
         textGameStatus.text = modelGameLogic.gameState.rawValue
         
-        // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
-        let gameView = GameBoardView() // Object palette
+        
         
         gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 ) // Autolayout
         print("About to add gameView")
@@ -344,6 +383,8 @@ extension GameBoardVC {
         // Pass our observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerLogicModel)
         Factory.createObserver(observer: self, listeners: observerPreferencesModel)
+        Factory.createObserver(observer: self, listeners: observerStateMachine)
+
 
         
         // Initialize grid in view
