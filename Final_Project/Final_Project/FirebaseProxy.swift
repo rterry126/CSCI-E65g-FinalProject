@@ -250,53 +250,39 @@ class FirebaseProxy {
     
     
     
-    static func downloadHistory( completion: @escaping ([Game], Error) -> Void) {
+    func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
+        
+        print("Function downloadHistory called")
         
         var resultsArray = [Game]()
         // Create query.
         historyQuery = Firestore.firestore().collection("history_test").order(by: "created_at", descending: true ).limit(to: 10)
         
 //        historyQuery.getDocuments { snapshot, error in
-        listener =  historyQuery?.addSnapshotListener { ( documents, error) in
-            if let error = error {
-                print(error)
-                completion(resultsArray, error)
-                return
-            }
-            for doc in snapshot!.documents {
-                let cat = Cat(snapshot: doc)
-                catArray.append(cat)
-            }
-            completion(catArray, nil)
-        }
-        
-        self.listener =  historyQuery?.addSnapshotListener { ( documents, error) in
+        /*listener =*/  historyQuery?.addSnapshotListener { ( documents, error) in
             
-            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
             guard let snapshot = documents else {
-                print("Error fetching documents results: \(error!)")
+                if let error = error {
+                    print(error)
+                    completion(resultsArray, error)
+//                    return
+                }
                 return
             }
             
-            //            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
-            //            let date: Date = timestamp.dateValue()
-            
-            // Basically go through the sequence and pull out the data...
-            let resultsArray = snapshot.documents.map { (document) -> Game in
-                if let game = Game(dictionary: document.data(), id: document.documentID) {
-                    print("History \(game.id) => \(game.playerTwoName )")
-                    return game
+                // Basically go through the sequence and pull out the data...
+                resultsArray = snapshot.documents.map { (document) -> Game in
+                    if let game = Game(dictionary: document.data(), id: document.documentID) {
+                        print("History \(game.id) => \(game.playerTwoName )")
+                        return game
+                    }
+                    else {
+                        fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+                    }
                 }
-                else {
-                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
-                }
-            }
+                completion(resultsArray, nil)
             
-            
-        completion(resultsArray, nil)
         }
-        
-        
         
     }
 

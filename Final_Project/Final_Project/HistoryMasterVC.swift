@@ -30,6 +30,11 @@ class HistoryMasterViewController: UIViewController {
     
     public var games: [Game] = []
     
+    var sharedFirebaseProxy: FirebaseProxy = {
+        print("HistoryMasterVC ==> FirebaseProxy: get Singleton")
+        return FirebaseProxy.instance
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,21 +49,21 @@ class HistoryMasterViewController: UIViewController {
         /**************************************************/
         // TODO - Move to Proxy
         
-        func initializeHistory() {
+//        func initializeHistory() {
 //            activityIndicator.startAnimating()
-            FirebaseProxy.downloadHistory() { catArray, error in
+            sharedFirebaseProxy.downloadHistory() { resultsArray, error in
 //                self.activityIndicator.stopAnimating()
                 if let error = error {
-                    self.alert(title: "Error", message: error.localizedDescription)
+                    print("\(error.localizedDescription)")
                     return
                 }
                 
-                self.games = results
+                self.games = resultsArray
                 // 11/13 - Not sure this does anything. Legacy code from tutorial???
                 //            self.documents = snapshot.documents
                 self.gameHistoryTableView.reloadData()
             }
-        }
+//        }
         
         
         
@@ -70,8 +75,7 @@ class HistoryMasterViewController: UIViewController {
 //                return
 //            }
 //
-////            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
-////            let date: Date = timestamp.dateValue()
+
 //
 //            // Basically go through the sequence and pull out the data...
 //            let results = snapshot.documents.map { (document) -> Game in
@@ -93,7 +97,7 @@ class HistoryMasterViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.listener.remove()
+//        self.listener.remove()
     }
     
     
