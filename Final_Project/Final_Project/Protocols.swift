@@ -7,6 +7,7 @@
 ////
 //
 import Foundation
+import Firebase
 
 //Used for delegate for view
 import UIKit
@@ -36,7 +37,7 @@ protocol GamePrefModelObserver: class {
 
 protocol GameStateMachineObserver: class {
     
-    func getDatabaseHandle(notification : NSNotification)
+    func getDatabaseHandle(notification : NSNotification) -> Firestore
 }
 
 

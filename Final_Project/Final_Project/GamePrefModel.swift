@@ -15,11 +15,15 @@ class GamePrefModel {
     
     let defaults = UserDefaults.standard
     
+    // Singleton creation
+    
+    static let instance: GamePrefModelProtocol = GamePrefModel()
+    
     
     // Initialize our player names and colors by either retrieving saved values OR initializing to our
     // default values here instead of when the private variable is declared
     //MARK: - Set stored or default preferences
-    init() {
+    private init() {
         
         //MARK: - Set Player names
         // Player One name

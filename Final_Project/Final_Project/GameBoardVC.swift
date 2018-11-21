@@ -63,7 +63,7 @@ class GameBoardVC: UIViewController {
     let timeToMakeMove = 5.0
     
 //    // Get handle to this later in the 'initializing' state
-//    var fireStoreDB: Firestore
+    var fireStoreDB: Firestore
     
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
@@ -75,13 +75,15 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.stateChanged, #selector(getDatabaseHandle(notification:)))]
+//    var observerStateMachine: observerArray = [(.stateChanged, #selector(getDatabaseHandle(notification:)))]
     
     
     //MARK: - Init()
     // Get saved grid size. Since we only fetch these values at init, we can change during game
     // without consequences via our preferences setter
     required init?(coder aDecoder: NSCoder) {
+        
+        
         //MARK: - Set size of game grid...
         self.numOfGridRows = modelGamePrefs.numRows
         self.numOfGridColumns = modelGamePrefs.numColumns
@@ -89,9 +91,16 @@ class GameBoardVC: UIViewController {
         //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
         // VC has loaded so we change state to 2 - initializing
         StateMachine.state = .initializing
-        
         print("View Controller initializing")
+        
+        // This doesn't really do anything???
+        fireStoreDB = FirebaseProxy.db // Get handle to our database
+        FirebaseProxy.instance.requestInitialize()
+        
         super.init(coder: aDecoder)
+        
+        // Add our state machine observers
+//        Factory.createObserver(observer: self, listeners: observerStateMachine)
     }
     
     
@@ -101,7 +110,7 @@ class GameBoardVC: UIViewController {
     
     var modelGamePrefs: GamePrefModelProtocol = {
         print("Controller ==> Preferences Model: instantiate")
-        return GamePrefModel()
+        return GamePrefModel.instance
     }()
     
     
@@ -179,11 +188,13 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     }
 }
 
+
+
 //MARK: - GameStateMachineObserver extension
-extension GameBoardVC: GameStateMachineObserver {
+//extension GameBoardVC: GameStateMachineObserver {
 
-    @objc func getDatabaseHandle(notification : NSNotification) {
-
+//    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
+//
 //        if let info = notification.userInfo as? Dictionary<String,Int> {
 //            // Check if value present before using it
 //            if let s = info["state"] {
@@ -196,8 +207,9 @@ extension GameBoardVC: GameStateMachineObserver {
 //        else {
 //            print("no value for key\n")
 //        }
-    }
-}
+//        return fireStoreDB
+//    }
+//}
 
 
 //MARK: - GameLogicModel Observer extension
@@ -384,7 +396,7 @@ extension GameBoardVC {
         // Pass our observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerLogicModel)
         Factory.createObserver(observer: self, listeners: observerPreferencesModel)
-        Factory.createObserver(observer: self, listeners: observerStateMachine)
+        
 
 
         

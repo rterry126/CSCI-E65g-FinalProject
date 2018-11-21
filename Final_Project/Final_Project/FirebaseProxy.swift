@@ -12,8 +12,6 @@ class FirebaseProxy {
     static let instance = FirebaseProxy()
     private init() {}
     
-    
-    
     // Static added by Robert
     static private let _db: Firestore = {
         
@@ -35,6 +33,7 @@ class FirebaseProxy {
     }()
 
 
+    
     static var db: Firestore {
         get {
             print("Firebase Proxy --> db handle created")
@@ -62,7 +61,7 @@ class FirebaseProxy {
                     domain: "AppErrorDomain",
                     code: -1,
                     userInfo: [
-                        NSLocalizedDescriptionKey: "Unable to retrieve population from snapshot \(sfDocument)"
+                        NSLocalizedDescriptionKey: "Unable to retrieve leader_bit from snapshot \(sfDocument)"
                     ]
                 )
                 errorPointer?.pointee = error
@@ -73,7 +72,7 @@ class FirebaseProxy {
                 transaction.updateData(["leader_bit": true], forDocument: sfReference)
                 // Update in model as well
             }
-            return nil
+            return nil // Ideally this should return True and in completion block below we set in model
         }) { (object, error) in
             if let error = error {
                 print("Transaction failed: \(error)")
@@ -86,7 +85,7 @@ class FirebaseProxy {
     
     func requestInitialize() {
         
-        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("RootKey")
+        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         
         rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
             
@@ -112,20 +111,27 @@ class FirebaseProxy {
         }
     }
     
-    //    private var activeRootObj: DocumentReference? {
-    //
-    //        didSet {
-    //
-    //            if let _ = activeRootObj {
-    //
-    //                // Switch state from initializing to initialized; notify everyone
-    //            }
-    //            else {
-    //
-    //                // Switch to permanent error state; don't worry about recovery now
-    //            }
-    //        }
-    //    }
+        private var activeRootObj: DocumentReference? {
+    
+            didSet {
+    
+                if let _ = activeRootObj {
+                    let documentData = ["playerOneName": "Sammy", "playerTwoName": "Joanna"]
+                    let mergeFields = ["playerOneName", "playerTwoName"]
+                    activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
+                    
+                    print("activeRootObj didSet run")
+                    
+                    // Set preferences
+    
+                    // Switch state from initializing to initialized; notify everyone
+                }
+                else {
+    
+                    // Switch to permanent error state; don't worry about recovery now
+                }
+            }
+        }
     
     
 //
@@ -217,24 +223,6 @@ class FirebaseProxy {
 //        return db
 //
 //    }()
-
-
-
-    private var activeRootObj: DocumentReference? {
-
-        didSet {
-
-            if let _ = activeRootObj {
-
-                // Switch state from initializing to initialized; notify everyone
-            }
-            else {
-
-                // Switch to permanent error state; don't worry about recovery now
-            }
-        }
-    }
-
 
 
     

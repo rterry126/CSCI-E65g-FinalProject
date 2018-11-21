@@ -20,13 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         print("App Delegate running")
-        // Create connection to Firebase
         
-        _ = FirebaseProxy.db
-        FirebaseProxy.instance.requestInitialize()
+//        FirebaseApp.configure()
+//        // Create connection to Firebase
+//
+//        FirebaseProxy.instance.requestInitialize()
         
-    // Elect leader/Player One
-        FirebaseProxy.electLeader()
+    // Remove this for now as is asynchronous and not sure of sequencing with this and uploading prefs
+        // i.e. player names after document creation...
+        
+        // Elect leader/Player One
+//        FirebaseProxy.electLeader()
         
         
         
