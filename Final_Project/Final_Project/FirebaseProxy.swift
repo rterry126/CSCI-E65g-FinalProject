@@ -229,9 +229,77 @@ class FirebaseProxy {
 
     /************** Inbound Firestore Functions (mostly) ****************/
 
-    static func baseQuery( collection: String, orderBy: String, limit: Int) -> Query {
-        return Firestore.firestore().collection(collection).order(by: orderBy, descending: true ).limit(to: limit)
+//    static func baseQuery( collection: String, orderBy: String, limit: Int) -> Query {
+//        return Firestore.firestore().collection(collection).order(by: orderBy, descending: true ).limit(to: limit)
+//    }
+    
+    private var documents: [DocumentSnapshot] = []
+    
+    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
+    // It automatically updates
+    private var listener : ListenerRegistration!
+    
+    // Set Firestore listener
+    var historyQuery: Query? {
+        didSet {
+            if let listener = listener {
+                listener.remove()
+            }
+        }
     }
+    
+    
+    
+    static func downloadHistory( completion: @escaping ([Game], Error) -> Void) {
+        
+        var resultsArray = [Game]()
+        // Create query.
+        historyQuery = Firestore.firestore().collection("history_test").order(by: "created_at", descending: true ).limit(to: 10)
+        
+//        historyQuery.getDocuments { snapshot, error in
+        listener =  historyQuery?.addSnapshotListener { ( documents, error) in
+            if let error = error {
+                print(error)
+                completion(resultsArray, error)
+                return
+            }
+            for doc in snapshot!.documents {
+                let cat = Cat(snapshot: doc)
+                catArray.append(cat)
+            }
+            completion(catArray, nil)
+        }
+        
+        self.listener =  historyQuery?.addSnapshotListener { ( documents, error) in
+            
+            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
+            guard let snapshot = documents else {
+                print("Error fetching documents results: \(error!)")
+                return
+            }
+            
+            //            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
+            //            let date: Date = timestamp.dateValue()
+            
+            // Basically go through the sequence and pull out the data...
+            let resultsArray = snapshot.documents.map { (document) -> Game in
+                if let game = Game(dictionary: document.data(), id: document.documentID) {
+                    print("History \(game.id) => \(game.playerTwoName )")
+                    return game
+                }
+                else {
+                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+                }
+            }
+            
+            
+        completion(resultsArray, nil)
+        }
+        
+        
+        
+    }
+
 
 
 

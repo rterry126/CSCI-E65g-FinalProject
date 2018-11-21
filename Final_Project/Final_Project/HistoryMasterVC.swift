@@ -28,65 +28,65 @@ class GameHistoryTableViewCell: UITableViewCell {
 //MARK: -
 class HistoryMasterViewController: UIViewController {
     
-    private var documents: [DocumentSnapshot] = []
     public var games: [Game] = []
     
-    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
-    // It automatically updates
-    private var listener : ListenerRegistration!
-    
-    // Set Firestore listener
-    var query: Query? {
-        didSet {
-            if let listener = listener {
-                listener.remove()
-            }
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //navigationItem.leftBarButtonItem = editButtonItem
 
-        // Create query. Fuction has been moved to FirebaseProxy file
-        self.query = FirebaseProxy.baseQuery(collection: "history_test", orderBy: "created_at", limit: 10)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
        
         /**************************************************/
         // TODO - Move to Proxy
-        self.listener =  query?.addSnapshotListener { ( documents, error) in
-            
-            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
-            guard let snapshot = documents else {
-                print("Error fetching documents results: \(error!)")
-                return
-            }
-            
-//            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
-//            let date: Date = timestamp.dateValue()
-            
-            // Basically go through the sequence and pull out the data...
-            let results = snapshot.documents.map { (document) -> Game in
-                if let game = Game(dictionary: document.data(), id: document.documentID) {
-                    print("History \(game.id) => \(game.playerTwoName )")
-                    return game
+        
+        func initializeHistory() {
+//            activityIndicator.startAnimating()
+            FirebaseProxy.downloadHistory() { catArray, error in
+//                self.activityIndicator.stopAnimating()
+                if let error = error {
+                    self.alert(title: "Error", message: error.localizedDescription)
+                    return
                 }
-                else {
-                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
-                }
+                
+                self.games = results
+                // 11/13 - Not sure this does anything. Legacy code from tutorial???
+                //            self.documents = snapshot.documents
+                self.gameHistoryTableView.reloadData()
             }
-            
-            self.games = results
-            
-            // 11/13 - Not sure this does anything. Legacy code from tutorial???
-//            self.documents = snapshot.documents
-            
-            self.gameHistoryTableView.reloadData()
-            
         }
+        
+        
+        
+//        self.listener =  query?.addSnapshotListener { ( documents, error) in
+//
+//            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
+//            guard let snapshot = documents else {
+//                print("Error fetching documents results: \(error!)")
+//                return
+//            }
+//
+////            let timestamp: Timestamp = DocumentSnapshot.get("created_at") as! Timestamp
+////            let date: Date = timestamp.dateValue()
+//
+//            // Basically go through the sequence and pull out the data...
+//            let results = snapshot.documents.map { (document) -> Game in
+//                if let game = Game(dictionary: document.data(), id: document.documentID) {
+//                    print("History \(game.id) => \(game.playerTwoName )")
+//                    return game
+//                }
+//                else {
+//                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+//                }
+//            }
+//
+//
+//
+//        }
         
         /***********************************************/
     }
