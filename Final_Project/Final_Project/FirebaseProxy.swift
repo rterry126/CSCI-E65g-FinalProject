@@ -4,6 +4,10 @@
 //
 //
 //
+// Sources - Closures and @escaping - https://firebase.googleblog.com/2018/07/swift-closures-and-firebase-handling.html
+// Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
+
+
 import Firebase
 
 
@@ -227,7 +231,7 @@ class FirebaseProxy {
 
     
 
-    /************** Inbound Firestore Functions (mostly) ****************/
+    /************** Inbound (mostly) Firestore Functions  ****************/
     
     private var documents: [DocumentSnapshot] = []
     
@@ -259,6 +263,7 @@ class FirebaseProxy {
             guard let snapshot = documents else {
                 if let error = error {
                     print(error)
+                    // Return error to async calling closure in HistoryMasterVC
                     completion(resultsArray, error)
 //                    return
                 }
@@ -274,6 +279,7 @@ class FirebaseProxy {
                         fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
                     }
                 }
+                // Return results to async calling closure in HistoryMasterVC
                 completion(resultsArray, nil)
         }
     }

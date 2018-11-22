@@ -39,13 +39,13 @@ class HistoryMasterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //navigationItem.leftBarButtonItem = editButtonItem
 
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
        
+            // Retrieve data for table asychronously. Reload table when results are returned
             sharedFirebaseProxy.downloadHistory() { resultsArray, error in
                 if let error = error {
                     print("\(error.localizedDescription)")
