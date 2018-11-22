@@ -228,10 +228,6 @@ class FirebaseProxy {
     
 
     /************** Inbound Firestore Functions (mostly) ****************/
-
-//    static func baseQuery( collection: String, orderBy: String, limit: Int) -> Query {
-//        return Firestore.firestore().collection(collection).order(by: orderBy, descending: true ).limit(to: limit)
-//    }
     
     private var documents: [DocumentSnapshot] = []
     
@@ -258,7 +254,6 @@ class FirebaseProxy {
         // Create query.
         historyQuery = Firestore.firestore().collection("history_test").order(by: "created_at", descending: true ).limit(to: 10)
         
-//        historyQuery.getDocuments { snapshot, error in
         /*listener =*/  historyQuery?.addSnapshotListener { ( documents, error) in
             
             guard let snapshot = documents else {
@@ -269,7 +264,6 @@ class FirebaseProxy {
                 }
                 return
             }
-            
                 // Basically go through the sequence and pull out the data...
                 resultsArray = snapshot.documents.map { (document) -> Game in
                     if let game = Game(dictionary: document.data(), id: document.documentID) {
@@ -281,12 +275,6 @@ class FirebaseProxy {
                     }
                 }
                 completion(resultsArray, nil)
-            
         }
-        
     }
-
-
-
-
 }

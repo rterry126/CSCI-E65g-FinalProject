@@ -46,53 +46,20 @@ class HistoryMasterViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
        
-        /**************************************************/
-        // TODO - Move to Proxy
-        
-//        func initializeHistory() {
-//            activityIndicator.startAnimating()
             sharedFirebaseProxy.downloadHistory() { resultsArray, error in
-//                self.activityIndicator.stopAnimating()
                 if let error = error {
                     print("\(error.localizedDescription)")
                     return
                 }
                 
                 self.games = resultsArray
-                // 11/13 - Not sure this does anything. Legacy code from tutorial???
-                //            self.documents = snapshot.documents
                 self.gameHistoryTableView.reloadData()
             }
-//        }
-        
-        
-        
-//        self.listener =  query?.addSnapshotListener { ( documents, error) in
-//
-//            // Robert - 'documents' is an array of DocumentSnapshots (data read from a document in your Firestore database.)
-//            guard let snapshot = documents else {
-//                print("Error fetching documents results: \(error!)")
-//                return
-//            }
-//
 
-//
-//            // Basically go through the sequence and pull out the data...
-//            let results = snapshot.documents.map { (document) -> Game in
-//                if let game = Game(dictionary: document.data(), id: document.documentID) {
-//                    print("History \(game.id) => \(game.playerTwoName )")
-//                    return game
-//                }
-//                else {
-//                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
-//                }
-//            }
-//
-//
-//
-//        }
-        
-        /***********************************************/
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,9 +67,6 @@ class HistoryMasterViewController: UIViewController {
 //        self.listener.remove()
     }
     
-    
-    
-    /******************************************/
     
     let tableSections = 1
     

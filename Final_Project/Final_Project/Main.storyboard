@@ -327,7 +327,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="TKY-0p-qv5">
-                                <rect key="frame" x="0.0" y="109" width="375" height="509"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="historyCell" rowHeight="87" id="ORB-lL-hwv" userLabel="historyCell" customClass="GameHistoryTableViewCell" customModule="Final_Project" customModuleProvider="target">
@@ -419,7 +419,7 @@
                                             <outlet property="playerTwoName" destination="Yor-aJ-I1r" id="3lW-7q-8PT"/>
                                             <outlet property="playerTwoScore" destination="g1n-BQ-ME1" id="0cD-5x-xF3"/>
                                             <outlet property="time" destination="mzi-Vc-mK0" id="Aeb-5V-PnT"/>
-                                            <segue destination="g9f-nM-QNm" kind="showDetail" identifier="segueHistoryDetail" id="Q38-yR-n5c"/>
+                                            <segue destination="g9f-nM-QNm" kind="show" identifier="segueHistoryDetail" id="Q38-yR-n5c"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -428,24 +428,13 @@
                                     <outlet property="delegate" destination="xIt-VK-hfW" id="Eah-Zx-Rv0"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="History" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cdi-pb-UJ1">
-                                <rect key="frame" x="0.0" y="64" width="375" height="45"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="G0n-9v-Pzu"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="1bg-8S-ZWy"/>
-                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="CBI-hs-P1T"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="bottom" secondItem="Kaa-rt-nmk" secondAttribute="bottom" id="9Xu-Da-O1X"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="bottom" secondItem="Kaa-rt-nmk" secondAttribute="bottom" id="KSb-cl-Rx5"/>
+                            <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Kaa-rt-nmk" secondAttribute="top" id="M8i-oH-cic"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="trailing" secondItem="Kaa-rt-nmk" secondAttribute="trailing" id="OZp-cQ-UUL"/>
-                            <constraint firstItem="TKY-0p-qv5" firstAttribute="top" secondItem="Cdi-pb-UJ1" secondAttribute="bottom" id="Sgg-En-H5f"/>
-                            <constraint firstItem="Cdi-pb-UJ1" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="fSx-k3-bKf"/>
                             <constraint firstItem="TKY-0p-qv5" firstAttribute="leading" secondItem="Kaa-rt-nmk" secondAttribute="leading" id="sSw-D9-lic"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Kaa-rt-nmk"/>
@@ -463,19 +452,19 @@
         <!--HistoryDetailVC-->
         <scene sceneID="JDL-nk-lM9">
             <objects>
-                <viewController id="g9f-nM-QNm" userLabel="HistoryDetailVC" customClass="HistoryDetailVC" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="History Detail" id="g9f-nM-QNm" userLabel="HistoryDetailVC" customClass="HistoryDetailVC" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gVb-Jv-HI2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ns0-1d-h9i">
-                                <rect key="frame" x="166" y="123" width="42" height="21"/>
+                                <rect key="frame" x="166" y="167" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Static Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTS-OO-6Jh">
-                                <rect key="frame" x="100" y="280" width="175" height="21"/>
+                                <rect key="frame" x="100" y="324" width="175" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -493,7 +482,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="dF6-uK-srq"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail" id="zBg-Wn-lUB">
+                    <navigationItem key="navigationItem" title="History Detail" id="zBg-Wn-lUB">
                         <barButtonItem key="backBarButtonItem" title="Back" id="A8B-Rq-Sut"/>
                     </navigationItem>
                     <connections>
