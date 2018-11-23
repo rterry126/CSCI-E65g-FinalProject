@@ -290,11 +290,15 @@ class FirebaseProxy {
         
         let resizedImage = resizeImage(image: image, newWidth: 80.0)
         let imageData = resizedImage.pngData()
+        var docData = [String: Data]()
         
-        let docData: [String: Any] = [
-            "gameBoardView": imageData
-        ]
+        // TODO: - Since this is unwrapped, only try to store it below if the unwrapping was successful.
+        // Might have to move storing into the 'if let' statement.
         
+        // Will address later when this is moved into the storing of entire history.
+        if let imageToStore = imageData {
+            docData = ["gameBoardView": imageToStore]
+        }
         
         // Update one field, creating the document if it does not exist.
         Firestore.firestore().collection("history_test").document("WOqD3gIpLTBn0pxljXqJ").setData(docData, merge: true) { err in
