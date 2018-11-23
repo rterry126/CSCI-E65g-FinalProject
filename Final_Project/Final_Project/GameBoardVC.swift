@@ -113,6 +113,11 @@ class GameBoardVC: UIViewController {
         return GamePrefModel.instance
     }()
     
+    var sharedFirebaseProxy: FirebaseProxy = {
+        print("GameBoardVC ==> FirebaseProxy: get Singleton")
+        return FirebaseProxy.instance
+    }()
+    
     
     
     
@@ -273,6 +278,13 @@ extension GameBoardVC: GameLogicModelObserver {
             print("End of game. Deleting saved game state \(modelGameLogic)")
             
             try Persistence.deleteSavedGame()
+            
+            // Get image of gameboard
+            //TODO: Force unwrapping now just to test
+            let image = gameView!.asImage()
+            sharedFirebaseProxy.storeGameBoardImage(image: image)
+            
+            
         }
         catch let e {
             print("Deleting previous game failed: \(e)")
@@ -375,7 +387,7 @@ extension GameBoardVC {
         let gameView = GameBoardView() // Object palette
         
         // Disable inputs on startup
-        gameView.isUserInteractionEnabled = false
+//        gameView.isUserInteractionEnabled = false
         
         
         // Initialize the game state label

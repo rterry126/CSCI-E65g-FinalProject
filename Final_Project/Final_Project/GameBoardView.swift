@@ -16,6 +16,8 @@
 
 // Sources - gesture recognizers - https://guides.codepath.com/ios/Using-Gesture-Recognizers
 
+//Sources - get image from UIView - https://stackoverflow.com/questions/30696307/how-to-convert-a-uiview-to-an-image
+
 import UIKit
 
 @IBDesignable
@@ -231,5 +233,18 @@ class GameBoardView: UIView, GameGridViewProtocol {
         // Robert - so this just gives us locations relative to the custom view
         self.addGestureRecognizer(tapRecognizer)
         
+    }
+}
+
+// Added to create image from game board state
+extension UIView {
+    
+    // Using a function since `var image` might conflict with an existing variable
+    // (like on `UIImageView`)
+    func asImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        return renderer.image { rendererContext in
+            layer.render(in: rendererContext.cgContext)
+        }
     }
 }

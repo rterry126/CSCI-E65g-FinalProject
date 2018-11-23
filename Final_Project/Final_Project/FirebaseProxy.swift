@@ -280,7 +280,51 @@ class FirebaseProxy {
                     }
                 }
                 // Return results to async calling closure in HistoryMasterVC
+                print("results array size is \(resultsArray.count)")
                 completion(resultsArray, nil)
         }
     }
+    
+    /************** Outbound (mostly) Firestore Functions  ****************/
+    func storeGameBoardImage(image: UIImage) {
+        
+        let resizedImage = resizeImage(image: image, newWidth: 80.0)
+        let imageData = resizedImage.pngData()
+        
+        let docData: [String: Any] = [
+            "gameBoardView": imageData
+        ]
+        
+        
+        // Update one field, creating the document if it does not exist.
+        Firestore.firestore().collection("history_test").document("WOqD3gIpLTBn0pxljXqJ").setData(docData, merge: true) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            }
+            else {
+                print("Document successfully written!")
+            }
+        }
+    }
+    
+    
 }
+
+
+// Put in helper functions eventually
+
+func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+    
+    let scale = newWidth / image.size.width
+    let newHeight = image.size.height * scale
+    UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+    image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    //TODO: Remove optional
+    return newImage!
+    
+}
+
+
+

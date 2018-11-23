@@ -21,6 +21,7 @@ class GameHistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var playerTwoName: UILabel!
     @IBOutlet weak var playerOneScore: UILabel!
     @IBOutlet weak var playerTwoScore: UILabel!
+    @IBOutlet weak var gameView: UIImageView!
     
 }
 
@@ -141,6 +142,10 @@ extension HistoryMasterViewController: UITableViewDataSource {
         dateFormatter.dateFormat = "MM/dd/yy"
         timeFormatter.dateFormat = "HH:mm"
         
+        let image = UIImage(data: singleGame.gameBoardView)
+        print("image converted from data downloaded")
+        
+        
         // 3) Populate the cell
         
         // Firestore stores as a 'Timestamp'. Game date/time is stored in model as type 'Any' so
@@ -156,6 +161,7 @@ extension HistoryMasterViewController: UITableViewDataSource {
         cell.playerOneScore.text = singleGame.playerOneScore.description
         cell.playerTwoName.text = singleGame.playerTwoName
         cell.playerTwoScore.text = singleGame.playerTwoScore.description
+        cell.gameView.image = image
 
 
         // Return it to iOS to render
