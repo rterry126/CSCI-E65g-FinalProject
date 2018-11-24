@@ -66,6 +66,28 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
+    @objc func stateWaitingForUserMove() {
+        
+        StateMachine.state = .waitingForUserMMove
+        Util.log("Entered func stateWaitingForUseMove")
+        Util.log("Machine state is \(StateMachine.state.rawValue)")
+        
+        // Probably don't need to disable AND hide...
+        newGameButtonOutlet.isEnabled = false
+        newGameButtonOutlet.isHidden = true
+        
+        // Allow inputs
+        // Disable inputs
+        gameView?.isUserInteractionEnabled = true
+        
+        //Start move timers
+        //(timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+
+        
+    }
+    
+    
+    
     //    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
     //
     //        if let info = notification.userInfo as? Dictionary<String,Int> {

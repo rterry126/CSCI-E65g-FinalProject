@@ -45,6 +45,9 @@ class GameBoardVC: UIViewController {
     
     @IBAction func newGameButton(_ sender: UIButton) {
         
+        // Instead of hard wiring to single function just post notification that button was pressed. May need multiple responses
+        NotificationCenter.default.post(name: .waitingForUserMove , object: self)
+        
     }
     
     
@@ -83,7 +86,8 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame))]
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame)),
+                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel))]
     
     
     //MARK: - Init()
@@ -214,8 +218,9 @@ extension GameBoardVC: GameLogicModelObserver {
         // 3. Player does NOT make move in time. This functions is triggered by timerMove. Both
         // timers are invalid so code below does nothing.
         
-        timerMove.invalidate()
-        timerWarning.invalidate()
+        // Commented out 11/24 while building state machine
+//        timerMove.invalidate()
+//        timerWarning.invalidate()
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
@@ -229,7 +234,9 @@ extension GameBoardVC: GameLogicModelObserver {
         // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
         // cleaner
         
-        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        // Commented out 11/24 while building state machine
+
+//        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -272,14 +279,6 @@ extension GameBoardVC: GameLogicModelObserver {
             Util.log("Deleting previous game failed: \(e)")
         }
         
-        func startGame() {
-            
-            // 1) enable board
-            
-            
-            
-            (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
-        }
         
         
         // Play again?

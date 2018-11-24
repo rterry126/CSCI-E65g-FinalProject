@@ -21,6 +21,7 @@ extension Notification.Name {
     static let stateChanged = NSNotification.Name("stateChanged")
     
     static let readyForGame = NSNotification.Name("readyForGame")
+    static let waitingForUserMove = NSNotification.Name("waitingForUserMove")
 
     
     
