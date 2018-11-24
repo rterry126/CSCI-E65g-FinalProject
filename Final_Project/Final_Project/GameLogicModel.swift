@@ -201,8 +201,14 @@ extension GameLogicModel: GameLogicModelProtocol {
             throw GameLogicError.gridOccupied
         }
         
-        // Normal case
+        // Normal case - valid move
         
+        // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self)
+        
+        
+        // 11/24 Since move is valid  we send to the cloud. ONLY after confirmation from the cloud
+        // do we do updating below...
         _gameBoard[coordinates.row][coordinates.column] = ID
         
         

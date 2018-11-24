@@ -22,6 +22,9 @@ extension Notification.Name {
     
     static let readyForGame = NSNotification.Name("readyForGame")
     static let waitingForUserMove = NSNotification.Name("waitingForUserMove")
+    // Valid move -  square clicked, delegate from view called executeMove
+    static let executeMoveCalled = NSNotification.Name("executeMoveCalled")
+
 
     
     
