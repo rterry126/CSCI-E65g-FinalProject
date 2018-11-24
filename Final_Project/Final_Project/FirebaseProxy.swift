@@ -32,7 +32,7 @@ class FirebaseProxy {
         
         db.settings = settings
         
-        print("Private Firebase variable set")
+        Util.log("Private Firebase variable set")
         return db
     }()
 
@@ -40,7 +40,7 @@ class FirebaseProxy {
     
     static var db: Firestore {
         get {
-            print("Firebase Proxy --> db handle created")
+            Util.log("Firebase Proxy --> db handle created")
             return self._db
         }
     }
@@ -87,9 +87,12 @@ class FirebaseProxy {
 
     }
     
-    func requestInitialize() {
+    // Async closure so call completion handler when done to continue
+    func requestInitialize(completion: @escaping () -> Void) {
         
-        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
+//        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
+        let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
+
         
         rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
             
@@ -101,16 +104,18 @@ class FirebaseProxy {
                 
                 self.activeRootObj = nil // see didSet observer for handling
                 
+                completion() // Should we throw a fatal error above??
                 return
                 
             }
             
             let rootID: String = rootObjSnapshot.documentID
-            print("FirebaseProxy --> Root ID is \(rootID)")
+            Util.log("FirebaseProxy --> Root ID is \(rootID)")
             
             // Take an active game reference and turn it into the actual data
             
             self.activeRootObj = rootCollectionRef.document(rootID)
+            completion()
             
         }
     }
@@ -124,7 +129,7 @@ class FirebaseProxy {
                     let mergeFields = ["playerOneName", "playerTwoName"]
                     activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
                     
-                    print("activeRootObj didSet run")
+                    Util.log("activeRootObj didSet run")
                     
                     // Set preferences
     

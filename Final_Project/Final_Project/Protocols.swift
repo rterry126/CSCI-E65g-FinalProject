@@ -35,9 +35,12 @@ protocol GamePrefModelObserver: class {
     func colorsChanged()
 }
 
-protocol GameStateMachineObserver: class {
+protocol GameStateMachine: class {
     
-    func getDatabaseHandle(notification : NSNotification) -> Firestore
+//    func getDatabaseHandle(notification : NSNotification) -> Firestore
+    
+    func stateInitializing() 
+
 }
 
 

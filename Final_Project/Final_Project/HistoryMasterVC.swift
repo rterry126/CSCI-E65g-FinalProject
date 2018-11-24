@@ -32,7 +32,7 @@ class HistoryMasterViewController: UIViewController {
     public var games: [Game] = []
     
     var sharedFirebaseProxy: FirebaseProxy = {
-        print("HistoryMasterVC ==> FirebaseProxy: get Singleton")
+        Util.log("HistoryMasterVC ==> FirebaseProxy: get Singleton")
         return FirebaseProxy.instance
     }()
     
@@ -49,7 +49,7 @@ class HistoryMasterViewController: UIViewController {
             // Retrieve data for table asychronously. Reload table when results are returned
             sharedFirebaseProxy.downloadHistory() { resultsArray, error in
                 if let error = error {
-                    print("\(error.localizedDescription)")
+                    Util.log("\(error.localizedDescription)")
                     return
                 }
                 

@@ -38,6 +38,8 @@
 		E1B00ADA218E4A8B0032A66E /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */; };
 		E1B00ADB218E4A8B0032A66E /* GameBoardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */; };
 		E1D832A921A0D8AE00ED51DB /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D832A821A0D8AD00ED51DB /* StateMachine.swift */; };
+		E1D832AB21A9B58F00ED51DB /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D832AA21A9B58F00ED51DB /* Util.swift */; };
+		E1D832AD21A9B93600ED51DB /* GameBoardVCExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +77,8 @@
 		E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardVC.swift; sourceTree = "<group>"; };
 		E1D832A821A0D8AD00ED51DB /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = "/Users/robert/Desktop/e65g/final-project-rterry126/Final_Project/Final_Project/StateMachine.swift"; sourceTree = "<absolute>"; };
+		E1D832AA21A9B58F00ED51DB /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardVCExtensions.swift; sourceTree = "<group>"; };
 		FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,6 +136,7 @@
 				E157847921977DF400F142CA /* FirebaseProxy.swift */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
 				E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */,
+				E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */,
 				E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */,
 				E1578475219769A900F142CA /* HistoryMasterVC.swift */,
 				E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */,
@@ -151,6 +156,7 @@
 				E1D832A821A0D8AD00ED51DB /* StateMachine.swift */,
 				E1B00AC2218E4A8B0032A66E /* SharedAndHelpers.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
+				E1D832AA21A9B58F00ED51DB /* Util.swift */,
 				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
 			);
 			path = Final_Project;
@@ -321,8 +327,10 @@
 				E1B00AD1218E4A8B0032A66E /* ColorBarView.swift in Sources */,
 				E1462B05219B1550002BFFED /* Factory.swift in Sources */,
 				E1B00AD3218E4A8B0032A66E /* Pixel.swift in Sources */,
+				E1D832AB21A9B58F00ED51DB /* Util.swift in Sources */,
 				E1B00ACC218E4A8B0032A66E /* Protocols.swift in Sources */,
 				E1B00ACB218E4A8B0032A66E /* Delegates.swift in Sources */,
+				E1D832AD21A9B93600ED51DB /* GameBoardVCExtensions.swift in Sources */,
 				E1B00AD9218E4A8B0032A66E /* GameLogicModel.swift in Sources */,
 				E1B00ACE218E4A8B0032A66E /* ColorPickerView.swift in Sources */,
 				E1B00ACA218E4A8B0032A66E /* Persistence.swift in Sources */,

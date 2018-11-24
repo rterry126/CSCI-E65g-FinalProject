@@ -22,7 +22,7 @@ class StateMachine: StateMachineProtocol {
     static var state: State = .uninitialized {
         didSet {
             
-            print("State changed --> \(self.state)")
+            Util.log("state variable didSet to  --> \(self.state)")
             
             NotificationCenter.default.post(name: .stateChanged, object: self, userInfo: ["state": StateMachine.State.RawValue()])
             

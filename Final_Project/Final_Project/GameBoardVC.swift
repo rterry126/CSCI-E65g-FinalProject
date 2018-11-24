@@ -63,7 +63,7 @@ class GameBoardVC: UIViewController {
     let timeToMakeMove = 5.0
     
 //    // Get handle to this later in the 'initializing' state
-    var fireStoreDB: Firestore
+//    var fireStoreDB: Firestore
     
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
@@ -88,14 +88,6 @@ class GameBoardVC: UIViewController {
         self.numOfGridRows = modelGamePrefs.numRows
         self.numOfGridColumns = modelGamePrefs.numColumns
         
-        //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
-        // VC has loaded so we change state to 2 - initializing
-        StateMachine.state = .initializing
-        print("View Controller initializing")
-        
-        // This doesn't really do anything???
-        fireStoreDB = FirebaseProxy.db // Get handle to our database
-        FirebaseProxy.instance.requestInitialize()
         
         super.init(coder: aDecoder)
         
@@ -109,12 +101,12 @@ class GameBoardVC: UIViewController {
     var modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
     
     var modelGamePrefs: GamePrefModelProtocol = {
-        print("Controller ==> Preferences Model: instantiate")
+        Util.log("GameBoardVC ==> Preferences Model: instantiate")
         return GamePrefModel.instance
     }()
     
     var sharedFirebaseProxy: FirebaseProxy = {
-        print("GameBoardVC ==> FirebaseProxy: get Singleton")
+        Util.log("GameBoardVC ==> FirebaseProxy: get Singleton")
         return FirebaseProxy.instance
     }()
     
@@ -175,7 +167,7 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     
     DispatchQueue.global(qos: .background).async {
         
-        print("Saving after each turn \(modelGameLogic)")
+        Util.log("Saving game after each turn \(modelGameLogic)")
         //Returns an optional
         if let data = modelGameLogic.toJSONData() {
             
@@ -184,37 +176,18 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
                 try Persistence.save(data)
             }
             catch let e {
-                print("Sving failed: \(e)")
+                Util.log("Saving game failed: \(e)")
             }
         }
         else {
-            print("Unable to save state after this turn.")
+            Util.log("Unable to save game after this turn.")
         }
     }
 }
 
 
 
-//MARK: - GameStateMachineObserver extension
-//extension GameBoardVC: GameStateMachineObserver {
 
-//    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
-//
-//        if let info = notification.userInfo as? Dictionary<String,Int> {
-//            // Check if value present before using it
-//            if let s = info["state"] {
-//                print(s)
-//                if s == 2 { // If we are in initializing state then get handle to Firestore
-//                    fireStoreDB = FirebaseProxy.db
-//                }
-//            }
-//        }
-//        else {
-//            print("no value for key\n")
-//        }
-//        return fireStoreDB
-//    }
-//}
 
 
 //MARK: - GameLogicModel Observer extension
@@ -237,7 +210,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
-        print("Model ==> Controller: successful move executed:")
+        Util.log("GameModel ==> GameBoardVC: successful move executed:")
         
         // First increment count. If moves are remaining then a observer to update the player will be called
         // Otherwise, if last move, a observer to execute end of game routines will be called
@@ -275,7 +248,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // Delete saved game, otherwise we are in a loop that just fetches saved game
         do {
-            print("End of game. Deleting saved game state \(modelGameLogic)")
+            Util.log("End of game. Deleting saved game state \(modelGameLogic)")
             
             try Persistence.deleteSavedGame()
             
@@ -287,7 +260,16 @@ extension GameBoardVC: GameLogicModelObserver {
             
         }
         catch let e {
-            print("Deleting previous game failed: \(e)")
+            Util.log("Deleting previous game failed: \(e)")
+        }
+        
+        func startGame() {
+            
+            // 1) enable board
+            
+            
+            
+            (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
         }
         
         
@@ -358,6 +340,9 @@ extension GameBoardVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        stateInitializing()
+
+        
       
         // Below commented on 11/9 when implementing singleton pattern
 //        do {
@@ -386,8 +371,7 @@ extension GameBoardVC {
         // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
         let gameView = GameBoardView() // Object palette
         
-        // Disable inputs on startup
-//        gameView.isUserInteractionEnabled = false
+        
         
         
         // Initialize the game state label
@@ -396,9 +380,9 @@ extension GameBoardVC {
         
         
         gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 ) // Autolayout
-        print("About to add gameView")
+        
         view.addSubview(gameView) // View hierarchy
-        print("Done adding gameView")
+        Util.log("Added custom view - gameView")
         
         self.gameView = gameView
         
@@ -438,8 +422,7 @@ extension GameBoardVC {
         // Initialize state of board - colors, game status, etc
         updateUI()
         
-        // TODO: - This is initial timer creation. Should be put in a 'Start Game' function at some point.
-        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
+        
 
     }
     
@@ -463,7 +446,7 @@ extension GameBoardVC {
     
     // @objc required because this is passed to #selector
     @objc func timerFired() {
-        print("played times up tone")
+        Util.log("played times up tone")
         self.successfulBoardMove()
         
     }
