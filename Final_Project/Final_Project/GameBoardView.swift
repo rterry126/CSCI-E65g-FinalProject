@@ -76,6 +76,9 @@ class GameBoardView: UIView, GameGridViewProtocol {
         // Make view clear, in case that the grid doesn't take up whole view.
         backgroundColor = UIColor.clear
         
+        //Default start state of game view should be non-interactive
+        self.isUserInteractionEnabled = false
+        
     }
     
     override init(frame: CGRect) {
