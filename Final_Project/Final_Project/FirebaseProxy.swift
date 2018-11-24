@@ -13,6 +13,12 @@ import Firebase
 
 class FirebaseProxy {
     
+    // Use this for now but would eventually like to pass preferences in via VC
+    var modelGamePrefs: GamePrefModelProtocol = {
+        Util.log("FirebaseProxy ==> Preferences Model: instantiate")
+        return GamePrefModel.instance
+    }()
+    
     static let instance = FirebaseProxy()
     private init() {}
     
@@ -125,11 +131,13 @@ class FirebaseProxy {
             didSet {
     
                 if let _ = activeRootObj {
-                    let documentData = ["playerOneName": "Sammy", "playerTwoName": "Joanna"]
+                    
+                    // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
+                    let documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName]
                     let mergeFields = ["playerOneName", "playerTwoName"]
                     activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
                     
-                    Util.log("activeRootObj didSet run")
+                    Util.log("activeRootObj didSet run, preferences loaded into Firebase")
                     
                     // Set preferences
     
