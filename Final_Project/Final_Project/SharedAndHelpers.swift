@@ -76,6 +76,9 @@ enum GridState: String, CaseIterable, Codable {
 
 enum GameState: String, CaseIterable, Codable {
     
+    case welcome = "Welcome"
+    case initializing = "Initializing"
+    case readyForGame = "Ready for Game"
     case ongoing = "Ongoing"
     case completedDraw = "Completed - Draw"
     case completedOne = "Completed - Player One wins"

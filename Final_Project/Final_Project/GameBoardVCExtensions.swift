@@ -17,6 +17,8 @@ extension GameBoardVC: GameStateMachine {
         
         activityIndicator.startAnimating()
         
+        modelGameLogic.gameState = .initializing
+        
         //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
         // VC has loaded so we change state to 2 - initializing
         StateMachine.state = .initializing
@@ -36,10 +38,30 @@ extension GameBoardVC: GameStateMachine {
     }
     
     @objc func stateReadyForGame() {
-        
-        self.activityIndicator.stopAnimating()
 
         Util.log("function stateReadyForGame triggered via listener")
+        Util.log("Ready for Game") // Eventually change the label I haven't created to show this...
+        
+        self.activityIndicator.stopAnimating()
+        // Button is deactivated and hidden via the storyboard setup.
+        newGameButtonOutlet.isEnabled = true
+        newGameButtonOutlet.isHidden = false
+        
+        //Clear in memory cache
+        // Doubt this is needed for initial first time run, as model is initialed from scratch, but
+        // keep for now.
+//        modelGameLogic.resetModel()
+        
+        Util.log("Waiting for New Game button press")
+        Util.log("Machine state is \(StateMachine.state.rawValue)")
+
+    }
+    
+    // As game state changes through initialization AND play, listener will modify the text field
+    @objc func updateGameStateLabel() {
+        
+        // Update game state text field.
+        textGameStatus.text = modelGameLogic.gameState.rawValue
         
     }
     

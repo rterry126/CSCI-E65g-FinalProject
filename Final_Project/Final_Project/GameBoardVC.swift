@@ -41,6 +41,12 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var textGameStatus: UILabel!
     @IBOutlet weak var textGameName: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var newGameButtonOutlet: UIButton!
+    
+    @IBAction func newGameButton(_ sender: UIButton) {
+        
+    }
+    
     
     
     // Taken from class code example. Create our custom view
@@ -71,7 +77,8 @@ class GameBoardVC: UIViewController {
     // 'listenerArray' is type alias
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
-                                             (.gameState, #selector(endOfGame)),(.moveExecuted, #selector(successfulBoardMove))]
+                                             (.gameState, #selector(endOfGame)),(.gameState, #selector(updateGameStateLabel)),
+                                             (.moveExecuted, #selector(successfulBoardMove))]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
@@ -151,7 +158,8 @@ class GameBoardVC: UIViewController {
         textPlayer2.text = modelGamePrefs.playerTwoName
         
         // Update game state text field.
-        textGameStatus.text = modelGameLogic.gameState.rawValue
+        // This is now in it's own function called by a listener
+//        textGameStatus.text = modelGameLogic.gameState.rawValue
         
         // Update game name
         textGameName.text = modelGamePrefs.gameName

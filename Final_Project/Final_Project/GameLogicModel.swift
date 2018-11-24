@@ -76,7 +76,8 @@ class GameLogicModel: NSObject, Codable {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _totalTurns = 0
         _whoseTurn = GridState.playerOne
-        _gameState = GameState.ongoing
+        _gameState = GameState.welcome
+        
         super.init()
     }
     
@@ -142,7 +143,7 @@ class GameLogicModel: NSObject, Codable {
     // When game starts the state is .ongoing, however if state changes notification should happen
     private var _gameState: GameState {
         didSet {
-            print("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
+            Util.log("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
             NotificationCenter.default.post(name: .gameState, object: self)
 
         }
@@ -228,6 +229,30 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
+    func resetModel() {
+        
+        //Board Size, retrieve from preferences
+        // Returns 0 if key is non-existent
+        // Sets to default value stored in enum if key is non existent
+        var _numRows = defaults.integer(forKey: "\(PrefKeys.BoardSize.rows)")
+        if _numRows == 0 {
+            _numRows = PrefKeys.BoardSize.rows.rawValue
+        }
+        
+        var _numColumns = defaults.integer(forKey: "\(PrefKeys.BoardSize.columns)")
+        if _numColumns == 0 {
+            _numColumns = PrefKeys.BoardSize.columns.rawValue
+        }
+        
+        _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
+        _totalTurns = 0
+        _whoseTurn = GridState.playerOne
+        _gameState = GameState.ongoing
+        
+        Util.log("Model has been reset")
+        
+    }
+    
     // Called by .executiveMove. Needs to know whose turn it is...
     var whoseTurn:GridState {
         get {
@@ -238,6 +263,9 @@ extension GameLogicModel: GameLogicModelProtocol {
     var gameState: GameState {
         get {
             return _gameState
+        }
+        set {
+            _gameState = newValue
         }
     }
 }

@@ -53,16 +53,26 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ohF-vU-2RU">
                                 <rect key="frame" x="177.5" y="493" width="20" height="20"/>
                             </activityIndicatorView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ycv-Ta-BxU">
+                                <rect key="frame" x="150" y="488" width="75" height="30"/>
+                                <state key="normal" title="New Game"/>
+                                <connections>
+                                    <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7h2-fY-Mhh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cCr-qn-d4a" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="2nU-ke-WBZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7zv-oR-2Ia" secondAttribute="trailing" constant="8" id="7PG-gx-OHT"/>
                             <constraint firstItem="S8K-8s-rTw" firstAttribute="centerY" secondItem="wra-gC-ZpN" secondAttribute="centerY" id="D8V-Q9-nu1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ycv-Ta-BxU" secondAttribute="trailing" constant="150" id="JcY-6B-quP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="cCr-qn-d4a" secondAttribute="bottom" constant="40" id="Nj2-iL-sKg"/>
+                            <constraint firstItem="Ycv-Ta-BxU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="150" id="PL1-xR-qqH"/>
                             <constraint firstItem="7zv-oR-2Ia" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="QkX-3u-feA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="wra-gC-ZpN" secondAttribute="trailing" constant="50" id="W9b-1y-Tta"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wra-gC-ZpN" secondAttribute="bottom" constant="20" id="ZY9-aV-LKt"/>
+                            <constraint firstItem="fbC-Sy-f46" firstAttribute="top" secondItem="Ycv-Ta-BxU" secondAttribute="bottom" constant="10" id="cG8-7M-roX"/>
                             <constraint firstItem="fbC-Sy-f46" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="gqX-HS-fn5"/>
                             <constraint firstItem="ohF-vU-2RU" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="iuM-5Z-YSm"/>
                             <constraint firstItem="fbC-Sy-f46" firstAttribute="top" secondItem="ohF-vU-2RU" secondAttribute="bottom" constant="15" id="jQy-6c-y3e"/>
@@ -81,6 +91,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="ohF-vU-2RU" id="bev-a5-1V8"/>
+                        <outlet property="newGameButtonOutlet" destination="Ycv-Ta-BxU" id="i6U-1h-Yrm"/>
                         <outlet property="textGameName" destination="7zv-oR-2Ia" id="kYt-qR-n33"/>
                         <outlet property="textGameStatus" destination="cCr-qn-d4a" id="uWe-Pf-yB6"/>
                         <outlet property="textPlayer1" destination="wra-gC-ZpN" id="OXF-SQ-G6h"/>
