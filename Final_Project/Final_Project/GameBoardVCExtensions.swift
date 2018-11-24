@@ -29,11 +29,11 @@ extension GameBoardVC: GameStateMachine {
         //        fireStoreDB = FirebaseProxy.db // Get handle to our database
         
         // TODO: - I don't think this needs to be in a completion handler. The next state is called asynchronously and this doesn't do anything.
-        FirebaseProxy.instance.requestInitialize() {
-            Util.log("Initialization Completion handler called. ")
-//            sleep(5)
-//            self.activityIndicator.stopAnimating() // This is moved to state 3
-        }
+        FirebaseProxy.instance.requestInitialize() //{
+//            Util.log("Initialization Completion handler called. ")
+////            sleep(5)
+////            self.activityIndicator.stopAnimating() // This is moved to state 3
+//        }
         
         
     }

@@ -100,7 +100,7 @@ class FirebaseProxy {
     }
     
     // Async closure so call completion handler when done to continue
-    func requestInitialize(completion: @escaping () -> Void) {
+    func requestInitialize() {
         
 //        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
@@ -116,7 +116,7 @@ class FirebaseProxy {
                 
                 self.activeRootObj = nil // see didSet observer for handling
                 
-                completion() // Should we throw a fatal error above??
+                
                 return
                 
             }
@@ -127,7 +127,7 @@ class FirebaseProxy {
             // Take an active game reference and turn it into the actual data
             
             self.activeRootObj = rootCollectionRef.document(rootID)
-            completion()
+           
             
         }
     }
