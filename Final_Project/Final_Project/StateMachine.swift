@@ -24,20 +24,20 @@ class StateMachine: StateMachineProtocol {
             
             Util.log("state variable didSet to  --> \(self.state)")
             
-            NotificationCenter.default.post(name: .stateChanged, object: self, userInfo: ["state": StateMachine.State.RawValue()])
+            NotificationCenter.default.post(name: .stateChanged, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
             
         }
     }
     
-    enum State: Int {
+    enum State: String {
         
-        case uninitialized = 1 // Set first state as '1' to match up with lecture docs
-        case initializing
-        case readyForGame
-        case waitingForUserMMove
-        case waitingForMoveConfirmation
-        case waitingForOpponentMove
-        case gameOver
+        case uninitialized = "Welcome"
+        case initializing = "Initializing"
+        case readyForGame = "Ready for game"
+        case waitingForUserMMove = "Ready for Your Move"
+        case waitingForMoveConfirmation = "Waiting for confirmation of Your move"
+        case waitingForOpponentMove = "Waiting for opponent's move"
+        case gameOver = "Game Over"
         
         
     }

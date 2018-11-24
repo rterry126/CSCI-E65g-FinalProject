@@ -76,7 +76,7 @@ class GameLogicModel: NSObject, Codable {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _totalTurns = 0
         _whoseTurn = GridState.playerOne
-        _gameState = GameState.welcome
+        _gameState = GameState.ongoing
         
         super.init()
     }
@@ -264,8 +264,6 @@ extension GameLogicModel: GameLogicModelProtocol {
         get {
             return _gameState
         }
-        set {
-            _gameState = newValue
-        }
+        
     }
 }

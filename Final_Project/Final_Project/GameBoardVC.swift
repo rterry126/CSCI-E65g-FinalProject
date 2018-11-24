@@ -74,16 +74,16 @@ class GameBoardVC: UIViewController {
     
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
-    // 'listenerArray' is type alias
+    // 'observerArray' is type alias
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
-                                             (.gameState, #selector(endOfGame)),(.gameState, #selector(updateGameStateLabel)),
+                                             (.gameState, #selector(endOfGame)),
                                              (.moveExecuted, #selector(successfulBoardMove))]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.readyForGame, #selector(stateReadyForGame))]
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame))]
     
     
     //MARK: - Init()
@@ -387,7 +387,7 @@ extension GameBoardVC {
         
         
         // Initialize the game state label
-        textGameStatus.text = modelGameLogic.gameState.rawValue
+        textGameStatus.text = StateMachine.state.rawValue
         
         
         

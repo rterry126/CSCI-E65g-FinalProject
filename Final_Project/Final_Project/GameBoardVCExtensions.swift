@@ -17,8 +17,6 @@ extension GameBoardVC: GameStateMachine {
         
         activityIndicator.startAnimating()
         
-        modelGameLogic.gameState = .initializing
-        
         //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
         // VC has loaded so we change state to 2 - initializing
         StateMachine.state = .initializing
@@ -61,7 +59,7 @@ extension GameBoardVC: GameStateMachine {
     @objc func updateGameStateLabel() {
         
         // Update game state text field.
-        textGameStatus.text = modelGameLogic.gameState.rawValue
+        textGameStatus.text = StateMachine.state.rawValue
         
     }
     
