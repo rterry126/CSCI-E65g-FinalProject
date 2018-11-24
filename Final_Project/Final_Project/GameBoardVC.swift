@@ -76,7 +76,7 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-//    var observerStateMachine: observerArray = [(.stateChanged, #selector(getDatabaseHandle(notification:)))]
+    var observerStateMachine: observerArray = [(.readyForGame, #selector(stateReadyForGame))]
     
     
     //MARK: - Init()
@@ -340,6 +340,9 @@ extension GameBoardVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Pass our state observers and selectors to our factory function to create the observers
+        Factory.createObserver(observer: self, listeners: observerStateMachine)
         
         stateInitializing()
 

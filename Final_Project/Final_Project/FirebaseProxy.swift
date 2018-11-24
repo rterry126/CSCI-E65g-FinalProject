@@ -7,7 +7,7 @@
 // Sources - Closures and @escaping - https://firebase.googleblog.com/2018/07/swift-closures-and-firebase-handling.html
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 
-
+import Foundation  // needed for notification center
 import Firebase
 
 
@@ -18,6 +18,12 @@ class FirebaseProxy {
         Util.log("FirebaseProxy ==> Preferences Model: instantiate")
         return GamePrefModel.instance
     }()
+    
+    // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
+    
+    // Set preferences
+    lazy var documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName]
+    let mergeFields = ["playerOneName", "playerTwoName"]
     
     static let instance = FirebaseProxy()
     private init() {}
@@ -132,16 +138,22 @@ class FirebaseProxy {
     
                 if let _ = activeRootObj {
                     
-                    // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
-                    let documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName]
-                    let mergeFields = ["playerOneName", "playerTwoName"]
+                    
                     activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
                     
                     Util.log("activeRootObj didSet run, preferences loaded into Firebase")
                     
-                    // Set preferences
+                    
     
                     // Switch state from initializing to initialized; notify everyone
+                    StateMachine.state = .readyForGame
+                    // I.e. a listener should trigger the stateReadyForGame function????
+                    
+                    // Can either put notifications at each state change OR attach to the enum 'state'
+                    // Attaching to the enum means that we would have to also post which state it was changed to. This might be easier
+                    // for now....
+                    NotificationCenter.default.post(name: .readyForGame, object: self)
+                    
                 }
                 else {
     

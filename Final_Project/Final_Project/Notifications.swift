@@ -19,6 +19,11 @@ extension Notification.Name {
     static let namesChanged = NSNotification.Name("namesChanged")
     static let colorsChanged = NSNotification.Name("colorsChanged")
     static let stateChanged = NSNotification.Name("stateChanged")
+    
+    static let readyForGame = NSNotification.Name("readyForGame")
+
+    
+    
 
 
 

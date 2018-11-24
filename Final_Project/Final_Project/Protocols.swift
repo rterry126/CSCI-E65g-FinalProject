@@ -39,7 +39,8 @@ protocol GameStateMachine: class {
     
 //    func getDatabaseHandle(notification : NSNotification) -> Firestore
     
-    func stateInitializing() 
+    func stateInitializing()
+    func stateReadyForGame()
 
 }
 
