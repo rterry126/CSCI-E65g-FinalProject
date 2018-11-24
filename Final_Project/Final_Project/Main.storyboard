@@ -50,6 +50,9 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ohF-vU-2RU">
+                                <rect key="frame" x="177.5" y="493" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -61,6 +64,8 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="wra-gC-ZpN" secondAttribute="trailing" constant="50" id="W9b-1y-Tta"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wra-gC-ZpN" secondAttribute="bottom" constant="20" id="ZY9-aV-LKt"/>
                             <constraint firstItem="fbC-Sy-f46" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="gqX-HS-fn5"/>
+                            <constraint firstItem="ohF-vU-2RU" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="iuM-5Z-YSm"/>
+                            <constraint firstItem="fbC-Sy-f46" firstAttribute="top" secondItem="ohF-vU-2RU" secondAttribute="bottom" constant="15" id="jQy-6c-y3e"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="S8K-8s-rTw" secondAttribute="leading" constant="-50" id="lF0-Xd-zo6"/>
                             <constraint firstItem="7zv-oR-2Ia" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="r9q-wr-hXr"/>
                             <constraint firstItem="cCr-qn-d4a" firstAttribute="top" secondItem="fbC-Sy-f46" secondAttribute="bottom" constant="8" id="swF-Ea-K1z"/>
@@ -75,6 +80,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="ohF-vU-2RU" id="bev-a5-1V8"/>
                         <outlet property="textGameName" destination="7zv-oR-2Ia" id="kYt-qR-n33"/>
                         <outlet property="textGameStatus" destination="cCr-qn-d4a" id="uWe-Pf-yB6"/>
                         <outlet property="textPlayer1" destination="wra-gC-ZpN" id="OXF-SQ-G6h"/>

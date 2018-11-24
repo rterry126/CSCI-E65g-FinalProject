@@ -15,6 +15,8 @@ extension GameBoardVC: GameStateMachine {
     
     func stateInitializing() {
         
+        activityIndicator.startAnimating()
+        
         //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
         // VC has loaded so we change state to 2 - initializing
         StateMachine.state = .initializing
@@ -24,6 +26,8 @@ extension GameBoardVC: GameStateMachine {
         //        fireStoreDB = FirebaseProxy.db // Get handle to our database
         FirebaseProxy.instance.requestInitialize() {
             Util.log("Initialization Completion handler called. ")
+            sleep(5)
+            self.activityIndicator.stopAnimating()
         }
         
         

@@ -40,6 +40,7 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var textPlayer2: UILabel!
     @IBOutlet weak var textGameStatus: UILabel!
     @IBOutlet weak var textGameName: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
     // Taken from class code example. Create our custom view
