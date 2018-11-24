@@ -153,16 +153,16 @@ class GameBoardVC: UIViewController {
         }
         
         
-        //Update player names
+        //Update player names and game name
         textPlayer1.text = modelGamePrefs.playerOneName
         textPlayer2.text = modelGamePrefs.playerTwoName
+        textGameName.text = modelGamePrefs.gameName
         
         // Update game state text field.
         // This is now in it's own function called by a listener
 //        textGameStatus.text = modelGameLogic.gameState.rawValue
         
-        // Update game name
-        textGameName.text = modelGamePrefs.gameName
+        
         
     }
 }
@@ -378,20 +378,12 @@ extension GameBoardVC {
 //               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
 //        }
 
-        // State 0 - Unitialized
         
+        /**** Setup Custom View, i.e. game board */
         // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
-        let gameView = GameBoardView() // Object palette
+        let gameView = GameBoardView()
         
-        
-        
-        
-        // Initialize the game state label
-        textGameStatus.text = StateMachine.state.rawValue
-        
-        
-        
-        gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 ) // Autolayout
+        gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 )
         
         view.addSubview(gameView) // View hierarchy
         Util.log("Added custom view - gameView")
@@ -401,6 +393,12 @@ extension GameBoardVC {
         gameView.dataSource = self
         gameView.delegate = self
         
+        // Initialize grid in view
+        gameView.createGrid()
+        
+        
+        
+        
         // Pass our observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerLogicModel)
         Factory.createObserver(observer: self, listeners: observerPreferencesModel)
@@ -408,8 +406,7 @@ extension GameBoardVC {
 
 
         
-        // Initialize grid in view
-        gameView.createGrid()
+        
         
         // Now redraw the view
         
@@ -452,7 +449,7 @@ extension GameBoardVC {
     }
     
     // This just serves as a function to pass in .successfulBoardMove to create the timers.
-    // There are 2 separate locatins where the timers are created: 1) When the game first starts
+    // There are 2 separate locations where the timers are created: 1) When the game first starts
     // 2) After each move (they are non-repeating timers). Instead of hard coding the selector or
     // what action I wanted to happen upon expiration, I just pass in this function.
     

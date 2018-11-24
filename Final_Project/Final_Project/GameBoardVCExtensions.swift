@@ -15,6 +15,9 @@ extension GameBoardVC: GameStateMachine {
     
     func stateInitializing() {
         
+        // Initialize the game state label
+        textGameStatus.text = StateMachine.state.rawValue
+        
         activityIndicator.startAnimating()
         
         //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
