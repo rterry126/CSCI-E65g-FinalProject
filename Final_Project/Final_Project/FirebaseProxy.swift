@@ -336,6 +336,30 @@ class FirebaseProxy {
         }
     }
     
+    func storeMove() {
+        
+        var docData = [String: [String: Any]]()
+        
+        
+        // Will address later when this is moved into the storing of entire history.
+        let  modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
+        let test = modelGameLogic.totalTurns
+        
+        docData = ["moves": ["\(test)": ["moveTime": Date(), "row": 1, "column": 2, "player": "playerOne"] ]]
+        
+        
+        // Update one field, creating the document if it does not exist.
+        
+        Firestore.firestore().collection("activeGame").document("121212").setData(docData, merge: true) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            }
+            else {
+                print("Document successfully written!")
+            }
+        }
+    }
+    
     
 }
 

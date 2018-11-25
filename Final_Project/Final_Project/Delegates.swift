@@ -58,6 +58,9 @@ extension GameBoardVC: GameGridViewDelegate {
             // observer implanted in .executeMove
             try modelGameLogic.executeMove(playerID: modelGameLogic.whoseTurn, moveCoordinates: (location.row, location.column))
             
+            // 11/24 the function below should only run and update the board color after confirmation
+            //from the cloud...
+            
             // Update the board state. Ideally I'd like to do this in updateUI, however not sure how to
             // pass the coordinates to updateUI....
             gameView?.changeGridState(x: location.column, y: location.row)

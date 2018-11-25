@@ -209,11 +209,13 @@ extension GameLogicModel: GameLogicModelProtocol {
         
         // 11/24 Since move is valid  we send to the cloud. ONLY after confirmation from the cloud
         // do we do updating below...
-        _gameBoard[coordinates.row][coordinates.column] = ID
         
         
-        // Notify controller that successful move was executed
-        NotificationCenter.default.post(name: .moveExecuted, object: self)
+//        _gameBoard[coordinates.row][coordinates.column] = ID
+//
+//
+//        // Notify controller that successful move was executed
+//        NotificationCenter.default.post(name: .moveExecuted, object: self)
 
         
         print("Player who just moved was \(ID)")
@@ -271,5 +273,11 @@ extension GameLogicModel: GameLogicModelProtocol {
             return _gameState
         }
         
+    }
+    
+    var totalTurns: Int {
+        get {
+            return _totalTurns
+        }
     }
 }

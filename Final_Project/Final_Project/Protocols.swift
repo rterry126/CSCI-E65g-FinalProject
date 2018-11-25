@@ -66,6 +66,8 @@ protocol GameLogicModelProtocol: class, Codable {
     
     func resetModel()
     
+    var totalTurns: Int { get }
+    
     
 }
 

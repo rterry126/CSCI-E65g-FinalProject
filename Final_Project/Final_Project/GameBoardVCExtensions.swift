@@ -86,6 +86,12 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
+    @objc func tempMOveFunction() {
+     
+        
+        FirebaseProxy.instance.storeMove()
+    }
+    
     
     
     //    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
