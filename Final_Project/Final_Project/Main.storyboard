@@ -60,17 +60,36 @@
                                     <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7h2-fY-Mhh"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GreenButton" translatesAutoresizingMaskIntoConstraints="NO" id="sUe-LP-L5Y">
+                                <rect key="frame" x="45" y="575" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="1w8-y5-2X9"/>
+                                    <constraint firstAttribute="height" constant="25" id="btu-Fx-Ez7"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GreenButton" translatesAutoresizingMaskIntoConstraints="NO" id="uOW-pm-bFJ">
+                                <rect key="frame" x="308" y="575" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="AyZ-CX-tOo"/>
+                                    <constraint firstAttribute="width" constant="25" id="TKY-ie-xRo"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="fR2-Bb-hTF"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="i4K-YI-KAb"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cCr-qn-d4a" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="2nU-ke-WBZ"/>
+                            <constraint firstItem="uOW-pm-bFJ" firstAttribute="leading" secondItem="S8K-8s-rTw" secondAttribute="trailing" constant="8.5" id="5on-5S-seZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7zv-oR-2Ia" secondAttribute="trailing" constant="8" id="7PG-gx-OHT"/>
                             <constraint firstItem="S8K-8s-rTw" firstAttribute="centerY" secondItem="wra-gC-ZpN" secondAttribute="centerY" id="D8V-Q9-nu1"/>
+                            <constraint firstItem="wra-gC-ZpN" firstAttribute="leading" secondItem="sUe-LP-L5Y" secondAttribute="trailing" constant="8.5" id="IrV-X5-wPh"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ycv-Ta-BxU" secondAttribute="trailing" constant="150" id="JcY-6B-quP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="cCr-qn-d4a" secondAttribute="bottom" constant="44" id="Nj2-iL-sKg"/>
                             <constraint firstItem="Ycv-Ta-BxU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="150" id="PL1-xR-qqH"/>
                             <constraint firstItem="7zv-oR-2Ia" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="QkX-3u-feA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="wra-gC-ZpN" secondAttribute="trailing" constant="50" id="W9b-1y-Tta"/>
+                            <constraint firstItem="sUe-LP-L5Y" firstAttribute="centerY" secondItem="wra-gC-ZpN" secondAttribute="centerY" id="WzS-Pp-yUC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wra-gC-ZpN" secondAttribute="bottom" constant="20" id="ZY9-aV-LKt"/>
                             <constraint firstItem="fbC-Sy-f46" firstAttribute="top" secondItem="Ycv-Ta-BxU" secondAttribute="bottom" constant="10" id="cG8-7M-roX"/>
                             <constraint firstItem="fbC-Sy-f46" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="gqX-HS-fn5"/>
@@ -79,6 +98,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="S8K-8s-rTw" secondAttribute="leading" constant="-50" id="lF0-Xd-zo6"/>
                             <constraint firstItem="7zv-oR-2Ia" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="r9q-wr-hXr"/>
                             <constraint firstItem="cCr-qn-d4a" firstAttribute="top" secondItem="fbC-Sy-f46" secondAttribute="bottom" constant="4" id="swF-Ea-K1z"/>
+                            <constraint firstItem="uOW-pm-bFJ" firstAttribute="centerY" secondItem="S8K-8s-rTw" secondAttribute="centerY" id="ydY-kD-EI5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -92,6 +112,8 @@
                     <connections>
                         <outlet property="activityIndicator" destination="ohF-vU-2RU" id="bev-a5-1V8"/>
                         <outlet property="newGameButtonOutlet" destination="Ycv-Ta-BxU" id="i6U-1h-Yrm"/>
+                        <outlet property="playerOneIndicator" destination="sUe-LP-L5Y" id="PJ4-Yc-FQE"/>
+                        <outlet property="playerTwoIndicator" destination="uOW-pm-bFJ" id="n6E-M9-FKG"/>
                         <outlet property="textGameName" destination="7zv-oR-2Ia" id="kYt-qR-n33"/>
                         <outlet property="textGameStatus" destination="cCr-qn-d4a" id="uWe-Pf-yB6"/>
                         <outlet property="textPlayer1" destination="wra-gC-ZpN" id="OXF-SQ-G6h"/>
@@ -100,7 +122,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-372" y="136"/>
+            <point key="canvasLocation" x="-372" y="135.38230884557723"/>
         </scene>
         <!--PreferencesVC-->
         <scene sceneID="Gy1-gf-rYh">
@@ -576,6 +598,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="GreenButton" width="55" height="55"/>
         <image name="help" width="30" height="30"/>
         <image name="home" width="30" height="30"/>
     </resources>

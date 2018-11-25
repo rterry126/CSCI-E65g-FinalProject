@@ -14,6 +14,7 @@
 		E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1578475219769A900F142CA /* HistoryMasterVC.swift */; };
 		E15784782197778100F142CA /* GameHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15784772197778100F142CA /* GameHistoryModel.swift */; };
 		E157847A21977DF400F142CA /* FirebaseProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E157847921977DF400F142CA /* FirebaseProxy.swift */; };
+		E173AA3521AB19AF00BA00F9 /* GreenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = E173AA3421AB19AF00BA00F9 /* GreenButton.png */; };
 		E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E178D864219734D700DA4E93 /* GoogleService-Info.plist */; };
 		E1915B272195AAEA00730B95 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1915B262195AAEA00730B95 /* Notifications.swift */; };
 		E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1B00AAF218E4A8A0032A66E /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 		E1578475219769A900F142CA /* HistoryMasterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMasterVC.swift; sourceTree = "<group>"; };
 		E15784772197778100F142CA /* GameHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHistoryModel.swift; sourceTree = "<group>"; };
 		E157847921977DF400F142CA /* FirebaseProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseProxy.swift; sourceTree = "<group>"; };
+		E173AA3421AB19AF00BA00F9 /* GreenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GreenButton.png; sourceTree = "<group>"; };
 		E178D864219734D700DA4E93 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E1915B262195AAEA00730B95 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		E1B00A9A218E4A370032A66E /* Final_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Final_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +183,7 @@
 				E1D832A821A0D8AD00ED51DB /* StateMachine.swift */,
 				E1B00AC2218E4A8B0032A66E /* SharedAndHelpers.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
+				E173AA3421AB19AF00BA00F9 /* GreenButton.png */,
 				E173AA3321AADF4D00BA00F9 /* ProvidedCode */,
 			);
 			path = Final_Project;
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1B00AD6218E4A8B0032A66E /* LaunchScreen.storyboard in Resources */,
+				E173AA3521AB19AF00BA00F9 /* GreenButton.png in Resources */,
 				E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */,
 				E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */,
 				E1B00AD7218E4A8B0032A66E /* Main.storyboard in Resources */,

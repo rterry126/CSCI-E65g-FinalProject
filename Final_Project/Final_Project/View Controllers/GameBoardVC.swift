@@ -42,6 +42,10 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var textGameName: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var newGameButtonOutlet: UIButton!
+    @IBOutlet weak var playerOneIndicator: UIImageView!
+    @IBOutlet weak var playerTwoIndicator: UIImageView!
+    
+    
     
     @IBAction func newGameButton(_ sender: UIButton) {
         
@@ -87,7 +91,7 @@ class GameBoardVC: UIViewController {
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame)),
-                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(tempMOveFunction)),
+                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
                                                 (.moveStoredFirestore, #selector(updateGameView))]
     
     

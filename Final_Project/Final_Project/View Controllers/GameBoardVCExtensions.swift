@@ -86,10 +86,13 @@ extension GameBoardVC: GameStateMachine {
     }
     
     // Triggered by listener in .executeMove in GameLogicModel
-    @objc func tempMOveFunction(_ notification :Notification) {
+    @objc func stateWaitingForMoveConfirmation(_ notification :Notification) {
         
-        // the GameLogicModel (executeMove) has determined that the move is valid. Therefore lock the grid from user input
-        //while we attempt to store the move to Firestore
+        // the GameLogicModel (executeMove) first determines that the move is valid (grid not occupied, game not over, in bounds,...)
+        // IF valid, only then do we attempt to store the move to the cloud..
+        activityIndicator.startAnimating()
+        
+        StateMachine.state = .waitingForMoveConfirmation
 //        gameView?.isUserInteractionEnabled = false
         
      
