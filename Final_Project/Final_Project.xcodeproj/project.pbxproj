@@ -111,6 +111,19 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		E173AA3121AADDD200BA00F9 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */,
+				E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */,
+				E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */,
+				E1578475219769A900F142CA /* HistoryMasterVC.swift */,
+				E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */,
+				E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
 		E1B00A91218E4A370032A66E = {
 			isa = PBXGroup;
 			children = (
@@ -132,15 +145,10 @@
 		E1B00A9C218E4A370032A66E /* Final_Project */ = {
 			isa = PBXGroup;
 			children = (
+				E173AA3121AADDD200BA00F9 /* View Controllers */,
 				E1B00AB6218E4A8A0032A66E /* AppDelegate.swift */,
 				E157847921977DF400F142CA /* FirebaseProxy.swift */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
-				E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */,
-				E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */,
-				E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */,
-				E1578475219769A900F142CA /* HistoryMasterVC.swift */,
-				E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */,
-				E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */,
 				E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */,
 				E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */,
 				E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */,

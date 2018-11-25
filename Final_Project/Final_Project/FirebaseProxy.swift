@@ -343,9 +343,11 @@ class FirebaseProxy {
         
         // Will address later when this is moved into the storing of entire history.
         let  modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
-        let test = modelGameLogic.totalTurns
+        let test = modelGameLogic.totalTurns + 1
         
-        docData = ["moves": ["\(test)": ["moveTime": Date(), "row": 1, "column": 2, "player": "playerOne"] ]]
+        // Figure out how to change the time to a server timestamp to account for differing times
+        // on two devices...
+        docData = ["moves": ["\(test)": ["moveTime": FieldValue.serverTimestamp() , "row": 1, "column": 2, "player": "playerOne"] ]]
         
         
         // Update one field, creating the document if it does not exist.
