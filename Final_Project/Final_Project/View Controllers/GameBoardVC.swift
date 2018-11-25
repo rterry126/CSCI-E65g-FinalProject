@@ -103,8 +103,7 @@ class GameBoardVC: UIViewController {
         
         super.init(coder: aDecoder)
         
-        // Add our state machine observers
-//        Factory.createObserver(observer: self, listeners: observerStateMachine)
+  
     }
     
     

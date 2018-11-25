@@ -336,18 +336,13 @@ class FirebaseProxy {
         }
     }
     
-    func storeMove() {
+    func storeMove(row: Int, column: Int, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
         
         var docData = [String: [String: Any]]()
         
         
-        // Will address later when this is moved into the storing of entire history.
-        let  modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
-        let test = modelGameLogic.totalTurns + 1
+        docData = ["moves": ["\(moveNumber)": ["moveTime": FieldValue.serverTimestamp() , "row": row, "column": column, "player": playerID] ]]
         
-        // Figure out how to change the time to a server timestamp to account for differing times
-        // on two devices...
-        docData = ["moves": ["\(test)": ["moveTime": FieldValue.serverTimestamp() , "row": 1, "column": 2, "player": "playerOne"] ]]
         
         
         // Update one field, creating the document if it does not exist.
@@ -355,11 +350,18 @@ class FirebaseProxy {
         Firestore.firestore().collection("activeGame").document("121212").setData(docData, merge: true) { err in
             if let err = err {
                 print("Error writing document: \(err)")
+                completion(err)
             }
             else {
-                print("Document successfully written!")
+                Util.log("Document successfully written!")
+                
+                
+                completion(nil)
+
+                
             }
         }
+        
     }
     
     

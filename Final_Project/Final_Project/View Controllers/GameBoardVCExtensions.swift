@@ -77,7 +77,6 @@ extension GameBoardVC: GameStateMachine {
         newGameButtonOutlet.isHidden = true
         
         // Allow inputs
-        // Disable inputs
         gameView?.isUserInteractionEnabled = true
         
         //Start move timers
@@ -86,10 +85,44 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
-    @objc func tempMOveFunction() {
-     
+    // Triggered by listener in .executeMove in GameLogicModel
+    @objc func tempMOveFunction(_ notification :Notification) {
         
-        FirebaseProxy.instance.storeMove()
+        // the GameLogicModel (executeMove) has determined that the move is valid. Therefore lock the grid from user input
+        //while we attempt to store the move to Firestore
+        gameView?.isUserInteractionEnabled = false
+        
+     
+        // notification has a dict 'userInfo' that we've used to pass moves, etc. Dict is optional and must be unwrapped
+        guard let coordinates = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
+            fatalError("Cannot retrieve coordinates of move")
+        }
+        
+        //TODO: - Will eventually remove this as it won't be necessary. Player ID is set per device
+        guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+            fatalError("Cannot retrieve playerID")
+        }
+        
+        guard let moveNumber = notification.userInfo!["totalTurns"] as? Int else {
+            fatalError("Cannot retrieve turn number")
+        }
+        FirebaseProxy.instance.storeMove(row: coordinates.row, column: coordinates.column, playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
+        
+            if let error = err {
+                // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
+                let alert = UIAlertController(title: "Firebase Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            
+            //Successful write to Firestore so continue with game
+            }  else
+            {
+             // Set listener to update the game state model and the view
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates, "moveNumber": moveNumber ])
+                
+            }
+        }
+        
     }
     
     

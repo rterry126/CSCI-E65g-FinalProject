@@ -202,9 +202,10 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         
         // Normal case - valid move
+        print(totalTurns)
         
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
-        NotificationCenter.default.post(name: .executeMoveCalled, object: self)
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "totalTurns": totalTurns ])
         
         
         // 11/24 Since move is valid  we send to the cloud. ONLY after confirmation from the cloud
@@ -262,6 +263,9 @@ extension GameLogicModel: GameLogicModelProtocol {
     }
     
     // Called by .executiveMove. Needs to know whose turn it is...
+    //TODO: -
+    // 11/25 Ideally we can eliminate this for network version as the device making the move will
+    // be assigned P1 or P2. We're don't need to manually alternate the player in the model
     var whoseTurn:GridState {
         get {
             return _whoseTurn
