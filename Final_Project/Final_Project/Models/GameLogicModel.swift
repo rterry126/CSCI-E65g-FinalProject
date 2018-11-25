@@ -85,15 +85,7 @@ class GameLogicModel: NSObject, Codable {
     
     private var _gameBoard = [[ GridState ]]()
     
-    
-    // Public gameBoard
-    var gameBoard:[[GridState]] {
-        get {
-            return _gameBoard
-        }
-    }
-    
-    
+
     
     private func inBounds(untrustedInput: GridCoord) -> Bool {
         
@@ -208,7 +200,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "totalTurns": totalTurns ])
         
         
-        // 11/24 Since move is valid  we send to the cloud. ONLY after confirmation from the cloud
+        // 11/24 Since move is valid  we send the move to the cloud. ONLY after confirmation from the cloud
         // do we do updating below...
         
         
@@ -284,4 +276,15 @@ extension GameLogicModel: GameLogicModelProtocol {
             return _totalTurns
         }
     }
+    
+    // Public gameBoard
+    var gameBoard:[[GridState]] {
+        get {
+            return _gameBoard
+        }
+        set {
+            _gameBoard = newValue
+        }
+    }
+    
 }

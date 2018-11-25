@@ -90,7 +90,7 @@ extension GameBoardVC: GameStateMachine {
         
         // the GameLogicModel (executeMove) has determined that the move is valid. Therefore lock the grid from user input
         //while we attempt to store the move to Firestore
-        gameView?.isUserInteractionEnabled = false
+//        gameView?.isUserInteractionEnabled = false
         
      
         // notification has a dict 'userInfo' that we've used to pass moves, etc. Dict is optional and must be unwrapped
@@ -107,7 +107,6 @@ extension GameBoardVC: GameStateMachine {
             fatalError("Cannot retrieve turn number")
         }
         FirebaseProxy.instance.storeMove(row: coordinates.row, column: coordinates.column, playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
-        
             if let error = err {
                 // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                 let alert = UIAlertController(title: "Firebase Error", message: error.localizedDescription, preferredStyle: .alert)
@@ -117,8 +116,9 @@ extension GameBoardVC: GameStateMachine {
             //Successful write to Firestore so continue with game
             }  else
             {
-             // Set listener to update the game state model and the view
-                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates, "moveNumber": moveNumber ])
+                print("else of completion handler is running...")
+                // Set listener to update the game state model and the view
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates])
                 
             }
         }

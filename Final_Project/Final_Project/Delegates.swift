@@ -63,7 +63,9 @@ extension GameBoardVC: GameGridViewDelegate {
             
             // Update the board state. Ideally I'd like to do this in updateUI, however not sure how to
             // pass the coordinates to updateUI....
-            gameView?.changeGridState(x: location.column, y: location.row)
+            
+            //
+//            gameView?.changeGridState(x: location.column, y: location.row)
         }
             
         catch let e {

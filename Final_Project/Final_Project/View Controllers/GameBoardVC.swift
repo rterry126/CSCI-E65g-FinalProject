@@ -87,7 +87,8 @@ class GameBoardVC: UIViewController {
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame)),
-                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(tempMOveFunction))]
+                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(tempMOveFunction)),
+                                                (.moveStoredFirestore, #selector(updateGameView))]
     
     
     //MARK: - Init()
@@ -457,4 +458,39 @@ extension GameBoardVC {
         self.successfulBoardMove()
         
     }
+    
+    //TODO: - Figure out best place to place this
+    
+    @objc func updateGameView(_ notification :Notification) {
+        
+        Util.log("update Game View called via listener")
+        
+        // notification has a dict 'userInfo' that we've used to pass moves, etc. Dict is optional and must be unwrapped
+        guard let location = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
+            fatalError("Cannot retrieve coordinates of move")
+        }
+        
+        // TODO: - Should be able to remove this later
+        guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+            fatalError("Cannot retrieve playerID")
+        }
+        
+        
+
+        print(location.column)
+        print(location.row)
+        
+        modelGameLogic.gameBoard[location.row][location.column] = playerID
+
+
+        // Notify controller that successful move was executed
+        NotificationCenter.default.post(name: .moveExecuted, object: self)
+        
+        
+        gameView?.changeGridState(x: location.column, y: location.row)
+        
+        
+    }
 }
+
+
