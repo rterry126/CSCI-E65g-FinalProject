@@ -17,6 +17,8 @@ extension GameBoardVC: GameStateMachine {
         
         // Initialize the game state label
         textGameStatus.text = StateMachine.state.rawValue
+        playerOneIndicator.isHidden = true
+        playerTwoIndicator.isHidden = true
         
         activityIndicator.startAnimating()
         
@@ -76,6 +78,10 @@ extension GameBoardVC: GameStateMachine {
         newGameButtonOutlet.isEnabled = false
         newGameButtonOutlet.isHidden = true
         
+        // TODO: - This will eventually need to be changed to adapt to multi players
+        // Perhaps a flip/flop type of system...
+        playerOneIndicator.isHidden = false
+        
         // Allow inputs
         gameView?.isUserInteractionEnabled = true
         
@@ -85,7 +91,7 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
-    // Triggered by listener in .executeMove in GameLogicModel
+    // Triggered by listener in .executeMove in GameLogicModel. 'notification' passes us the move coordinates
     @objc func stateWaitingForMoveConfirmation(_ notification :Notification) {
         
         // the GameLogicModel (executeMove) first determines that the move is valid (grid not occupied, game not over, in bounds,...)
@@ -109,22 +115,39 @@ extension GameBoardVC: GameStateMachine {
         guard let moveNumber = notification.userInfo!["totalTurns"] as? Int else {
             fatalError("Cannot retrieve turn number")
         }
-        FirebaseProxy.instance.storeMove(row: coordinates.row, column: coordinates.column, playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
-            if let error = err {
-                // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
-                let alert = UIAlertController(title: "Firebase Error", message: error.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            
-            //Successful write to Firestore so continue with game
-            }  else
-            {
-                print("else of completion handler is running...")
-                // Set listener to update the game state model and the view
-                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates])
+        
+        //Attempt to store in Firestore
+        //Closure is called from completion() in the async
+        FirebaseProxy.instance.storeMoveFirestore(row: coordinates.row, column: coordinates.column,
+                                         playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
+                if let error = err {
+                    // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
+                   
+                    self.present(Factory.createAlert(error), animated: true, completion: nil)
                 
-            }
+                }
+                //Successful write to Firestore so continue with game
+                else {
+                   
+                    // Set listener to update the game state model and the view
+                    NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates])
+                    
+                    self.activityIndicator.stopAnimating()
+                    StateMachine.state = .waitingForOpponentMove
+                    // Update game state text field.
+                    self.textGameStatus.text = StateMachine.state.rawValue
+                    
+                }
         }
+        
+    }
+    
+    // Triggered by listener when state changes to .waitingForOpponentMove
+    @objc func stateWaitingForOpponent() {
+        
+        Util.log("Listener activitated for opponent move")
+        
+        
         
     }
     

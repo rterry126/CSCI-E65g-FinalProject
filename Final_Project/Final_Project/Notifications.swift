@@ -25,6 +25,8 @@ extension Notification.Name {
     
     static let executeMoveCalled = NSNotification.Name("executeMoveCalled") // Valid move -  square clicked, delegate from view called executeMove
     static let moveStoredFirestore = NSNotification.Name("moveStoredFirestore") //Successful writing of move to Firestore
+    static let waitingForOpponentMove = NSNotification.Name("waitingForOpponentMove")
+    
 
 
 

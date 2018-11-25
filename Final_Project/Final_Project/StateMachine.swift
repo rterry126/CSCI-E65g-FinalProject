@@ -24,7 +24,10 @@ class StateMachine: StateMachineProtocol {
             
             Util.log("state variable didSet to  --> \(self.state)")
             
-            NotificationCenter.default.post(name: .stateChanged, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
+            if state == .waitingForOpponentMove {
+                Util.log("setting observer for opponent move")
+                NotificationCenter.default.post(name: .waitingForOpponentMove, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
+            }
             
         }
     }
@@ -39,6 +42,7 @@ class StateMachine: StateMachineProtocol {
         case waitingForOpponentMove = "Waiting for opponent's move"
         case gameOver = "Game Over"
         
-        
     }
+    
+    
 }

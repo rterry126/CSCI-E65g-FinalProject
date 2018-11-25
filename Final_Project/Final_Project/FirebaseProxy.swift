@@ -336,17 +336,15 @@ class FirebaseProxy {
         }
     }
     
-    func storeMove(row: Int, column: Int, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
+    func storeMoveFirestore(row: Int, column: Int, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
         
         var docData = [String: [String: Any]]()
         
-        
         docData = ["moves": ["\(moveNumber)": ["moveTime": FieldValue.serverTimestamp() , "row": row, "column": column, "player": playerID] ]]
         
-        
-        
         // Update one field, creating the document if it does not exist.
-        
+        // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
+        // If successful then we will update our board logical state and view state and change our state Machine 
         Firestore.firestore().collection("activeGame").document("121212").setData(docData, merge: true) { err in
             if let err = err {
                 print("Error writing document: \(err)")
@@ -354,14 +352,9 @@ class FirebaseProxy {
             }
             else {
                 Util.log("Document successfully written!")
-                
-                
                 completion(nil)
-
-                
             }
         }
-        
     }
     
     

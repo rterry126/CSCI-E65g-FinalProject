@@ -91,8 +91,9 @@ class GameBoardVC: UIViewController {
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame)),
-                                               (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
-                                                (.moveStoredFirestore, #selector(updateGameView))]
+        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+        (.moveStoredFirestore, #selector(updateGameView)),
+                                                (.waitingForOpponentMove , #selector(stateWaitingForOpponent))]
     
     
     //MARK: - Init()
