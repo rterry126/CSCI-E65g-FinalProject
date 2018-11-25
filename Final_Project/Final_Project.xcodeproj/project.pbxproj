@@ -124,6 +124,26 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
+		E173AA3221AADEE300BA00F9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */,
+				E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */,
+				E15784772197778100F142CA /* GameHistoryModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E173AA3321AADF4D00BA00F9 /* ProvidedCode */ = {
+			isa = PBXGroup;
+			children = (
+				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
+				E1D832AA21A9B58F00ED51DB /* Util.swift */,
+				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
+			);
+			path = ProvidedCode;
+			sourceTree = "<group>";
+		};
 		E1B00A91218E4A370032A66E = {
 			isa = PBXGroup;
 			children = (
@@ -145,27 +165,23 @@
 		E1B00A9C218E4A370032A66E /* Final_Project */ = {
 			isa = PBXGroup;
 			children = (
+				E173AA3221AADEE300BA00F9 /* Models */,
 				E173AA3121AADDD200BA00F9 /* View Controllers */,
 				E1B00AB6218E4A8A0032A66E /* AppDelegate.swift */,
 				E157847921977DF400F142CA /* FirebaseProxy.swift */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
 				E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */,
-				E1B00AC3218E4A8B0032A66E /* GameLogicModel.swift */,
-				E1B00AB2218E4A8A0032A66E /* GamePrefModel.swift */,
-				E15784772197778100F142CA /* GameHistoryModel.swift */,
 				E1915B262195AAEA00730B95 /* Notifications.swift */,
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
 				E178D864219734D700DA4E93 /* GoogleService-Info.plist */,
 				E1B00AC0218E4A8A0032A66E /* LaunchScreen.storyboard */,
 				E1B00AC1218E4A8B0032A66E /* Main.storyboard */,
-				E1B00AB3218E4A8A0032A66E /* Persistence.swift */,
 				E1462B04219B1550002BFFED /* Factory.swift */,
 				E1B00AB5218E4A8A0032A66E /* Protocols.swift */,
 				E1D832A821A0D8AD00ED51DB /* StateMachine.swift */,
 				E1B00AC2218E4A8B0032A66E /* SharedAndHelpers.swift */,
 				E1B00AAF218E4A8A0032A66E /* Assets.xcassets */,
-				E1D832AA21A9B58F00ED51DB /* Util.swift */,
-				E1B00AB7218E4A8A0032A66E /* ColorPicker */,
+				E173AA3321AADF4D00BA00F9 /* ProvidedCode */,
 			);
 			path = Final_Project;
 			sourceTree = "<group>";
