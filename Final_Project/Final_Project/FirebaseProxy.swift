@@ -273,6 +273,66 @@ class FirebaseProxy {
         }
     }
     
+    // Set Firestore listener
+    //TODO: - DO I need spearate queries? What does the listener removal do?
+    var moveQuery: Query? {
+        didSet {
+            if let listener = listener {
+                listener.remove()
+            }
+        }
+    }
+    
+    
+    func opponentMoveFirestore( ) {
+        print("opponent move Firestore function")
+        
+        Firestore.firestore().collection("activeGame").document("121212")
+            .addSnapshotListener { documentSnapshot, error in
+                guard let document = documentSnapshot else {
+                    print("Error fetching document: \(error!)")
+                    return
+                }
+                guard let data = document.data() else {
+                    print("Document data was empty.")
+                    return
+                }
+                print("Current data: \(data)")
+        }
+//        // Create query.
+//        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime")
+//
+//        /*listener =*/  moveQuery?.addSnapshotListener { ( documents, error) in
+//
+//            guard let snapshot = documents else {
+//                if let error = error {
+//                    print(error)
+//                    // Return error to async calling closure in HistoryMasterVC
+////                    completion(resultsArray, error)
+//                    //                    return
+//                }
+//                return
+//            }
+//            // Basically go through the sequence and pull out the data...
+//
+//            // go through all the results
+//           
+//
+////            resultsArray = snapshot.documents.map { (document) -> Game in
+////                if let game = Game(dictionary: document.data(), id: document.documentID) {
+////                    print("History \(game.id) => \(game.playerTwoName )")
+////                    return game
+////                }
+////                else {
+////                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+////                }
+////            }
+//            // Return results to async calling closure in HistoryMasterVC
+////            print("results array size is \(resultsArray.count)")
+////            completion(resultsArray, nil)
+//        }
+    }
+    
     
     
     func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
