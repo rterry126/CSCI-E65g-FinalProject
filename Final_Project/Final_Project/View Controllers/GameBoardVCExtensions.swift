@@ -13,15 +13,21 @@ import Firebase
 //MARK: - GameStateMachine extension
 extension GameBoardVC: GameStateMachine {
     
-    func stateInitializing() {
+    // As game state changes through initialization AND play, listener will modify the text field
+    @objc func updateGameStateLabel() {
+        
+        // Update game state text field.
+        textGameStatus.text = StateMachine.state.rawValue
+        
+    }
+    
+    @objc func stateInitializing() {
         
         Util.log("View Controller initializing. State changed to  -> 2")
         
-        // I think this is handled by the stateChange listener
-        //textGameStatus.text = StateMachine.state.rawValue
         
-        playerOneIndicator.isHidden = true
-        playerTwoIndicator.isHidden = true
+        readyPlayerOne.isHidden = true
+        readyPlayerTwo.isHidden = true
         
         activityIndicator.startAnimating()
         
@@ -46,10 +52,9 @@ extension GameBoardVC: GameStateMachine {
     @objc func stateReadyForGame() {
 
         Util.log("function stateReadyForGame triggered via listener")
-        Util.log("Ready for Game") // Eventually change the label I haven't created to show this...
         
         self.activityIndicator.stopAnimating()
-        // Button is deactivated and hidden via the storyboard setup.
+        // Button is initially deactivated and hidden via the storyboard setup.
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
         
@@ -63,27 +68,15 @@ extension GameBoardVC: GameStateMachine {
 
     }
     
-    // As game state changes through initialization AND play, listener will modify the text field
-    @objc func updateGameStateLabel() {
-        
-        // Update game state text field.
-        textGameStatus.text = StateMachine.state.rawValue
-        
-    }
     
     @objc func stateWaitingForUserMove() {
         
-        StateMachine.state = .waitingForUserMMove
-        Util.log("Entered func stateWaitingForUseMove")
         Util.log("Machine state is \(StateMachine.state.rawValue)")
         
         // Probably don't need to disable AND hide...
         newGameButtonOutlet.isEnabled = false
         newGameButtonOutlet.isHidden = true
         
-        // TODO: - This will eventually need to be changed to adapt to multi players
-        // Perhaps a flip/flop type of system...
-        playerOneIndicator.isHidden = false
         
         // Allow inputs
         gameView?.isUserInteractionEnabled = true
@@ -101,7 +94,7 @@ extension GameBoardVC: GameStateMachine {
         // IF valid, only then do we attempt to store the move to the cloud..
         activityIndicator.startAnimating()
         
-        StateMachine.state = .waitingForMoveConfirmation
+//        StateMachine.state = .waitingForMoveConfirmation
 //        gameView?.isUserInteractionEnabled = false
         
      
@@ -137,8 +130,7 @@ extension GameBoardVC: GameStateMachine {
                     
                     self.activityIndicator.stopAnimating()
                     StateMachine.state = .waitingForOpponentMove
-                    // Update game state text field.
-                    self.textGameStatus.text = StateMachine.state.rawValue
+                    
                     
                 }
         }

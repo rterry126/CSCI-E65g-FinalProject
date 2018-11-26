@@ -196,8 +196,12 @@ extension GameLogicModel: GameLogicModelProtocol {
         // Normal case - valid move
         print(totalTurns)
         
+        
+        StateMachine.state = .waitingForMoveConfirmation
+
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
         NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "totalTurns": totalTurns ])
+        
         
         
         // 11/24 Since move is valid  we send the move to the cloud. ONLY after confirmation from the cloud

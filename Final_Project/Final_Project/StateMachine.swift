@@ -34,15 +34,20 @@ class StateMachine: StateMachineProtocol {
 
             case .initializing:
                 notificatonName = Notification.Name.initializing
+                Util.log("state changed to .initializing")
 
             case .readyForGame:
                 notificatonName = Notification.Name.readyForGame
+                Util.log("state changed to .readyForGame")
 
             case .waitingForUserMMove:
                 notificatonName = Notification.Name.waitingForUserMove
+                Util.log("state changed to .waitingForUserMove")
 
             case .waitingForMoveConfirmation:
-                notificatonName = Notification.Name.waitingForMoveConfirmation
+//                notificatonName = Notification.Name.waitingForMoveConfirmation
+                //This listener is embeded in the model logic function executeMove, as it needs the move coordinates, etc to pass to selector function
+                return
 
             case .waitingForOpponentMove:
                 notificatonName = Notification.Name.waitingForOpponentMove

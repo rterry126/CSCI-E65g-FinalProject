@@ -7,7 +7,7 @@
 //
 
 // Source - Alert with no handler - https://learnappmaking.com/uialertcontroller-alerts-swift-how-to/
-// Source - devide width/height - https://stackoverflow.com/questions/24084941/how-to-get-device-width-and-height
+// Source - @objc devide width/height - https://stackoverflow.com/questions/24084941/how-to-get-device-width-and-height
 // Source - sharing state (i.e. models) between VC - https://code.tutsplus.com/tutorials/the-right-way-to-share-state-between-swift-view-controllers--cms-28474
 
 // Source - view controller initializer - https://www.hackingwithswift.com/example-code/language/fixing-class-viewcontroller-has-no-initializers
@@ -42,15 +42,16 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var textGameName: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var newGameButtonOutlet: UIButton!
-    @IBOutlet weak var playerOneIndicator: UIImageView!
-    @IBOutlet weak var playerTwoIndicator: UIImageView!
+    @IBOutlet weak var readyPlayerOne: UIImageView!
+    @IBOutlet weak var readyPlayerTwo: UIImageView!
     
     
     
     @IBAction func newGameButton(_ sender: UIButton) {
         
-        // Instead of hard wiring to single function just post notification that button was pressed. May need multiple responses
-        NotificationCenter.default.post(name: .waitingForUserMove , object: self)
+        // New game button pressed. Change state
+        StateMachine.state = .waitingForUserMMove
+
         
     }
     
@@ -90,8 +91,8 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.readyForGame, #selector(stateReadyForGame)),
-        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(updateGameStateLabel)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
+        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),
                                                 (.waitingForOpponentMove , #selector(stateWaitingForOpponent))]
     
@@ -152,10 +153,15 @@ class GameBoardVC: UIViewController {
         case .playerOne:
             textPlayer1.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerOneColor)
             textPlayer2.backgroundColor = UIColor.white
+            readyPlayerOne.isHidden = false
+            readyPlayerTwo.isHidden = true
+
             
         case .playerTwo:
             textPlayer1.backgroundColor = UIColor.white
             textPlayer2.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerTwoColor)
+            readyPlayerTwo.isHidden = false
+            readyPlayerOne.isHidden = true
             
         case .empty: //Switch needs to be exhaustive. This should never execute
             return
@@ -166,11 +172,6 @@ class GameBoardVC: UIViewController {
         textPlayer1.text = modelGamePrefs.playerOneName
         textPlayer2.text = modelGamePrefs.playerTwoName
         textGameName.text = modelGamePrefs.gameName
-        
-        // Update game state text field.
-        // This is now in it's own function called by a listener
-//        textGameStatus.text = modelGameLogic.gameState.rawValue
-        
         
         
     }

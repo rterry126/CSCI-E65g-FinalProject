@@ -30,6 +30,7 @@ extension Notification.Name {
     static let gameOver = NSNotification.Name("gameOver")
 
     
+    // This notification passes the move coordinates...
     static let executeMoveCalled = NSNotification.Name("executeMoveCalled") // Valid move -  square clicked, delegate from view called executeMove
     static let moveStoredFirestore = NSNotification.Name("moveStoredFirestore") //Successful writing of move to Firestore
     
