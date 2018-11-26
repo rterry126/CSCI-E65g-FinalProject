@@ -126,7 +126,7 @@ extension GameBoardVC: GameStateMachine {
                 else {
                    
                     // Set listener to update the game state model and the view
-                    NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": playerID, "coordinates": coordinates])
+                    NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
                     
                     self.activityIndicator.stopAnimating()
                     StateMachine.state = .waitingForOpponentMove

@@ -120,9 +120,12 @@ class FirebaseProxy {
                 
                 // Robert - so if there is no active game we'll need to initialize the activeRoot
                 // when the game is started I think...
-                self.activeRootObj = nil // see didSet observer for handling
+//                self.activeRootObj = nil // see didSet observer for handling
                 
-                
+                //No active game to upload the preferences into document zero '0'
+                rootCollectionRef.document("\(0)").setData(self.documentData, mergeFields: self.mergeFields, completion: nil)
+                // Initializing is successful, change state
+                StateMachine.state = .readyForGame
                 return
                 
             }
@@ -147,7 +150,7 @@ class FirebaseProxy {
                 if let _ = activeRootObj {
                     
                     
-                    activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
+//                    activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
                     
                     Util.log("activeRootObj didSet run, preferences loaded into Firebase")
                     
@@ -157,12 +160,7 @@ class FirebaseProxy {
                     
                     // Switch state from initializing to initialized; notify everyone
                     StateMachine.state = .readyForGame
-                    // I.e. a listener should trigger the stateReadyForGame function????
                     
-                    // Can either put notifications at each state change OR attach to the enum 'state'
-                    // Attaching to the enum means that we would have to also post which state it was changed to. This might be easier
-                    // for now....
-                    NotificationCenter.default.post(name: .readyForGame, object: self)
                     
                 }
                 else {
@@ -242,29 +240,6 @@ class FirebaseProxy {
 //
 
 
-//    // Static added by Robert
-//    static private let _db: Firestore = {
-//
-//        // Locally bound to where it's needed. Keep related things close together!
-//
-//        FirebaseApp.configure()
-//
-//        let db: Firestore = Firestore.firestore()
-//
-//        // This little extra is just from console output if you fail to do so
-//
-//        let settings: FirestoreSettings = db.settings
-//
-//        settings.areTimestampsInSnapshotsEnabled = true
-//
-//        db.settings = settings
-//
-//        return db
-//
-//    }()
-
-
-    
 
     /************** Inbound (mostly) Firestore Functions  ****************/
     
@@ -297,24 +272,50 @@ class FirebaseProxy {
     func opponentMoveFirestore( ) {
         print("opponent move Firestore function")
         
-        let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
-        
-        
-        rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
-            
-            (snapshot: QuerySnapshot?, error: Error?)  in
-            
-            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
-                
-                print("temp error statement")
-                
-                return
-                
-            }
-            
-            print(lastMove.data())
-            
+        FirebaseProxy.db.collection("activeGame").addSnapshotListener { querySnapshot, error in
+                guard let snapshot = querySnapshot else {
+                    print("Error fetching snapshots: \(error!)")
+                    return
+                }
+                snapshot.documentChanges.forEach { diff in
+//                    if (diff.type == .added) {
+//                        print("New city: \(diff.document.data())")
+//                    }
+                    if (diff.type == .modified) {
+                        print("Modified city: \(diff.document.data())")
+                    }
+//                    if (diff.type == .removed) {
+//                        print("Removed city: \(diff.document.data())")
+//                    }
+                }
         }
+        
+        
+        
+//        FirebaseProxy.db.collection("activeGame")
+//            .addSnapshotListener(includeMetadataChanges: true) { documentSnapshot, error in
+//                print("metadata has changed...")
+//        }
+        
+//        let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
+//
+//
+//        rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
+//
+//            (snapshot: QuerySnapshot?, error: Error?)  in
+//
+////            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
+//            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
+//
+//                print("temp error statement")
+//
+//                return
+//
+//            }
+//
+//            print(lastMove.data())
+//
+//        }
         
     }
     
