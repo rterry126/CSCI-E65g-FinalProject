@@ -8,6 +8,7 @@
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 
 import Foundation  // needed for notification center
+import UIKit // needed for alerts
 import Firebase
 
 
@@ -100,7 +101,7 @@ class FirebaseProxy {
     }
     
     // Async closure so call completion handler when done to continue
-    func requestInitialize() {
+    func requestInitialize()  {
         
 //        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
@@ -108,12 +109,17 @@ class FirebaseProxy {
         
         rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
             
-            (snapshot: QuerySnapshot?, error: Error?) in
+            (snapshot: QuerySnapshot?, error: Error?)  in
             
             guard let rootObjSnapshot: QueryDocumentSnapshot = snapshot?.documents.first else {
                 
+                //TODO:- Move this to calling function and return the error.
+//                UIViewController.present(Factory.createAlert(error), animated: true, completion: nil)
+                
                 NSLog("Cannot find active game: \(error?.localizedDescription ?? "Missing Error")")
                 
+                // Robert - so if there is no active game we'll need to initialize the activeRoot
+                // when the game is started I think...
                 self.activeRootObj = nil // see didSet observer for handling
                 
                 
@@ -144,7 +150,9 @@ class FirebaseProxy {
                     Util.log("activeRootObj didSet run, preferences loaded into Firebase")
                     
                     
-    
+                    // Robert - So this is if there is an active game???
+                    // If so then it shouldn't go to readForGame but pick up game in route...
+                    
                     // Switch state from initializing to initialized; notify everyone
                     StateMachine.state = .readyForGame
                     // I.e. a listener should trigger the stateReadyForGame function????
@@ -287,50 +295,25 @@ class FirebaseProxy {
     func opponentMoveFirestore( ) {
         print("opponent move Firestore function")
         
-        Firestore.firestore().collection("activeGame").document("121212")
-            .addSnapshotListener { documentSnapshot, error in
-                guard let document = documentSnapshot else {
-                    print("Error fetching document: \(error!)")
-                    return
-                }
-                guard let data = document.data() else {
-                    print("Document data was empty.")
-                    return
-                }
-                print("Current data: \(data)")
+        let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
+        
+        
+        rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
+            
+            (snapshot: QuerySnapshot?, error: Error?)  in
+            
+            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
+                
+                print("temp error statement")
+                
+                return
+                
+            }
+            
+            print(lastMove.data())
+            
         }
-//        // Create query.
-//        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime")
-//
-//        /*listener =*/  moveQuery?.addSnapshotListener { ( documents, error) in
-//
-//            guard let snapshot = documents else {
-//                if let error = error {
-//                    print(error)
-//                    // Return error to async calling closure in HistoryMasterVC
-////                    completion(resultsArray, error)
-//                    //                    return
-//                }
-//                return
-//            }
-//            // Basically go through the sequence and pull out the data...
-//
-//            // go through all the results
-//           
-//
-////            resultsArray = snapshot.documents.map { (document) -> Game in
-////                if let game = Game(dictionary: document.data(), id: document.documentID) {
-////                    print("History \(game.id) => \(game.playerTwoName )")
-////                    return game
-////                }
-////                else {
-////                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
-////                }
-////            }
-//            // Return results to async calling closure in HistoryMasterVC
-////            print("results array size is \(resultsArray.count)")
-////            completion(resultsArray, nil)
-//        }
+        
     }
     
     
@@ -398,14 +381,14 @@ class FirebaseProxy {
     
     func storeMoveFirestore(row: Int, column: Int, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
         
-        var docData = [String: [String: Any]]()
+        var docData =  [String: Any]()
         
-        docData = ["moves": ["\(moveNumber)": ["moveTime": FieldValue.serverTimestamp() , "row": row, "column": column, "player": playerID] ]]
+        docData = ["moveTime": FieldValue.serverTimestamp() , "row": row, "column": column, "player": playerID]
         
         // Update one field, creating the document if it does not exist.
         // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
         // If successful then we will update our board logical state and view state and change our state Machine 
-        Firestore.firestore().collection("activeGame").document("121212").setData(docData, merge: true) { err in
+        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: true) { err in
             if let err = err {
                 print("Error writing document: \(err)")
                 completion(err)
