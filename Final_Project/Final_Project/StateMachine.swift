@@ -24,10 +24,39 @@ class StateMachine: StateMachineProtocol {
             
             Util.log("state variable didSet to  --> \(self.state)")
             
-            if state == .waitingForOpponentMove {
-                Util.log("setting observer for opponent move")
-                NotificationCenter.default.post(name: .waitingForOpponentMove, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
+            
+            let notificatonName: NSNotification.Name
+            
+            switch state {
+                
+            case .uninitialized: // Added so switch would be exhaustive, no listener needed on startup
+                return
+
+            case .initializing:
+                notificatonName = Notification.Name.initializing
+
+            case .readyForGame:
+                notificatonName = Notification.Name.readyForGame
+
+            case .waitingForUserMMove:
+                notificatonName = Notification.Name.waitingForUserMove
+
+            case .waitingForMoveConfirmation:
+                notificatonName = Notification.Name.waitingForMoveConfirmation
+
+            case .waitingForOpponentMove:
+                notificatonName = Notification.Name.waitingForOpponentMove
+
+            case .gameOver:
+                notificatonName = Notification.Name.gameOver
+                
             }
+            NotificationCenter.default.post(name: notificatonName, object: self) // Used to drive the game state
+            NotificationCenter.default.post(name: .stateChanged , object: self) // Just used to update state label on game screen
+            
+
+//                NotificationCenter.default.post(name: .waitingForOpponentMove, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
+//            }
             
         }
     }
@@ -43,6 +72,4 @@ class StateMachine: StateMachineProtocol {
         case gameOver = "Game Over"
         
     }
-    
-    
 }

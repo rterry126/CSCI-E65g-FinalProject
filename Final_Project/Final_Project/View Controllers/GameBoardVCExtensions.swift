@@ -15,17 +15,20 @@ extension GameBoardVC: GameStateMachine {
     
     func stateInitializing() {
         
-        // Initialize the game state label
-        textGameStatus.text = StateMachine.state.rawValue
+        Util.log("View Controller initializing. State changed to  -> 2")
+        
+        // I think this is handled by the stateChange listener
+        //textGameStatus.text = StateMachine.state.rawValue
+        
         playerOneIndicator.isHidden = true
         playerTwoIndicator.isHidden = true
         
         activityIndicator.startAnimating()
         
-        //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
-        // VC has loaded so we change state to 2 - initializing
-        StateMachine.state = .initializing
-        Util.log("View Controller initializing. State changed to  -> 2")
+//        //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
+//        // VC has loaded so we change state to 2 - initializing
+//        StateMachine.state = .initializing
+        
         
         // This doesn't really do anything???
         //        fireStoreDB = FirebaseProxy.db // Get handle to our database

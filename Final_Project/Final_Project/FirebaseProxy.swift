@@ -134,6 +134,8 @@ class FirebaseProxy {
             
             self.activeRootObj = rootCollectionRef.document(rootID)
            
+            // Initializing is successful, change state
+            StateMachine.state = .readyForGame
             
         }
     }

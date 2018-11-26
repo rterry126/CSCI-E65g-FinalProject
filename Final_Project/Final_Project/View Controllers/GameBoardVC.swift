@@ -356,7 +356,7 @@ extension GameBoardVC {
         // Pass our state observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerStateMachine)
         
-        stateInitializing()
+       StateMachine.state = .initializing
 
         
       
