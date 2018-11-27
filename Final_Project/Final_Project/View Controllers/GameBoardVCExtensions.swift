@@ -141,7 +141,11 @@ extension GameBoardVC: GameStateMachine {
     @objc func stateWaitingForOpponent() {
         
         Util.log("Listener activitated for opponent move")
-        FirebaseProxy.instance.opponentMoveFirestore()
+        FirebaseProxy.instance.opponentMoveFirestore() { move in
+            
+            print("\(move)")
+            
+        }
         
         
         
