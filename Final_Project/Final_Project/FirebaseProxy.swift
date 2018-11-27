@@ -268,12 +268,14 @@ class FirebaseProxy {
         }
     }
     
-    listener = FirebaseProxy.db.collection("activeGame").addSnapshotListener
+//    listener = FirebaseProxy.db.collection("activeGame").addSnapshotListener
     
     func opponentMoveFirestore(completion: @escaping ([String: Any]) -> Void ) {
         print("opponent move Firestore function")
         
-        listener { querySnapshot, error in
+        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
+        
+        listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")
                     return
@@ -283,17 +285,21 @@ class FirebaseProxy {
            
             snapshot.documentChanges.forEach { diff in
                 
-//                    if (diff.type == .added) {
-//                        print("New city: \(diff.document.data())")
-//                    }
                 var temp: [String: Any]
-                    if (diff.type == .modified) {
+                
+                    if (diff.type == .added) {
+                        print("New city: \(diff.document.data())")
                         temp = diff.document.data()
-
-//                        print("Modified city: \(diff.document.data())")
                         completion(temp)
-                        
+
                     }
+//                    if (diff.type == .modified) {
+//                        temp = diff.document.data()
+//
+////                        print("Modified city: \(diff.document.data())")
+//                        completion(temp)
+//
+//                    }
 //                    if (diff.type == .removed) {
 //                        print("Removed city: \(diff.document.data())")
 //                    }
