@@ -94,7 +94,7 @@ class GameBoardVC: UIViewController {
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
         (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),
-                                                (.waitingForOpponentMove , #selector(stateWaitingForOpponent))]
+                                                (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent))]
     
     
     //MARK: - Init()

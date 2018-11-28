@@ -48,6 +48,11 @@ class StateMachine: StateMachineProtocol {
 //                notificatonName = Notification.Name.waitingForMoveConfirmation
                 //This listener is embeded in the model logic function executeMove, as it needs the move coordinates, etc to pass to selector function
                 return
+                
+            case .initialSnapshotOfGameBoard:
+                notificatonName = Notification.Name.initialSnapshotOfGameBoard
+                Util.log("state changed to .waitingForUserMove")
+
 
             case .waitingForOpponentMove:
                 notificatonName = Notification.Name.waitingForOpponentMove
@@ -73,6 +78,10 @@ class StateMachine: StateMachineProtocol {
         case readyForGame = "Ready for game"
         case waitingForUserMMove = "Ready for Your Move"
         case waitingForMoveConfirmation = "Waiting for confirmation of Your move"
+        // So when we first set a listener on Firestore waiting for opponent's move it returns current game board. We need to discard this
+        // and wait for the NEXT listener update, which is the opponent move. Could just use BOOL logic in the callback but this
+        // might be a little cleaner...
+        case initialSnapshotOfGameBoard = "Waiting for opponent's move "
         case waitingForOpponentMove = "Waiting for opponent's move"
         case gameOver = "Game Over"
         

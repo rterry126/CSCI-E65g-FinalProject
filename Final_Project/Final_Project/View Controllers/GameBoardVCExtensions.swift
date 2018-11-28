@@ -140,18 +140,29 @@ extension GameBoardVC: GameStateMachine {
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
         
-        var stateFirstCallback: Bool = true
+//        var stateFirstCallback: Bool = true
         
         Util.log("Listener activitated for opponent move")
         FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
             
-            if stateFirstCallback {
-                stateFirstCallback = false
+            
+            if StateMachine.state == .initialSnapshotOfGameBoard { // first snapshot, doesn't contain new move
+               StateMachine.state = .waitingForOpponentMove // Now we can get the actual move
             }
             else {
                 
                 print("\(move)")
-                listener.remove()
+                
+                //TODO: - parrse to ensure data is correct and move is correct//?
+                
+                let ID = move["player"]
+                let coordinates = (row: move["row"], column: move["column"])
+                let userInfo = ["playerID": ID, "coordinates": coordinates ]
+                listener.remove() // don't want or need notifications while it's our move
+                
+                // Set listener to update the game state model and the view
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: userInfo as [AnyHashable : Any])
+                
                 StateMachine.state = .waitingForUserMMove
             }
             
