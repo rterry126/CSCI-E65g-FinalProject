@@ -51,11 +51,14 @@ class StateMachine: StateMachineProtocol {
                 
             case .initialSnapshotOfGameBoard:
                 notificatonName = Notification.Name.initialSnapshotOfGameBoard
-                Util.log("state changed to .waitingForUserMove")
+                Util.log("state changed to .initial snapshot of board")
 
 
             case .waitingForOpponentMove:
-                notificatonName = Notification.Name.waitingForOpponentMove
+                Util.log("state changed to .waitingForOpponentMove")
+
+//                notificatonName = Notification.Name.waitingForOpponentMove
+                return
 
             case .gameOver:
                 notificatonName = Notification.Name.gameOver

@@ -129,7 +129,7 @@ extension GameBoardVC: GameStateMachine {
                     NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
                     
                     self.activityIndicator.stopAnimating()
-                    StateMachine.state = .waitingForOpponentMove
+                    StateMachine.state = .initialSnapshotOfGameBoard
                     
                     
                 }
@@ -154,14 +154,16 @@ extension GameBoardVC: GameStateMachine {
                 print("\(move)")
                 
                 //TODO: - parrse to ensure data is correct and move is correct//?
-                
-                let ID = move["player"]
-                let coordinates = (row: move["row"], column: move["column"])
-                let userInfo = ["playerID": ID, "coordinates": coordinates ]
+                print("row \(move["row"])")
+                print("col \(move["column"])")
+
+                let ID = self.modelGameLogic.whoseTurn
+                let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
+//                let userInfo = ["playerID": ID, "coordinates": coordinates ]
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
-                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: userInfo as [AnyHashable : Any])
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": ID, "coordinates": coordinates])
                 
                 StateMachine.state = .waitingForUserMMove
             }
