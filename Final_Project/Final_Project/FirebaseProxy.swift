@@ -270,7 +270,7 @@ class FirebaseProxy {
     
 //    listener = FirebaseProxy.db.collection("activeGame").addSnapshotListener
     
-    func opponentMoveFirestore(completion: @escaping ([String: Any]) -> Void ) {
+    func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
         print("opponent move Firestore function")
         
         moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
@@ -290,7 +290,7 @@ class FirebaseProxy {
                     if (diff.type == .added) {
                         print("New city: \(diff.document.data())")
                         temp = diff.document.data()
-                        completion(temp)
+                        completion(temp, self.listener)
 
                     }
 //                    if (diff.type == .modified) {
@@ -308,7 +308,7 @@ class FirebaseProxy {
                 }
             
         }
-//        listener.remove()
+//        listener.remove() removing here is too soon
         
         
         
