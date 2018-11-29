@@ -60,24 +60,23 @@ class FirebaseProxy {
     
     func electPlayerOne(completion: @escaping ( Bool ) -> Void ) {
         
-        let sfReference = FirebaseProxy.db.collection("elect_leader").document("123456")
+        let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
         
         FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
-            let sfDocument: DocumentSnapshot
+            let document: DocumentSnapshot
             do {
-                try sfDocument = transaction.getDocument(sfReference)
+                try document = transaction.getDocument(reference)
             } catch let fetchError as NSError {
                 errorPointer?.pointee = fetchError
                 return nil
             }
-            
-            guard let leaderBit = sfDocument.data()?["leader_bit"] as? Bool else {
+            guard let leaderBit = document.data()?["leader_bit"] as? Bool else {
                 
                 let error = NSError(
                     domain: "AppErrorDomain",
                     code: -1,
                     userInfo: [
-                        NSLocalizedDescriptionKey: "Unable to retrieve leader_bit from snapshot \(sfDocument)"
+                        NSLocalizedDescriptionKey: "Unable to retrieve leader_bit from snapshot \(document)"
                     ]
                 )
                 errorPointer?.pointee = error
@@ -86,29 +85,26 @@ class FirebaseProxy {
             print("leader Bit from Firestore \(leaderBit)")
             // leaderBit is current false, i.e. no player one. Go ahead and set
             if !leaderBit {
-                print("\nUpdated leader bit\n")
-                transaction.updateData(["leader_bit": true], forDocument: sfReference)
+                Util.log("\nUpdated leader bit\n")
+                transaction.updateData(["leader_bit": true], forDocument: reference)
                 // Update in model as well
             }
             else {
-                print("\nUpdated leader reset for next game\n")
-                transaction.updateData(["leader_bit": false], forDocument: sfReference)
+                Util.log("\nUpdated leader reset for next game\n")
+                transaction.updateData(["leader_bit": false], forDocument: reference)
             }
             
             return !leaderBit // Ideally this should return True and in completion block below we set in model
         })
         {(object, error) in
             guard let leaderBit = object as? Bool else {
-                print("Unable to set leader bit")
-                print(object)
+                Util.log("Unable to set leader bit")
                 return
             }
             if let error = error {
-                print("Transaction failed: \(error)")
-                print(leaderBit)
+                Util.log("Transaction failed: \(error)")
             } else {
-                print("Transaction successfully committed!")
-                print(leaderBit)
+                Util.log("Transaction successfully committed!")
                 completion(leaderBit)
 
             }

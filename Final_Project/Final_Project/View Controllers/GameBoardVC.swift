@@ -50,7 +50,13 @@ class GameBoardVC: UIViewController {
     @IBAction func newGameButton(_ sender: UIButton) {
         
         // New game button pressed. Change state
-        StateMachine.state = .waitingForUserMMove
+        
+        if modelGameLogic.amIPlayerOne {
+            StateMachine.state = .waitingForUserMMove
+        }
+        else {
+            StateMachine.state = .waitingForOpponentMove
+        }
 
         
     }
