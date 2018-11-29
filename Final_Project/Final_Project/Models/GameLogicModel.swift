@@ -60,6 +60,8 @@ class GameLogicModel: NSObject, Codable {
     // This is our default init IF game state isn't saved/persisted
     override init() {
         
+        
+        
         //Board Size, retrieve from preferences
         // Returns 0 if key is non-existent
         // Sets to default value stored in enum if key is non existent

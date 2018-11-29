@@ -15,6 +15,18 @@ import AVFoundation // Used to notify when timer/turn is about to expire via aud
 // timers using convenience code so move that here as well.
 class Factory {
     
+    func createInstance<C: NSObject , P: NSObjectProtocol>(c: C, p:P) {
+        let sharedInstance: p = {
+            let instance = c()
+            return instance
+            }
+        
+        // OR
+        
+        static let instance = c()
+        private init() {}
+    }
+    
    // Singleton Creation
 //    static let sharedInstance: GameLogicModelProtocol = {
 //        let instance = GameLogicModel()

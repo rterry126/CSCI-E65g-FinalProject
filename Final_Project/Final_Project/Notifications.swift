@@ -23,6 +23,7 @@ extension Notification.Name {
     
     // Network/game state change listeners
     static let initializing = NSNotification.Name("initializing")
+    static let electPlayerOne = NSNotification.Name("electPlayerOne")
     static let readyForGame = NSNotification.Name("readyForGame")
     static let waitingForUserMove = NSNotification.Name("waitingForUserMove")
     static let waitingForMoveConfirmation = NSNotification.Name("waitingForMoveConfirmation")
