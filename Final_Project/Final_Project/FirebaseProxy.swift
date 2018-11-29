@@ -58,11 +58,11 @@ class FirebaseProxy {
         }
     }
     
-    func electPlayerOne(completion: @escaping ( Bool ) -> Void) {
+    func electPlayerOne(completion: @escaping ( Bool ) -> Void ) {
         
         let sfReference = FirebaseProxy.db.collection("elect_leader").document("123456")
         
-        FirebaseProxy.db.runTransaction { (transaction, errorPointer) -> Any? in
+        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
             let sfDocument: DocumentSnapshot
             do {
                 try sfDocument = transaction.getDocument(sfReference)
@@ -83,27 +83,36 @@ class FirebaseProxy {
                 errorPointer?.pointee = error
                 return nil
             }
+            print("leader Bit from Firestore \(leaderBit)")
+            // leaderBit is current false, i.e. no player one. Go ahead and set
             if !leaderBit {
                 print("\nUpdated leader bit\n")
                 transaction.updateData(["leader_bit": true], forDocument: sfReference)
                 // Update in model as well
-                
+            }
+            else {
+                print("\nUpdated leader reset for next game\n")
+                transaction.updateData(["leader_bit": false], forDocument: sfReference)
             }
             
-            return nil // Ideally this should return True and in completion block below we set in model
+            return !leaderBit // Ideally this should return True and in completion block below we set in model
+        })
+        {(object, error) in
+            guard let leaderBit = object as? Bool else {
+                print("Unable to set leader bit")
+                print(object)
+                return
+            }
+            if let error = error {
+                print("Transaction failed: \(error)")
+                print(leaderBit)
+            } else {
+                print("Transaction successfully committed!")
+                print(leaderBit)
+                completion(leaderBit)
+
+            }
         }
-            
-        
-        
-        // 11/29 trying to figure out why thread isn't going back to main. commenting out for simplicity
-//        { (object, error) in
-//            if let error = error {
-//                print("Transaction failed: \(error)")
-//            } else {
-//                print("Transaction successfully committed!")
-//
-//            }
-//        }
     }
     
     // Async closure so call completion handler when done to continue
