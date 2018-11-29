@@ -58,12 +58,11 @@ class FirebaseProxy {
         }
     }
     
-    static func electLeader() {
+    func electPlayerOne(completion: @escaping ( Bool ) -> Void) {
         
         let sfReference = FirebaseProxy.db.collection("elect_leader").document("123456")
         
-    
-        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
+        FirebaseProxy.db.runTransaction { (transaction, errorPointer) -> Any? in
             let sfDocument: DocumentSnapshot
             do {
                 try sfDocument = transaction.getDocument(sfReference)
@@ -88,16 +87,23 @@ class FirebaseProxy {
                 print("\nUpdated leader bit\n")
                 transaction.updateData(["leader_bit": true], forDocument: sfReference)
                 // Update in model as well
+                
             }
+            
             return nil // Ideally this should return True and in completion block below we set in model
-        }) { (object, error) in
-            if let error = error {
-                print("Transaction failed: \(error)")
-            } else {
-                print("Transaction successfully committed!")
-            }
         }
-
+            
+        
+        
+        // 11/29 trying to figure out why thread isn't going back to main. commenting out for simplicity
+//        { (object, error) in
+//            if let error = error {
+//                print("Transaction failed: \(error)")
+//            } else {
+//                print("Transaction successfully committed!")
+//
+//            }
+//        }
     }
     
     // Async closure so call completion handler when done to continue

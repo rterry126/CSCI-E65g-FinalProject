@@ -140,6 +140,8 @@ class GameLogicModel: NSObject, Codable {
 
         }
     }
+    
+    private var _amIPlayerOne = false
 }
 
 
@@ -288,6 +290,16 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         set {
             _gameBoard = newValue
+        }
+    }
+    
+    // Set during election. Shouldn't change afterwards
+    var amIPlayerOne: Bool {
+        get {
+            return _amIPlayerOne
+        }
+        set {
+            _amIPlayerOne = newValue
         }
     }
     

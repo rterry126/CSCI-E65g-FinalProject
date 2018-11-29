@@ -91,7 +91,7 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
         (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),
                                                 (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent))]
@@ -139,6 +139,13 @@ class GameBoardVC: UIViewController {
     //MARK: - Functions
     
     func displayAlert(message: String) {
+        
+        let alert = UIAlertController(title: "Game Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func displayAlert(title: String, message: String) {
         
         let alert = UIAlertController(title: "Game Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
@@ -357,7 +364,9 @@ extension GameBoardVC {
         // Pass our state observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerStateMachine)
         
-       StateMachine.state = .initializing
+//       StateMachine.state = .initializing
+        StateMachine.state = .electPlayerOne
+
 
         
       

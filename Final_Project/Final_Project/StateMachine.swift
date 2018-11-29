@@ -31,6 +31,10 @@ class StateMachine: StateMachineProtocol {
                 
             case .uninitialized: // Added so switch would be exhaustive, no listener needed on startup
                 return
+                
+            case .electPlayerOne: // Added before the game is initialized. Whoever is player one will upload saved game, if it exists.
+                notificatonName = Notification.Name.electPlayerOne
+                Util.log("state changed to .electPlayerOne")
 
             case .initializing:
                 notificatonName = Notification.Name.initializing
@@ -77,6 +81,7 @@ class StateMachine: StateMachineProtocol {
     enum State: String {
         
         case uninitialized = "Welcome"
+        case electPlayerOne = "Determining Player One"
         case initializing = "Initializing"
         case readyForGame = "Ready for game"
         case waitingForUserMMove = "Ready for Your Move"

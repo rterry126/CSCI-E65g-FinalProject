@@ -42,6 +42,7 @@ protocol GameStateMachine: class {
     func stateInitializing()
     func stateReadyForGame()
     func stateWaitingForUserMove()
+    func stateElectPlayerOne()
 
 }
 
@@ -68,6 +69,8 @@ protocol GameLogicModelProtocol: class, Codable {
     
     var totalTurns: Int { get }
     var gameBoard: [[GridState]] { get set }
+    
+    var amIPlayerOne: Bool { get set }
     
     
 }

@@ -21,6 +21,35 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
+    @objc func stateElectPlayerOne() {
+        
+//        activityIndicator.startAnimating() // Transaction on Firstore, this could take a while
+        
+        Util.log("Player election function called in proxy")
+        FirebaseProxy.instance.electPlayerOne() { success in
+            
+            if success {
+                
+                // For now write this directly to MOdel, however would like to eventually move to listener
+                
+                self.modelGameLogic.amIPlayerOne = true
+            }
+            //No 'else' needed as default is false
+            
+            
+            
+            
+            // Now advance to state .initializing
+            StateMachine.state = .initializing
+            
+            let player =  success ? "Player One" : "Player Two"
+            self.displayAlert(title: "Election Complete", message: "You are \(player)")
+        
+        } // End of callback closure
+        
+        
+    }
+    
     @objc func stateInitializing() {
         
         Util.log("View Controller initializing. State changed to  -> 2")
