@@ -185,13 +185,14 @@ extension GameBoardVC: GameStateMachine {
 
                 let ID = self.modelGameLogic.whoseTurn
                 let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
+                print(coordinates)
 //                let userInfo = ["playerID": ID, "coordinates": coordinates ]
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
                 NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": ID, "coordinates": coordinates])
                 
-                StateMachine.state = .waitingForUserMMove
+                StateMachine.state = .waitingForUserMove
             }
             
         }

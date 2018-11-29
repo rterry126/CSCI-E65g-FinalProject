@@ -52,10 +52,11 @@ class GameBoardVC: UIViewController {
         // New game button pressed. Change state
         
         if modelGameLogic.amIPlayerOne {
-            StateMachine.state = .waitingForUserMMove
+            StateMachine.state = .waitingForUserMove
         }
         else {
-            StateMachine.state = .waitingForOpponentMove
+            print("new game button pushed and I am player two")
+            StateMachine.state = .initialSnapshotOfGameBoard
         }
 
         

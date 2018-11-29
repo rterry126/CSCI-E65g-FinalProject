@@ -44,7 +44,7 @@ class StateMachine: StateMachineProtocol {
                 notificatonName = Notification.Name.readyForGame
                 Util.log("state changed to .readyForGame")
 
-            case .waitingForUserMMove:
+            case .waitingForUserMove:
                 notificatonName = Notification.Name.waitingForUserMove
                 Util.log("state changed to .waitingForUserMove")
 
@@ -84,7 +84,7 @@ class StateMachine: StateMachineProtocol {
         case electPlayerOne = "Determining Player One"
         case initializing = "Initializing"
         case readyForGame = "Ready for game"
-        case waitingForUserMMove = "Ready for Your Move"
+        case waitingForUserMove = "Ready for Your Move"
         case waitingForMoveConfirmation = "Waiting for confirmation of Your move"
         // So when we first set a listener on Firestore waiting for opponent's move it returns current game board. We need to discard this
         // and wait for the NEXT listener update, which is the opponent move. Could just use BOOL logic in the callback but this
