@@ -53,6 +53,9 @@ class GameLogicModel: NSObject, Codable {
         _whoseTurn = whoseTurnVal
         _gameState = gameStateVal
         
+        //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
+        _maxTurns = 10
+        
         super.init()
     }
     
@@ -72,6 +75,11 @@ class GameLogicModel: NSObject, Codable {
         if _numColumns == 0 {
             _numColumns = PrefKeys.BoardSize.columns.rawValue
         }
+        let gridSize = Double(_numRows * _numColumns)
+        _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.85))
+        print("Max turns \(_maxTurns)")
+        
+        
         
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _moveCount = 0
@@ -111,9 +119,10 @@ class GameLogicModel: NSObject, Codable {
             // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
             //TODO:
-            // Changed 11/1/18 - Discovered maxTurns was actually number of moves. Since each turn
-            // should count as 2 moves, double _maxTurns. Refactor in the future to address correctly
-            if oldValue == (_maxTurns) * 2 - 1 {
+            // Figure out how to have game end simultaneously on both sides...
+            // Game will end when below is true, so...
+            // 1) Update state variable 2) send the other player a message to update their state variable
+            if oldValue == (_maxTurns)  {
                 
                 
                 // So result is hard coded for now
@@ -127,9 +136,11 @@ class GameLogicModel: NSObject, Codable {
             }
         }
     }
-    // TODO: - this logic is faulty as it advances after each move, not 'turn'. so multiply by 2
-    // or some other hack so that every player gets same number of turns
-    private let _maxTurns = 5
+    
+    // This is initially calculated regardless of whether or not player 1 or 2. That's just to keep
+    // code cleaner. IF player 2 then we will update it via Firestore from the value calculated by
+    // Player 1
+    private var _maxTurns: Int // Random and set in init()
     private var _whoseTurn: GridState // Start with player one
     
     // When game starts the state is .ongoing, however if state changes notification should happen
@@ -236,6 +247,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
+    //TODO: - Not curently used 11/30
     func resetModel() {
         
         //Board Size, retrieve from preferences
@@ -300,6 +312,16 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         set {
             _amIPlayerOne = newValue
+        }
+    }
+    
+    var maxTurns: Int {
+        get {
+            return _maxTurns
+        }
+        set {
+            _maxTurns = newValue
+            print("max turns set via setter. Value is \(_maxTurns)")
         }
     }
     

@@ -72,6 +72,8 @@ protocol GameLogicModelProtocol: class, Codable {
     
     var amIPlayerOne: Bool { get set }
     
+    var maxTurns: Int { get set } // Need to make this public. Player 1 sets this randomly, need to now set it in player 2 via Firestore
+    
     
 }
 
