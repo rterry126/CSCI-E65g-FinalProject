@@ -6,8 +6,11 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
+// Sources - Blurring a view - https://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view
+
 import UIKit
 import Firebase
+import AVFoundation
 
 
 //MARK: - GameStateMachine extension
@@ -99,6 +102,10 @@ extension GameBoardVC: GameStateMachine {
         
         Util.log("Machine state is \(StateMachine.state.rawValue)")
         
+        //TODO: - Change sound
+        // Audio to let user know it's their turn
+        AudioServicesPlayAlertSound(SystemSoundID(1103))
+        
         // Probably don't need to disable AND hide...
         newGameButtonOutlet.isEnabled = false
         newGameButtonOutlet.isHidden = true
@@ -166,6 +173,8 @@ extension GameBoardVC: GameStateMachine {
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
         
+//        blurView(view: gameView)
+        
 //        var stateFirstCallback: Bool = true
         
         Util.log("Listener activitated for opponent move")
@@ -200,6 +209,25 @@ extension GameBoardVC: GameStateMachine {
         
         
     }
+    
+//    func blurView(view: UIView?) {
+//        if let view = view {
+//            if !UIAccessibility.isReduceTransparencyEnabled {
+//                view.backgroundColor = .clear
+//
+//                let blurEffect = UIBlurEffect(style: .regular)
+//                let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//                //always fill the view
+//                blurEffectView.frame = view.frame.offsetBy(dx: 0.0, dy: -94.0) // Only blur the board
+////                blurEffectView.frame = self.view.bounds
+//                blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//
+//                view.addSubview(blurEffectView) //if you have more UIViews, use an insertSubview API to place it where needed
+//            } else {
+//                view.backgroundColor = .black
+//            }
+//        }
+//    }
     
     
     
