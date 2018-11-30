@@ -145,6 +145,7 @@ class GameBoardVC: UIViewController {
     
     //MARK: - Functions
     
+    //TODO: move to factory
     func displayAlert(message: String) {
         
         let alert = UIAlertController(title: "Game Error", message: message, preferredStyle: .alert)
@@ -154,7 +155,7 @@ class GameBoardVC: UIViewController {
     
     func displayAlert(title: String, message: String) {
         
-        let alert = UIAlertController(title: "Game Error", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }

@@ -180,8 +180,8 @@ extension GameBoardVC: GameStateMachine {
                 print("\(move)")
                 
                 //TODO: - parrse to ensure data is correct and move is correct//?
-                print("row \(move["row"])")
-                print("col \(move["column"])")
+//                print("row \(move["row"])")
+//                print("col \(move["column"])")
 
                 let ID = self.modelGameLogic.whoseTurn
                 let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
