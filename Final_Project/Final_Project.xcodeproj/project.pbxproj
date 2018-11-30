@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		13E142B5664A8636D8F352B0 /* Pods_Final_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */; };
 		E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */; };
+		E10D153821B16E1B00E859CC /* Ideas_toDo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E10D153721B16E1B00E859CC /* Ideas_toDo.rtf */; };
 		E1462B05219B1550002BFFED /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1462B04219B1550002BFFED /* Factory.swift */; };
 		E1462B0B219C83FE002BFFED /* HistoryDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */; };
 		E1578476219769A900F142CA /* HistoryMasterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1578475219769A900F142CA /* HistoryMasterVC.swift */; };
@@ -47,6 +48,7 @@
 		716B2219D2357C408C4E5D7A /* Pods-Final_Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.debug.xcconfig"; sourceTree = "<group>"; };
 		D163329055C809AFA8ED7918 /* Pods_Final_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Final_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BAA7E218F1F5100FDCC27 /* HelpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
+		E10D153721B16E1B00E859CC /* Ideas_toDo.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Ideas_toDo.rtf; sourceTree = "<group>"; };
 		E1462B04219B1550002BFFED /* Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		E1462B0A219C83FE002BFFED /* HistoryDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailVC.swift; sourceTree = "<group>"; };
 		E1578475219769A900F142CA /* HistoryMasterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMasterVC.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		E1B00A91218E4A370032A66E = {
 			isa = PBXGroup;
 			children = (
+				E10D153721B16E1B00E859CC /* Ideas_toDo.rtf */,
 				E1B00A9C218E4A370032A66E /* Final_Project */,
 				E1B00A9B218E4A370032A66E /* Products */,
 				D802641DAF8CD65ABA2C27DC /* Pods */,
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1B00AD6218E4A8B0032A66E /* LaunchScreen.storyboard in Resources */,
+				E10D153821B16E1B00E859CC /* Ideas_toDo.rtf in Resources */,
 				E173AA3521AB19AF00BA00F9 /* GreenButton.png in Resources */,
 				E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */,
 				E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */,
