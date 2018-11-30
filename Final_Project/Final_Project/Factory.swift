@@ -106,13 +106,21 @@ class Factory {
     
     /************** Alert Factory *********************/
     
-    static func createAlert(_ error: Error) -> UIAlertController {
+    // NOt sure this is used but need to change name tomatch below
+    static func createAlert(_ error: Error, _ title: String = "Firestore Error") -> UIAlertController {
         
         // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
-        let alert = UIAlertController(title: "Firebase Error", message: error.localizedDescription, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
         
         return alert
+    }
+    
+    static func displayAlert(target: AnyObject, message: String, title: String = "Game Error") {
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+        target.present(alert, animated: true, completion: nil)
     }
     
 

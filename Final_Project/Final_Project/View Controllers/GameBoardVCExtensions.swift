@@ -40,7 +40,7 @@ extension GameBoardVC: GameStateMachine {
             StateMachine.state = .initializing
             
             let player =  success ? "Player One" : "Player Two"
-            self.displayAlert(title: "Election Complete", message: "You are \(player)")
+            Factory.displayAlert(target: self, message: "You are \(player)", title: "Election Complete")
 
         } // End of callback closure
     

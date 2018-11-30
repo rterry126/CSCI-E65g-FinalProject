@@ -71,7 +71,7 @@ extension GameBoardVC: GameGridViewDelegate {
         catch let e {
             if let gameLogicError = e as? GameLogicError {
                 
-                displayAlert(message: gameLogicError.rawValue)
+                Factory.displayAlert(target: self, message: gameLogicError.rawValue)
             }
         }
     }
