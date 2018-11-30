@@ -33,7 +33,7 @@ class GameLogicModel: NSObject, Codable {
     // CaseIterable added to know what values to save to Firestore
     enum CodingKeys: String, CodingKey, CaseIterable {
         case _gameBoard
-        case _totalTurns
+        case _moveCount
         case _whoseTurn
         case _gameState
     }
@@ -43,13 +43,13 @@ class GameLogicModel: NSObject, Codable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
-        let totalTurnsVal: Int = try container.decode(Int.self, forKey: ._totalTurns) // extracting the data
+        let moveCountVal: Int = try container.decode(Int.self, forKey: ._moveCount) // extracting the data
         let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
         let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
         
         // Now set the 4 items that we decided were important enough to save
         _gameBoard = gameBoardVal
-        _totalTurns = totalTurnsVal
+        _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
         _gameState = gameStateVal
         
@@ -74,7 +74,7 @@ class GameLogicModel: NSObject, Codable {
         }
         
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
-        _totalTurns = 0
+        _moveCount = 0
         _whoseTurn = GridState.playerOne
         _gameState = GameState.ongoing
         
@@ -103,10 +103,10 @@ class GameLogicModel: NSObject, Codable {
     
     //MARK: - Game Logic
     
-    private var _totalTurns: Int {
+    private var _moveCount: Int {
         didSet {
             
-            print("Model ==> Model: didSet(_totalTurns) updated to \(_totalTurns.description)")
+            print("Model ==> Model: didSet(_moveCount) updated to \(_moveCount.description)")
             
             // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
             
@@ -196,13 +196,13 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         
         // Normal case - valid move
-        print(totalTurns)
+        print(moveCount)
         
         
         StateMachine.state = .waitingForMoveConfirmation
 
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
-        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "totalTurns": totalTurns ])
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "moveCount": moveCount ])
         
         
         
@@ -219,14 +219,14 @@ extension GameLogicModel: GameLogicModelProtocol {
         
         print("Player who just moved was \(ID)")
         print("move at \(coordinates)")
-        print("turns \(_totalTurns)")
+        print("turns \(_moveCount)")
     }
     
     
     // Called by observer in GameViewController successfulBoardMove
-    func incrementTotalTurns() {
-        print("Controller ==> Model: incrementTotalTurns:")
-        _totalTurns += 1
+    func incrementMoveCount() {
+        print("Controller ==> Model: incrementMoveCount:")
+        _moveCount += 1
     }
     
     
@@ -252,7 +252,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
-        _totalTurns = 0
+        _moveCount = 0
         _whoseTurn = GridState.playerOne
         _gameState = GameState.ongoing
         
@@ -277,9 +277,9 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
-    var totalTurns: Int {
+    var moveCount: Int {
         get {
-            return _totalTurns
+            return _moveCount
         }
     }
     

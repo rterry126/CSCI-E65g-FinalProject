@@ -141,7 +141,7 @@ extension GameBoardVC: GameStateMachine {
             fatalError("Cannot retrieve playerID")
         }
         
-        guard let moveNumber = notification.userInfo!["totalTurns"] as? Int else {
+        guard let moveNumber = notification.userInfo!["moveCount"] as? Int else {
             fatalError("Cannot retrieve turn number")
         }
         

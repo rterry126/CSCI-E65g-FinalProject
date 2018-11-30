@@ -247,7 +247,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // Otherwise, if last move, a observer to execute end of game routines will be called
        
         // Set timers for next move. If end of game then these will be invalidated in endOfGame. Could
-        // complicate this by having endOfGame return a bool, move this below .incrementTotalTurns
+        // complicate this by having endOfGame return a bool, move this below .incrementMoveCount
         // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
         // cleaner
         
@@ -257,9 +257,9 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
-        modelGameLogic.incrementTotalTurns()
+        modelGameLogic.incrementMoveCount()
         
-        // .incrementTotalTurns has two observers set 1) if it's end of game, then that function is run
+        // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
         
         
@@ -327,7 +327,7 @@ extension GameBoardVC: GameLogicModelObserver {
     }
     
     
-    // Called by .incrementTotalTurns. It's not the end of game so call update player logic
+    // Called by .incrementMoveCount. It's not the end of game so call update player logic
     @objc func updatePlayer() {
         
         // Simple function that alternates turns and returns whose turn it is

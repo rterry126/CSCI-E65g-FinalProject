@@ -55,7 +55,7 @@ protocol GameLogicModelProtocol: class, Codable {
     
     var whoseTurn: GridState { get }
     
-    func incrementTotalTurns()
+    func incrementMoveCount()
     
     func gridState(at location: GridCoord) -> GridState
     
@@ -67,7 +67,7 @@ protocol GameLogicModelProtocol: class, Codable {
     
     func resetModel()
     
-    var totalTurns: Int { get }
+    var moveCount: Int { get }
     var gameBoard: [[GridState]] { get set }
     
     var amIPlayerOne: Bool { get set }
