@@ -14,7 +14,7 @@ extension Notification.Name {
     
     static let turnCountIncreased = NSNotification.Name("turnCountIncreased")
     
-    static let gameState = NSNotification.Name("gameState")
+//    static let gameState = NSNotification.Name("gameState")
     static let moveExecuted = NSNotification.Name("moveExecuted")
     static let namesChanged = NSNotification.Name("namesChanged")
     static let colorsChanged = NSNotification.Name("colorsChanged")

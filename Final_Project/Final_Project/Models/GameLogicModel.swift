@@ -35,7 +35,7 @@ class GameLogicModel: NSObject, Codable {
         case _gameBoard
         case _moveCount
         case _whoseTurn
-        case _gameState
+//        case _gameState
     }
     
     // Set game state from persisted data IF it exists
@@ -45,13 +45,13 @@ class GameLogicModel: NSObject, Codable {
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
         let moveCountVal: Int = try container.decode(Int.self, forKey: ._moveCount) // extracting the data
         let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
-        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
+//        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
         
         // Now set the 4 items that we decided were important enough to save
         _gameBoard = gameBoardVal
         _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
-        _gameState = gameStateVal
+//        _gameState = gameStateVal
         
         //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
         _maxTurns = 10
@@ -76,15 +76,21 @@ class GameLogicModel: NSObject, Codable {
             _numColumns = PrefKeys.BoardSize.columns.rawValue
         }
         let gridSize = Double(_numRows * _numColumns)
-        _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.85))
+        _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.65))
+        // For now set to a constant until I upload to Firstore and download to player 2
+        _maxTurns = 22
         print("Max turns \(_maxTurns)")
+        
         
         
         
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _moveCount = 0
         _whoseTurn = GridState.playerOne
-        _gameState = GameState.ongoing
+        
+        // This will need to be replaced by state machine variable when restoring game, which will vary
+        // depending on turn
+//        _gameState = GameState.ongoing
         
         super.init()
     }
@@ -127,7 +133,11 @@ class GameLogicModel: NSObject, Codable {
                 
                 // So result is hard coded for now
                 //TODO: future implementation let the game playing logic set this...
-                _gameState = .completedDraw
+                
+                // Commented out 12.1.18 - Superceded by state machine
+//                _gameState = .completedDraw
+                
+                StateMachine.state = .gameOver
             }
             else {
                 
@@ -144,13 +154,16 @@ class GameLogicModel: NSObject, Codable {
     private var _whoseTurn: GridState // Start with player one
     
     // When game starts the state is .ongoing, however if state changes notification should happen
-    private var _gameState: GameState {
-        didSet {
-            Util.log("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
-            NotificationCenter.default.post(name: .gameState, object: self)
-
-        }
-    }
+    
+    // Commented out 12.1.18 - variable decpreciated and superceded by state machine
+    
+//    private var _gameState: GameState {
+//        didSet {
+//            Util.log("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
+//            NotificationCenter.default.post(name: .gameState, object: self)
+//
+//        }
+//    }
     
     private var _amIPlayerOne = false
 }
@@ -159,6 +172,8 @@ class GameLogicModel: NSObject, Codable {
 
 //MARK: Extension Game Model Protocol
 extension GameLogicModel: GameLogicModelProtocol {
+    
+    
     
     
     // Size of game board
@@ -191,10 +206,11 @@ extension GameLogicModel: GameLogicModelProtocol {
          
          
          */
-        guard _gameState == .ongoing else {
-            // Game is over
-            throw GameLogicError.gameOver
-        }
+        // Commented out 12.1.18 If game is over then board is locked, plus this variable is depreciated
+//        guard _gameState == .ongoing else {
+//            // Game is over
+//            throw GameLogicError.gameOver
+//        }
         guard ID == _whoseTurn else {
             // Play out of turn
             throw GameLogicError.outOfTurn
@@ -266,7 +282,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _moveCount = 0
         _whoseTurn = GridState.playerOne
-        _gameState = GameState.ongoing
+//        _gameState = GameState.ongoing // Commented out 12.1.18
         
         Util.log("Model has been reset")
         
@@ -282,12 +298,12 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
     }
     
-    var gameState: GameState {
-        get {
-            return _gameState
-        }
-        
-    }
+//    var gameState: GameState {
+//        get {
+//            return _gameState
+//        }
+//        
+//    }
     
     var moveCount: Int {
         get {

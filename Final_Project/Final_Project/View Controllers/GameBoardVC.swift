@@ -92,7 +92,7 @@ class GameBoardVC: UIViewController {
     // 'observerArray' is type alias
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
-                                             (.gameState, #selector(endOfGame)),
+                                            /* (.gameState, #selector(endOfGame)), */
                                              (.moveExecuted, #selector(successfulBoardMove))]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
@@ -508,6 +508,7 @@ extension GameBoardVC {
         
         gameView?.changeGridState(x: location.column, y: location.row)
         
+        Factory.displayAlert(target: self, message: "\(modelGameLogic.moveCount)", title: "Move Count")
         
     }
 }

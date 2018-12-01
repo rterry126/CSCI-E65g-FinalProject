@@ -18,6 +18,7 @@ protocol StateMachineProtocol: class {
     //var instance: StateMachineProtocol { get }
     
     
+    
 }
 
 
@@ -63,7 +64,7 @@ protocol GameLogicModelProtocol: class, Codable {
     
     func setTurn()
     
-    var gameState: GameState { get }
+//    var gameState: GameState { get }
     
     func resetModel()
     

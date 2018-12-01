@@ -74,13 +74,13 @@ enum GridState: String, CaseIterable, Codable {
 }
 
 
-enum GameState: String, CaseIterable, Codable {
-    
-    case ongoing = "Ongoing"
-    case completedDraw = "Completed - Draw"
-    case completedOne = "Completed - Player One wins"
-    case completedTwo = "Completed - Player Two wins"
-}
+//enum GameState: String, CaseIterable, Codable {
+//    
+//    case ongoing = "Ongoing"
+//    case completedDraw = "Completed - Draw"
+//    case completedOne = "Completed - Player One wins"
+//    case completedTwo = "Completed - Player Two wins"
+//}
 
 //MARK: - Type aliases
 
