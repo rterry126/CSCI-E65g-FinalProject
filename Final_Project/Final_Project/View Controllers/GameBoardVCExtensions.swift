@@ -162,6 +162,8 @@ extension GameBoardVC: GameStateMachine {
                     NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
                     
                     self.activityIndicator.stopAnimating()
+                    
+                    // Moved to gameLogicModel _moveCount
                     StateMachine.state = .initialSnapshotOfGameBoard
                     
                     

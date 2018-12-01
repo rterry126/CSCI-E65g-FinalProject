@@ -13,7 +13,7 @@ import Foundation
 
 
 enum GameLogicError: String,Error {
-    case gameOver = "The game is over."
+//    case gameOver = "The game is over."
     case outOfTurn = "It's not your turn to move."
     case invalidLocation = "You have clicked on a location that is out of bounds. Try again"
     case gridOccupied = "That square is already occupied. Try again"
@@ -78,7 +78,7 @@ class GameLogicModel: NSObject, Codable {
         let gridSize = Double(_numRows * _numColumns)
         _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.65))
         // For now set to a constant until I upload to Firstore and download to player 2
-        _maxTurns = 22
+        _maxTurns = 6
         print("Max turns \(_maxTurns)")
         
         
@@ -122,13 +122,7 @@ class GameLogicModel: NSObject, Codable {
             
             print("Model ==> Model: didSet(_moveCount) updated to \(_moveCount.description)")
             
-            // Robert - if the listener isn't nil, as it's an optional, then call the appropriate listener (end of game or update player)
-            
-            //TODO:
-            // Figure out how to have game end simultaneously on both sides...
-            // Game will end when below is true, so...
-            // 1) Update state variable 2) send the other player a message to update their state variable
-            if oldValue == (_maxTurns)  {
+            if oldValue == (_maxTurns - 1)  {
                 
                 
                 // So result is hard coded for now
@@ -140,8 +134,9 @@ class GameLogicModel: NSObject, Codable {
                 StateMachine.state = .gameOver
             }
             else {
-                
                 NotificationCenter.default.post(name: .turnCountIncreased, object: self)
+                
+
                 
             }
         }
@@ -302,7 +297,7 @@ extension GameLogicModel: GameLogicModelProtocol {
 //        get {
 //            return _gameState
 //        }
-//        
+//
 //    }
     
     var moveCount: Int {

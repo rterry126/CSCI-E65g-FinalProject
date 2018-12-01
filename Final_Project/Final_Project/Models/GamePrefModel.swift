@@ -160,7 +160,6 @@ extension GamePrefModel: GamePrefModelProtocol {
     
     var playerOneName: String {
         get {
-            print("returning _playerOneName from getter \(_playerOneName)")
             return _playerOneName
         }
         set {

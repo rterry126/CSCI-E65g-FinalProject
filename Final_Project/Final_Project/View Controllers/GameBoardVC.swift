@@ -101,7 +101,8 @@ class GameBoardVC: UIViewController {
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
         (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),
-                                                (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent))]
+                                                (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),
+                                                (.gameOver, #selector(endOfGame))]
     
     
     //MARK: - Init()
@@ -268,6 +269,7 @@ extension GameBoardVC: GameLogicModelObserver {
     @objc func endOfGame() {
         // Called when num of turns in model is increased to max turns.
         
+        Factory.displayAlert(target: self, message: "end of game called")
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
@@ -279,23 +281,26 @@ extension GameBoardVC: GameLogicModelObserver {
         
         updateUI()
         
-        // Delete saved game, otherwise we are in a loop that just fetches saved game
-        do {
-            Util.log("End of game. Deleting saved game state \(modelGameLogic)")
-            
-            try Persistence.deleteSavedGame()
-            
-            // Get image of gameboard
-            //TODO: Force unwrapping now just to test
-            let image = gameView!.asImage()
-            sharedFirebaseProxy.storeGameBoardImage(image: image)
-            
-            
-        }
-        catch let e {
-            Util.log("Deleting previous game failed: \(e)")
-        }
+        // Commented out on 12.1.18 - Somehow end of game is letting play continue although
+        //inputs are invalidated above
         
+//        // Delete saved game, otherwise we are in a loop that just fetches saved game
+//        do {
+//            Util.log("End of game. Deleting saved game state \(modelGameLogic)")
+//
+//            try Persistence.deleteSavedGame()
+//
+//            // Get image of gameboard
+//            //TODO: Force unwrapping now just to test
+//            let image = gameView!.asImage()
+//            sharedFirebaseProxy.storeGameBoardImage(image: image)
+//
+//
+//        }
+//        catch let e {
+//            Util.log("Deleting previous game failed: \(e)")
+//        }
+//
         
         
         // Play again?
