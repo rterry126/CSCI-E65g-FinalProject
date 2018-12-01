@@ -124,7 +124,7 @@ class GameLogicModel: NSObject, Codable {
             
             if oldValue == (_maxTurns - 1)  {
                 
-                
+                Util.log("getting ready to initialize .gameOver state")
                 // So result is hard coded for now
                 //TODO: future implementation let the game playing logic set this...
                 
@@ -134,6 +134,16 @@ class GameLogicModel: NSObject, Codable {
                 StateMachine.state = .gameOver
             }
             else {
+                
+                // TODO: - 12.1.18 This is ugly too, however if it's not the end of game then change to appropriate state...
+                if StateMachine.state == .waitingForOpponentMove {
+                    StateMachine.state = .waitingForUserMove
+                }
+                else {
+                    StateMachine.state = .initialSnapshotOfGameBoard
+                }
+                
+                //TODO: - 12.1.18 Eventually get rid of this and incorporate into simplier logic
                 NotificationCenter.default.post(name: .turnCountIncreased, object: self)
                 
 
@@ -189,7 +199,7 @@ extension GameLogicModel: GameLogicModelProtocol {
     // Logic - if it doesn't throw an error then it was successful. Observers will carry the rest??
     func executeMove(playerID ID: GridState, moveCoordinates coordinates: GridCoord) throws  {
         /*
-         1. Check if game is over
+            Check if game is over
          2. Check if valid player
          3. Check if valid location, i.e. on the board
          4. Check if valid location, i.e. unoccupied.
@@ -220,8 +230,8 @@ extension GameLogicModel: GameLogicModelProtocol {
         // Normal case - valid move
         print(moveCount)
         
-        
-        StateMachine.state = .waitingForMoveConfirmation
+        // 12.1.18 moved to stateWaitingForMoveConfirmation for cleanliness
+//        StateMachine.state = .waitingForMoveConfirmation
 
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
         NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "moveCount": moveCount ])

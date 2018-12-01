@@ -44,6 +44,8 @@ protocol GameStateMachine: class {
     func stateReadyForGame()
     func stateWaitingForUserMove()
     func stateElectPlayerOne()
+    func stateWaitingForMoveConfirmation(_ notification :Notification)
+    func stateWaitingForOpponent()
 
 }
 

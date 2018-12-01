@@ -56,6 +56,13 @@ class GameBoardVC: UIViewController {
         }
         else {
             print("new game button pushed and I am player two")
+            
+            //TODO: - Put this somewhere else.
+            
+            // Probably don't need to disable AND hide...
+            newGameButtonOutlet.isEnabled = false
+            newGameButtonOutlet.isHidden = true
+            
             StateMachine.state = .initialSnapshotOfGameBoard
         }
 
@@ -93,14 +100,14 @@ class GameBoardVC: UIViewController {
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
                                             /* (.gameState, #selector(endOfGame)), */
-                                             (.moveExecuted, #selector(successfulBoardMove))]
+                                             /*(.moveExecuted, #selector(successfulBoardMove))*/]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
         (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
-        (.moveStoredFirestore, #selector(updateGameView)),
+        (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
                                                 (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),
                                                 (.gameOver, #selector(endOfGame))]
     
@@ -227,6 +234,9 @@ extension GameBoardVC: GameLogicModelObserver {
     
     @objc func successfulBoardMove() {
         
+        //TODO: - 12.1.18 Will need to eventually move the stateMachine update here
+        // to work with the timer and loss of turn if not executed in time...
+        
         
         // A couple of possibilities here:
         // 1. Player makes move within alloted time AND before warning. Invalidate BOTH timers since
@@ -262,6 +272,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
+        Factory.displayAlert(target: self, message: "\(modelGameLogic.moveCount)", title: "Move Count")
         
         
     }
@@ -489,7 +500,7 @@ extension GameBoardVC {
         
         Util.log("update Game View called via listener")
         
-        // notification has a dict 'userInfo' that we've used to pass moves, etc. Dict is optional and must be unwrapped
+        // 1) Get coordinates
         guard let location = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
             fatalError("Cannot retrieve coordinates of move")
         }
@@ -499,21 +510,26 @@ extension GameBoardVC {
             fatalError("Cannot retrieve playerID")
         }
         
-        
-
         print(location.column)
         print(location.row)
         
+        // 2) Update the Logic Model Array
         modelGameLogic.gameBoard[location.row][location.column] = playerID
-
-
-        // Notify controller that successful move was executed
-        NotificationCenter.default.post(name: .moveExecuted, object: self)
         
-        
+        // 3) Update the View Grid
         gameView?.changeGridState(x: location.column, y: location.row)
         
-        Factory.displayAlert(target: self, message: "\(modelGameLogic.moveCount)", title: "Move Count")
+        // 4) Still need to update the game state
+        // So it's updated via same listener that triggers this
+
+
+//        // Notify controller that successful move was executed
+//        NotificationCenter.default.post(name: .moveExecuted, object: self)
+        
+        
+        
+        
+        
         
     }
 }

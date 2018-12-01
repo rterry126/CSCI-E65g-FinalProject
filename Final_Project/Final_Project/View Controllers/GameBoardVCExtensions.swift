@@ -16,6 +16,8 @@ import AVFoundation
 //MARK: - GameStateMachine extension
 extension GameBoardVC: GameStateMachine {
     
+    
+    
     // As game state changes through initialization AND play, listener will modify the text field
     @objc func updateGameStateLabel() {
         
@@ -123,15 +125,17 @@ extension GameBoardVC: GameStateMachine {
     // Triggered by listener in .executeMove in GameLogicModel. 'notification' passes us the move coordinates
     @objc func stateWaitingForMoveConfirmation(_ notification :Notification) {
         
-        // the GameLogicModel (executeMove) first determines that the move is valid (grid not occupied, game not over, in bounds,...)
-        // IF valid, only then do we attempt to store the move to the cloud..
+        StateMachine.state = .waitingForMoveConfirmation
+
+        // the GameLogicModel (executeMove) has determined that the move is valid (grid not occupied, in bounds,...)
+        // Since logic model has determined it's a valid move, try to store in Firestore,
         activityIndicator.startAnimating()
         
 //        StateMachine.state = .waitingForMoveConfirmation
-//        gameView?.isUserInteractionEnabled = false
+        gameView?.isUserInteractionEnabled = false
         
      
-        // notification has a dict 'userInfo' that we've used to pass moves, etc. Dict is optional and must be unwrapped
+        // 1) Unwrap info that was passed in notification
         guard let coordinates = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
             fatalError("Cannot retrieve coordinates of move")
         }
@@ -145,8 +149,8 @@ extension GameBoardVC: GameStateMachine {
             fatalError("Cannot retrieve turn number")
         }
         
-        //Attempt to store in Firestore
-        //Closure is called from completion() in the async
+        // 2) Attempt to store in Firestore
+        // 3) Closure is called from completion() in the async
         FirebaseProxy.instance.storeMoveFirestore(row: coordinates.row, column: coordinates.column,
                                          playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
                 if let error = err {
@@ -155,16 +159,17 @@ extension GameBoardVC: GameStateMachine {
                     self.present(Factory.createAlert(error), animated: true, completion: nil)
                 
                 }
-                //Successful write to Firestore so continue with game
+                // 4) Successful write to Firestore so continue with game
                 else {
                    
-                    // Set listener to update the game state model and the view
+                    // A) Update game state model and the view
                     NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
                     
                     self.activityIndicator.stopAnimating()
                     
-                    // Moved to gameLogicModel _moveCount
-                    StateMachine.state = .initialSnapshotOfGameBoard
+                    // B) Change state machine
+                    // Move this to the increment turn logic
+//                    StateMachine.state = .initialSnapshotOfGameBoard
                     
                     
                 }
@@ -203,7 +208,9 @@ extension GameBoardVC: GameStateMachine {
                 // Set listener to update the game state model and the view
                 NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": ID, "coordinates": coordinates])
                 
-                StateMachine.state = .waitingForUserMove
+                // 12.1.18 Commented out while trying to figure out why end of game not working for both players
+                
+//                StateMachine.state = .waitingForUserMove
             }
             
         }
