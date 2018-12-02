@@ -1,6 +1,6 @@
 ////
-////  GameModel.swift
-////  Assignment7-rterry126
+////  ModelGameLogic.swift
+////  Final_Project-rterry126
 ////
 ////  Created by Robert Terry on 10/11/18.
 ////  Copyright © 2018 Robert Terry. All rights reserved.
@@ -77,9 +77,12 @@ class GameLogicModel: NSObject, Codable {
         }
         let gridSize = Double(_numRows * _numColumns)
         _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.65))
-        // For now set to a constant until I upload to Firstore and download to player 2
-        _maxTurns = 6
+        //Set number of turns to even
+        _maxTurns += (_maxTurns % 2 == 0) ? 0 : 1
+        
         print("Max turns \(_maxTurns)")
+        // For now set to a constant until I upload to Firstore and download to player 2
+        _maxTurns = 16
         
         
         

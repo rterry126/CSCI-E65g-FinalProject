@@ -1,6 +1,6 @@
 //
 //  PreferencesVC.swift
-//  Assignment7_rterry126
+//  Final_Project_rterry126
 //
 //  Created by Robert Terry on 10/20/18.
 //  Copyright © 2018 Robert Terry. All rights reserved.

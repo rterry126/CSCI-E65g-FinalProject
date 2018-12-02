@@ -1,5 +1,5 @@
 //  ColorPickerModel.swift
-//  Assignment7
+//  Final_Project
 //
 //  Created by BaseZen on 10/23/18.
 //  Copyright © 2018 CSCI E65g 2018. All rights reserved.

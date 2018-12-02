@@ -1,5 +1,5 @@
 //
-//  GameHistoryModel.swift
+//  ModelGameHistory.swift
 //  Final_Project
 //
 //  Created by Robert Terry on 11/10/18.
