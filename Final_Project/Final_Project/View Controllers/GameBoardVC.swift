@@ -280,7 +280,8 @@ extension GameBoardVC: GameLogicModelObserver {
     @objc func endOfGame() {
         // Called when num of turns in model is increased to max turns.
         
-        Factory.displayAlert(target: self, message: "end of game called")
+        let scores = CalculateScore.gameTotalBruteForce(array: modelGameLogic.gameBoard)
+        Factory.displayAlert(target: self, message: "end of game called. Player 1 score is \(scores.playerOne), Player 2 score is \(scores.playerTwo)", title: "End of Game")
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
