@@ -182,8 +182,6 @@ extension GameGridViewProtocol where Self: UIView {
         // Set flag to render our grid. Must reload all squares, i.e. schedule a setNeedsDisplay()
         reloadAllSquares()
     }
-    
-    
 }
 
 

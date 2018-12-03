@@ -148,7 +148,7 @@ extension GameBoardVC: GameStateMachine {
         guard let moveNumber = notification.userInfo!["moveCount"] as? Int else {
             fatalError("Cannot retrieve turn number")
         }
-        
+        print("player ID from stateWaitingForMoveConfir \(playerID)")
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
         FirebaseProxy.instance.storeMoveFirestore(row: coordinates.row, column: coordinates.column,
@@ -199,7 +199,8 @@ extension GameBoardVC: GameStateMachine {
 //                print("row \(move["row"])")
 //                print("col \(move["column"])")
 
-                let ID = self.modelGameLogic.whoseTurn
+//                let ID = self.modelGameLogic.whoseTurn
+                let ID = GridState(rawValue: move["player"] as! String)
                 let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
                 print(coordinates)
 //                let userInfo = ["playerID": ID, "coordinates": coordinates ]

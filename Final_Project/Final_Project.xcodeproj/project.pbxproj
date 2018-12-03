@@ -151,6 +151,14 @@
 			path = ProvidedCode;
 			sourceTree = "<group>";
 		};
+		E181BDF121B5EEAE002659B8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E1B00A91218E4A370032A66E = {
 			isa = PBXGroup;
 			children = (
@@ -173,12 +181,12 @@
 		E1B00A9C218E4A370032A66E /* Final_Project */ = {
 			isa = PBXGroup;
 			children = (
+				E181BDF121B5EEAE002659B8 /* Views */,
 				E173AA3221AADEE300BA00F9 /* Models */,
 				E173AA3121AADDD200BA00F9 /* View Controllers */,
 				E1B00AB6218E4A8A0032A66E /* AppDelegate.swift */,
 				E157847921977DF400F142CA /* FirebaseProxy.swift */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
-				E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */,
 				E1915B262195AAEA00730B95 /* Notifications.swift */,
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
 				E178D864219734D700DA4E93 /* GoogleService-Info.plist */,

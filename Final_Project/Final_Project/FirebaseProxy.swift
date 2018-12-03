@@ -279,7 +279,6 @@ class FirebaseProxy {
         }
     }
     
-//    listener = FirebaseProxy.db.collection("activeGame").addSnapshotListener
     
     func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
         print("opponent move Firestore function")
@@ -291,7 +290,7 @@ class FirebaseProxy {
                     print("Error fetching snapshots: \(error!)")
                     return
                 }
-                print(snapshot.documentChanges.count)
+//                print(snapshot.documentChanges.count)
             
            
             snapshot.documentChanges.forEach { diff in
@@ -299,7 +298,6 @@ class FirebaseProxy {
                 var temp: [String: Any]
                 
                     if (diff.type == .added) {
-                        print("New city: \(diff.document.data())")
                         temp = diff.document.data()
                         completion(temp, self.listener)
 
@@ -319,35 +317,6 @@ class FirebaseProxy {
                 }
             
         }
-//        listener.remove() removing here is too soon
-        
-        
-        
-//        FirebaseProxy.db.collection("activeGame")
-//            .addSnapshotListener(includeMetadataChanges: true) { documentSnapshot, error in
-//                print("metadata has changed...")
-//        }
-        
-//        let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
-//
-//
-//        rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
-//
-//            (snapshot: QuerySnapshot?, error: Error?)  in
-//
-////            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
-//            guard let lastMove: QueryDocumentSnapshot = snapshot?.documents.last else {
-//
-//                print("temp error statement")
-//
-//                return
-//
-//            }
-//
-//            print(lastMove.data())
-//
-//        }
-        
     }
     
     
