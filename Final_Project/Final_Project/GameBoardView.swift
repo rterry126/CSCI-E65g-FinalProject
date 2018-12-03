@@ -205,6 +205,12 @@ class GameBoardView: UIView, GameGridViewProtocol {
                 case .playerTwo:
                     fillColor = delegate?.gameGridView(in: self, gridState: path.state) ?? colorPlayerTwoDefault
                     
+                case .playerOnePower:
+                    fillColor = delegate?.gameGridView(in: self, gridState: path.state) ?? colorPlayerOneDefault
+                    
+                case .playerTwoPower:
+                    fillColor = delegate?.gameGridView(in: self, gridState: path.state) ?? colorPlayerTwoDefault
+                    
                 case .empty:
                     fillColor = delegate?.gameGridView(in: self, gridState: path.state) ?? colorEmptyDefault
                 }

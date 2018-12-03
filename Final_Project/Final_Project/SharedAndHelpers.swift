@@ -115,12 +115,12 @@ func <=>(size: GridCoord, sizeLimits: GridLimits) -> Bool {
 //MARK: - Helper Functions
 // Helper function to convert from HSB value stored in model (model doesn't know of UIColor) to
 // UIColor. Just keeps the view code cleaner.
-func hsbToUIColor(color: HSBColor) -> UIColor {
+func hsbToUIColor(color: HSBColor, alpha: CGFloat = 1.0) -> UIColor {
     
     return UIColor.init(hue: CGFloat(color.hue),
                         saturation: CGFloat(color.saturation),
                         brightness: CGFloat(color.brightness),
-                        alpha: 1.0)
+                        alpha: alpha)
 }
 
 // Source cited. Convert back to HSB to store color. Model doesn't 'know' UIColor
