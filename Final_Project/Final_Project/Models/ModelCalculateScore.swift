@@ -6,8 +6,7 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
-// LOOK at using flatmap to just map into a long 1-D and then breaking up into segments of the row size and
-// checking those...
+// Source - array find and replace - https://developer.apple.com/documentation/swift/array
 
 
 import Foundation

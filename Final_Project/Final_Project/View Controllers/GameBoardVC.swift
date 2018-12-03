@@ -182,7 +182,7 @@ class GameBoardVC: UIViewController {
             readyPlayerTwo.isHidden = false
             readyPlayerOne.isHidden = true
             
-        case .empty: //Switch needs to be exhaustive. This should never execute
+        default: //Switch needs to be exhaustive. This should never execute.
             return
         }
         
@@ -280,7 +280,7 @@ extension GameBoardVC: GameLogicModelObserver {
     @objc func endOfGame() {
         // Called when num of turns in model is increased to max turns.
         
-        let scores = CalculateScore.gameTotalBruteForce(array: modelGameLogic.gameBoard)
+        let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
         Factory.displayAlert(target: self, message: "Player 1 score is \(scores.playerOne) \n Player 2 score is \(scores.playerTwo)", title: "End of Game")
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
