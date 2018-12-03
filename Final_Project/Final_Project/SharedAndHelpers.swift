@@ -71,6 +71,8 @@ enum GridState: String, CaseIterable, Codable {
     case empty = "Empty"
     case playerOne = "Player One"
     case playerTwo = "Player Two"
+    case playerOnePower = "Player One Power"
+    case playerTwoPower = "Player Two Power"
 }
 
 

@@ -14,7 +14,22 @@ import Foundation
 
 class CalculateScore {
     
-    static func gameTotalBruteForce(array: [[GridState]]) -> (playerOne: Int, playerTwo: Int) {
+    static func gameTotalBruteForce(passedInArray: [[GridState]]) -> (playerOne: Int, playerTwo: Int) {
+        
+        // 0) Change the power squares, if present, to regular squares. Keeps the scoring logic easier below
+        
+        var array = passedInArray
+        
+        for row in 0 ..< array.count {
+            if let i = array[row].firstIndex(of: .playerOnePower) {
+                array[row][i] = .playerOne
+            }
+            if let j = array[row].firstIndex(of: .playerTwoPower) {
+                array[row][j] = .playerTwo
+            }
+        }
+        
+        
         
         var p1 = 0
         var p2 = 0
