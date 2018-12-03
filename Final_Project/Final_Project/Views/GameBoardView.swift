@@ -186,9 +186,7 @@ class GameBoardView: UIView, GameGridViewProtocol {
     
     
     override func draw(_ rect: CGRect) {
-//        print("Draw was called! My frame is \(self.frame) relative to my parent: \(String(describing: self.superview))")
-        
-        
+
         // Draw each of our grid squares, array of CGRect (which incorporates location
         // and size) and status (player1/2, empty)
         for row in gridArray{

@@ -233,11 +233,15 @@ extension GameLogicModel: GameLogicModelProtocol {
         guard  inBounds(untrustedInput: coordinates) else {
             throw GameLogicError.invalidLocation
         }
-        guard locationState(at: coordinates) == GridState.empty else {
-            //Logic to determine if Power Square is available
-            if powerSquareUsed {
+        let state = locationState(at: coordinates)
+        guard state == GridState.empty else {
+            
+            print(gameBoard)
+            // Determine if Power Square is available, previously used or already a Power Square
+            if powerSquareUsed || state == GridState.playerOnePower || state == GridState.playerTwoPower {
                 throw GameLogicError.gridOccupied
             }
+                
             // else powerSquare NOT used
             else {
                 switch localID {
@@ -252,12 +256,13 @@ extension GameLogicModel: GameLogicModelProtocol {
                 powerSquareUsed = true
                
             }
+            
+            print("\(localID.rawValue)")
+            // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
+            NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
             return
         }
         
-        
-        // Normal case - valid move
-        print(moveCount)
         
         // 12.1.18 moved to stateWaitingForMoveConfirmation for cleanliness
 //        StateMachine.state = .waitingForMoveConfirmation
