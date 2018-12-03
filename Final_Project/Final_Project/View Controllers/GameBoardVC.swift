@@ -513,9 +513,12 @@ extension GameBoardVC {
         
         print(location.column)
         print(location.row)
+        print(playerID)
         
         // 2) Update the Logic Model Array
         modelGameLogic.gameBoard[location.row][location.column] = playerID
+        
+        print(modelGameLogic.gameBoard[location.row][location.column])
         
         // 3) Update the View Grid
         gameView?.changeGridState(x: location.column, y: location.row)
