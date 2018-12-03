@@ -123,7 +123,7 @@ class CalculateScore {
             }
         }
         
-        // 3) Backward diagonal
+        // 4) Backward diagonal
         
         for columnIndex in stride(from: array[0].count - 1, through: 2, by: -1)  {
             
