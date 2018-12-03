@@ -43,6 +43,14 @@ extension GameBoardVC: GameGridViewDelegate {
         case .playerTwo:
             return hsbToUIColor(color: modelGamePrefs.playerTwoColor)
             
+        // Power squares are same color, just drop the opacity
+            
+        case .playerOnePower:
+            return hsbToUIColor(color: modelGamePrefs.playerOneColor, alpha: 0.8)
+            
+        case .playerTwoPower:
+            return hsbToUIColor(color: modelGamePrefs.playerTwoColor, alpha: 0.8)
+            
             
         case .empty:
             return colorEmpty

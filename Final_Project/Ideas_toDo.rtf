@@ -1,7 +1,7 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Bold;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red31\green31\blue36;}
+{\*\expandedcolortbl;;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c12157\c12157\c14118;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
 {\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listlevel\levelnfc3\levelnfcn3\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{upper-alpha\}.}{\leveltext\leveltemplateid102\'02\'01.;}{\levelnumbers\'01;}\fi-360\li1440\lin1440 }{\listname ;}\listid2}}
 {\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
@@ -10,7 +10,7 @@
 \ls1\ilvl0
 \f0\fs24 \cf0 \strike \strikec0 {\listtext	1.	}Fix end of game popup to display at correct time AND on both players screens\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-\cf0 \strikec0 This is probably going to have to tie in to the _gameState variable and its listeners. That needs to be reworked as we don't need 2 separate state machines.\
+\cf0 This is probably going to have to tie in to the _gameState variable and its listeners. That needs to be reworked as we don't need 2 separate state machines.\
 \
 This is the first priority..\strike0\striked0 .\
 \
@@ -42,4 +42,14 @@ WAIT, model knows the board size as it's needed for underlying logic...\
 \
 \
 To troubleshoot write out the steps of what happens when a move is confirmed, either by self OR other player\
+\
+\
+POWER Square isn't making it out of the executeMOve? function. The underlying logic is writing to the model but the display isn't updating...\
+\
+look into updateGameView\
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f1\b \cf2 \cb3 Got a tap, Location in sample view: (179.5, 191.5), setting color
+\f0\b0 \cf0 \cb1 \
 }

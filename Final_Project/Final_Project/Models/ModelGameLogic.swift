@@ -35,6 +35,7 @@ class GameLogicModel: NSObject, Codable {
         case _gameBoard
         case _moveCount
         case _whoseTurn
+        // case - add power square used??
 //        case _gameState
     }
     
@@ -51,6 +52,7 @@ class GameLogicModel: NSObject, Codable {
         _gameBoard = gameBoardVal
         _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
+        // - add power square used??
 //        _gameState = gameStateVal
         
         //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
@@ -174,6 +176,8 @@ class GameLogicModel: NSObject, Codable {
 //    }
     
     private var _amIPlayerOne = false
+    
+    private var _powerSquareUsed = false
 }
 
 
@@ -219,7 +223,10 @@ extension GameLogicModel: GameLogicModelProtocol {
 //            // Game is over
 //            throw GameLogicError.gameOver
 //        }
-        guard ID == _whoseTurn else {
+        // Need to modify ID for power square, assign to local variable
+        var localID = ID
+        
+        guard localID == _whoseTurn else {
             // Play out of turn
             throw GameLogicError.outOfTurn
         }
@@ -227,8 +234,27 @@ extension GameLogicModel: GameLogicModelProtocol {
             throw GameLogicError.invalidLocation
         }
         guard locationState(at: coordinates) == GridState.empty else {
-            throw GameLogicError.gridOccupied
+            //Logic to determine if Power Square is available
+            if powerSquareUsed {
+                throw GameLogicError.gridOccupied
+            }
+            // else powerSquare NOT used
+            else {
+                switch localID {
+                    
+                case .playerOne:
+                    localID = .playerOnePower
+                case .playerTwo:
+                    localID = .playerTwoPower
+                default:
+                    return
+                }
+                powerSquareUsed = true
+               
+            }
+            return
         }
+        
         
         // Normal case - valid move
         print(moveCount)
@@ -237,7 +263,7 @@ extension GameLogicModel: GameLogicModelProtocol {
 //        StateMachine.state = .waitingForMoveConfirmation
 
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
-        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": ID, "coordinates": coordinates, "moveCount": moveCount ])
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
         
         
         
@@ -336,6 +362,15 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         set {
             _amIPlayerOne = newValue
+        }
+    }
+    
+    var powerSquareUsed: Bool {
+        get {
+            return _powerSquareUsed
+        }
+        set {
+            _powerSquareUsed = newValue
         }
     }
     
