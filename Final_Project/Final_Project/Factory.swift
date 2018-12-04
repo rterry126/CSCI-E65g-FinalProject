@@ -85,9 +85,10 @@ class Factory {
     }
     
     /********* Timer factory *********/
-
     
-    // A move timer and a 2 second (untile move expires) timer are created and returned via tuple.
+    
+    
+    // A move timer and a 2 second (until move expires) timer are created and returned via tuple.
     // Purpose of timerWarning is to play audio alert so it's action is 'hardcoded' in the closure.
     static func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector ) -> (Timer,Timer) {
         
