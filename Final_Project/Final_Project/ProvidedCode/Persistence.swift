@@ -57,8 +57,22 @@ class Persistence {
 //        let data = try NSKeyedArchiver.archivedData(withRootObject: model, requiringSecureCoding: false)
         
         // So data is result of modelGameLogic.toJSONData()
-        try data.write(to: saveURL)
-        print("saved model success \(Date()) to path: \(saveURL)")
+        
+        /******* Attempt to append data to file **************/
+        // 1) Get current data
+        if var previousHistory = try? Data(contentsOf: URL(fileURLWithPath: saveURL.path)) {
+            previousHistory.append(data)
+            try previousHistory.write(to: saveURL)
+        }
+            
+        else {
+            throw NSError(domain: "File I/O", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to retrieve archived data"])
+        }
+        
+        
+        
+//        try data.write(to: saveURL)
+//        print("saved model success \(Date()) to path: \(saveURL)")
     }
     
     
@@ -87,8 +101,9 @@ class Persistence {
     // completion automatically. Then next game is started with default values, i.e. fresh.
     static func deleteSavedGame() throws {
         
-        let saveURL = try Persistence.getStorageURL()
-        try FileMgr.removeItem(at: saveURL)
+        // 12.4.18 commented to test appending data into file...
+//        let saveURL = try Persistence.getStorageURL()
+//        try FileMgr.removeItem(at: saveURL)
         
     }
 }
