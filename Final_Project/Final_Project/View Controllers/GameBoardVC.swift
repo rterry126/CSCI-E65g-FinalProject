@@ -31,6 +31,8 @@
 // Sources - Audio - https://stackoverflow.com/questions/31126124/using-existing-system-sounds-in-ios-app-swift
 // Sources - passing userinfo via notifications - https://stackoverflow.com/questions/24892454/how-to-access-a-dictionary-passed-via-nsnotification-using-swift
 
+// Source - display countdown timer - https://teamtreehouse.com/community/swift-countdown-timer-of-60-seconds
+
 import UIKit
 import Firebase
 
@@ -44,6 +46,7 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var newGameButtonOutlet: UIButton!
     @IBOutlet weak var readyPlayerOne: UIImageView!
     @IBOutlet weak var readyPlayerTwo: UIImageView!
+    @IBOutlet weak var textTimer: UILabel! // Initially hidden via storyboard...
     
     
     
@@ -85,9 +88,10 @@ class GameBoardVC: UIViewController {
     var numOfGridRows: Int
     var numOfGridColumns: Int
     
-    
+    var totalTime = 5
     var timerMove = Timer()
     var timerWarning = Timer() // Warning timer
+    var countdownTimer = Timer() // Display countdown timer
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
@@ -106,7 +110,7 @@ class GameBoardVC: UIViewController {
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
-        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
                                                 (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),
                                                 (.gameOver, #selector(endOfGame))]
@@ -250,6 +254,14 @@ extension GameBoardVC: GameLogicModelObserver {
 //        timerMove.invalidate()
 //        timerWarning.invalidate()
         
+        // 12.4.18 for countdown timer. Eventually will be incorporated with above...
+        textTimer.isHidden = true
+        countdownTimer.invalidate()
+        totalTime = 5 // Reset for next move....
+        textTimer.text = "\(timeFormatted(totalTime))" // label has reset time value for next time
+        // otherwise it has previous value before it's updated.
+        
+        
         // Model informs controller successful move has occurred then controller
         // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
         Util.log("GameModel ==> GameBoardVC: successful move executed:")
@@ -281,7 +293,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // Called when num of turns in model is increased to max turns.
         
         let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
-        Factory.displayAlert(target: self, message: "Player 1 score is \(scores.playerOne) \n Player 2 score is \(scores.playerTwo)", title: "End of Game")
+        Factory.displayAlert(target: self, message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)", title: "End of Game")
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
@@ -532,6 +544,41 @@ extension GameBoardVC {
         
         
         
+        
+        
+        
+    }
+    
+    
+    //TODO: - Cleanup this and put it in appropriate place
+    @objc func startTimer() {
+        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+        
+        
+    }
+    
+    @objc func displayTimer () {
+        
+        // Try putting this here so things seem move in sync
+        textTimer.isHidden = false // initialized as hidden via storyboard
+        
+        // Redeclare to integer so we don't have to continually convert
+//        var totalTime = Int(timeToMakeMove)
+        // total time is modifed so it doesn't persist each second function is called. Needs to
+        // be global but cannot use the var timeToMakeMove. Needs much cleanup...
+        
+        textTimer.text = "\(timeFormatted(totalTime))" // Helper fuction to format
+        
+        if totalTime != 0 {
+            totalTime -= 1
+            
+        // Keep this for now but eventually this will be incorporated into a) time expires OR b) Move made
+        // Going to go ahead and incorporate into move made....
+        } else {
+            textTimer.isHidden = true
+            countdownTimer.invalidate()
+            totalTime = 5 // Reset for next move....
+        }
         
         
         
