@@ -272,7 +272,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
-        Factory.displayAlert(target: self, message: "\(modelGameLogic.moveCount)", title: "Move Count")
+       
         
         
     }
