@@ -8,10 +8,13 @@ import Foundation
 // Limitations of NSUserDefaults: No custom types or object hierarchiesß
 class Persistence {
     static let ModelFileName = "Final_Project_rterry.serialized"
+    
+   // So we just need a unique name for the thumbnails/actual images
+    static let ThumbnailFileName = "\(Date().timeIntervalSince1970)_Thumb"
     static let FileMgr = FileManager.default
     
     // Resources on disk: URLs: "file:///path/to/file"
-    static func getStorageURL() throws -> URL {
+    static func getStorageURL(storageFileName: String) throws -> URL {
         // Important: searchpath API
         
         // Get the root of the App Sandbox, and a particular kind of subdirecotry
@@ -45,8 +48,9 @@ class Persistence {
     //This function is called from two places - func saveGameState, which is called after each player's
     // turn AND func preferencesVC which is a delegate.
     static func save(_ data: Data) throws {
-        let saveURL = try Persistence.getStorageURL() // file:///
+        let saveURL = try Persistence.getStorageURL(storageFileName: ModelFileName) // file:///
         print("saveURL: \(saveURL)")
+        print("image file \(ThumbnailFileName)")
         // This is a recursive process that will push archiving to the children if set up that way
         // A fast, more fragile, binary format
         
@@ -77,7 +81,7 @@ class Persistence {
     
     
     static func restore() throws -> NSObject {
-        let saveURL = try Persistence.getStorageURL()
+        let saveURL = try Persistence.getStorageURL(storageFileName: ModelFileName)
         print(saveURL)
         guard let rawData = try? Data(contentsOf: URL(fileURLWithPath: saveURL.path)) else {
             throw NSError(domain: "File I/O", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to retrieve archived data"])
@@ -102,7 +106,7 @@ class Persistence {
     static func deleteSavedGame() throws {
         
         // 12.4.18 commented to test appending data into file...
-//        let saveURL = try Persistence.getStorageURL()
+        //        let saveURL = try Persistence.getStorageURL(storageFileName: ModelFileName)
 //        try FileMgr.removeItem(at: saveURL)
         
     }
