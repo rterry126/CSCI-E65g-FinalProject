@@ -136,16 +136,19 @@ extension GameBoardVC: GameStateMachine {
         
      
         // 1) Unwrap info that was passed in notification
-        guard let coordinates = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
+        guard let coordinates = notification.userInfo?["coordinates"] as? (row:Int, column:Int) else {
+            Factory.displayAlert(target: self, message: "Cannot retrieve coordinates of move", title: "Fatal Error")
             fatalError("Cannot retrieve coordinates of move")
         }
         
+//        print("coordinates \(coordinates)")
+        
         //TODO: - Will eventually remove this as it won't be necessary. Player ID is set per device
-        guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+        guard let playerID = notification.userInfo?["playerID"] as? GridState else {
             fatalError("Cannot retrieve playerID")
         }
         
-        guard let moveNumber = notification.userInfo!["moveCount"] as? Int else {
+        guard let moveNumber = notification.userInfo?["moveCount"] as? Int else {
             fatalError("Cannot retrieve turn number")
         }
         print("player ID from stateWaitingForMoveConfir \(playerID)")
@@ -200,6 +203,7 @@ extension GameBoardVC: GameStateMachine {
 //                print("col \(move["column"])")
 
 //                let ID = self.modelGameLogic.whoseTurn
+                //TODO:- Guard let vice forced unwrap!!!!
                 let ID = GridState(rawValue: move["player"] as! String)
                 let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
                 print(coordinates)

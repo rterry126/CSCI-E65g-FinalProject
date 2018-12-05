@@ -299,6 +299,7 @@ class FirebaseProxy {
                 
                     if (diff.type == .added) {
                         temp = diff.document.data()
+                        print(temp)
                         completion(temp, self.listener)
 
                     }
