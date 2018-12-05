@@ -206,7 +206,7 @@ extension GameLogicModel: GameLogicModelProtocol {
     // Logic - if it doesn't throw an error then it was successful. Observers will carry the rest??
     func executeMove(playerID ID: GridState, moveCoordinates coordinates: GridCoord) throws  {
         /*
-            Check if game is over
+         
          2. Check if valid player
          3. Check if valid location, i.e. on the board
          4. Check if valid location, i.e. unoccupied.
@@ -258,7 +258,7 @@ extension GameLogicModel: GameLogicModelProtocol {
             }
             
             print("\(localID.rawValue)")
-            // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
+            // 12.4.18 Used to pass the powerSquare move
             NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
             return
         }
@@ -268,6 +268,7 @@ extension GameLogicModel: GameLogicModelProtocol {
 //        StateMachine.state = .waitingForMoveConfirmation
 
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
+        // 12.4.18 - Used to pass regular move
         NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
         
         

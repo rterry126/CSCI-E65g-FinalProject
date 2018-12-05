@@ -6,6 +6,8 @@
 //
 // Sources - Closures and @escaping - https://firebase.googleblog.com/2018/07/swift-closures-and-firebase-handling.html
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
+// Sources - Transactions - https://firebase.google.com/docs/firestore/manage-data/transactions
+
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts

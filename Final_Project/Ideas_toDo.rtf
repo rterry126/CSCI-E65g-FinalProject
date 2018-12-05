@@ -1,5 +1,5 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;}
 {\*\expandedcolortbl;;}
 {\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
@@ -8,7 +8,7 @@
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural\partightenfactor0
 \ls1\ilvl0
-\f0\fs24 \cf0 \strike \strikec0 {\listtext	1.	}Fix end of game popup to display at correct time AND on both players screens\
+\f0\fs24 \cf0 \strike \strikec0 Fix end of game popup to display at correct time AND on both players screens\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
 \cf0 This is probably going to have to tie in to the _gameState variable and its listeners. That needs to be reworked as we don't need 2 separate state machines.\
 \
@@ -41,13 +41,21 @@ HOWEVER, model should do the calculation, not some other object\
 WAIT, model knows the board size as it's needed for underlying logic...\
 \
 \
-To troubleshoot write out the steps of what happens when a move is confirmed, either by self OR other player\
 \
 \
-POWER Square 2 Issues now\
+\strike \strikec0 POWER Square 2 Issues now\
 \
 1) It's letting a power square be played again.\
-2) only the person playing the power square has it colored appropriately. The other is normal color...\
+2) only the person playing the power square has it colored appropriately. The other is normal color...\strike0\striked0 \
 \
 \
-CLEANUP ALL THE FORCED UNWRAPS!!!!}
+CLEANUP ALL THE FORCED UNWRAPS!!!!\
+\
+Timer and forfeited move - Could call the listener .executeMoveCalled, but pass dummy or nil coordinates.\
+Issues\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf0 1) Would need to refactor 
+\f1 func stateWaitingForMoveConfirmation as it stores in model and grid the move after receiving confirmation\
+2) Would also need to fix waiting on opponent's move\
+3) Refactoring might be easy - that should be next step\
+}
