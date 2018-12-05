@@ -143,12 +143,13 @@ extension GameBoardVC: GameStateMachine {
         
 //        print("coordinates \(coordinates)")
         
-        //TODO: - Will eventually remove this as it won't be necessary. Player ID is set per device
         guard let playerID = notification.userInfo?["playerID"] as? GridState else {
+            Factory.displayAlert(target: self, message: "Cannot retrieve playerID", title: "Fatal Error")
             fatalError("Cannot retrieve playerID")
         }
         
         guard let moveNumber = notification.userInfo?["moveCount"] as? Int else {
+            Factory.displayAlert(target: self, message: "Cannot retrieve turn number", title: "Fatal Error")
             fatalError("Cannot retrieve turn number")
         }
         print("player ID from stateWaitingForMoveConfir \(playerID)")
@@ -159,7 +160,7 @@ extension GameBoardVC: GameStateMachine {
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                    
-                    self.present(Factory.createAlert(error), animated: true, completion: nil)
+                    Factory.displayAlert(target: self, error: error, title: "Game Error")
                 
                 }
                 // 4) Successful write to Firestore so continue with game
