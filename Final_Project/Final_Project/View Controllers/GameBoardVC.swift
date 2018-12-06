@@ -32,9 +32,11 @@
 // Sources - passing userinfo via notifications - https://stackoverflow.com/questions/24892454/how-to-access-a-dictionary-passed-via-nsnotification-using-swift
 
 // Source - display countdown timer - https://teamtreehouse.com/community/swift-countdown-timer-of-60-seconds
+// Source - Sound IDs - https://github.com/TUNER88/iOSSystemSoundsLibrary
 
 import UIKit
 import Firebase
+import AVFoundation
 
 
 class GameBoardVC: UIViewController {
@@ -243,20 +245,18 @@ extension GameBoardVC: GameLogicModelObserver {
         
         
         // A couple of possibilities here:
-        // 1. Player makes move within alloted time AND before warning. Invalidate BOTH timers since
+        // 1. Player makes move within alloted time AND before warning. Invalidate All timers since
         // they aren't needed.
         // 2. Play makes move within alloted time but NOT before warning sound. timerWarning is already
         // invalid (it doesn't repeat) but need to invalidate timerMove.
-        // 3. Player does NOT make move in time. This functions is triggered by timerMove. Both
-        // timers are invalid so code below does nothing.
+        // 3. Player does NOT make move in time. This triggers func timerExpired and it handles the logic
         
-        // Commented out 11/24 while building state machine
-//        timerMove.invalidate()
-//        timerWarning.invalidate()
+        timerMove.invalidate()
+        timerWarning.invalidate()
+        countdownTimer.invalidate()
         
         // 12.4.18 for countdown timer. Eventually will be incorporated with above...
         textTimer.isHidden = true
-        countdownTimer.invalidate()
         totalTime = 5 // Reset for next move....
         textTimer.text = "\(timeFormatted(totalTime))" // label has reset time value for next time
         // otherwise it has previous value before it's updated.
@@ -495,15 +495,20 @@ extension GameBoardVC {
         }
     }
     
-    // This just serves as a function to pass in .successfulBoardMove to create the timers.
-    // There are 2 separate locations where the timers are created: 1) When the game first starts
-    // 2) After each move (they are non-repeating timers). Instead of hard coding the selector or
-    // what action I wanted to happen upon expiration, I just pass in this function.
+    // Time fired, turnis forfeited. Need to bypass most of move logic, but still advance the game state.
     
     // @objc required because this is passed to #selector
     @objc func timerFired() {
-        Util.log("played times up tone")
-        self.successfulBoardMove()
+        Util.log("Move Timer Fired, turn forfeited")
+//        self.successfulBoardMove()
+        modelGameLogic.incrementMoveCount() // normally handled in successfulBoardMove()
+        
+        // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
+        // coordinates, empty move to change the state to waiting for move confirmation.
+        // we need some type of move posted in Firestore to change state of both users.
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": modelGameLogic.whoseTurn, "moveCount": modelGameLogic.moveCount ])
+        
+        
         
     }
     
@@ -513,38 +518,35 @@ extension GameBoardVC {
         
         Util.log("update Game View called via listener")
         
-        // 1) Get coordinates
-        guard let location = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
-            fatalError("Cannot retrieve coordinates of move")
-        }
+        // 1) Get coordinates, only update view if we have coordinates, otherwise forfeited move so skip
+        if let location = notification.userInfo!["coordinates"] as? (row:Int, column:Int) {
+            // TODO: - Should be able to remove this later
+            print("Coordinates printing from updateGameView \(location)")
+            guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+                fatalError("Cannot retrieve playerID")
+            }
         
-        // TODO: - Should be able to remove this later
-        guard let playerID = notification.userInfo!["playerID"] as? GridState else {
-            fatalError("Cannot retrieve playerID")
-        }
+            print(location.column)
+            print(location.row)
+            print(playerID)
         
-        print(location.column)
-        print(location.row)
-        print(playerID)
+            // 2) Update the Logic Model Array
+            modelGameLogic.gameBoard[location.row][location.column] = playerID
         
-        // 2) Update the Logic Model Array
-        modelGameLogic.gameBoard[location.row][location.column] = playerID
+            print(modelGameLogic.gameBoard[location.row][location.column])
         
-        print(modelGameLogic.gameBoard[location.row][location.column])
+            // 3) Update the View Grid
+            gameView?.changeGridState(x: location.column, y: location.row)
         
-        // 3) Update the View Grid
-        gameView?.changeGridState(x: location.column, y: location.row)
-        
-        // 4) Still need to update the game state
-        // So it's updated via same listener that triggers this
+            // 4) Still need to update the game state
+            // So it's updated via same listener that triggers this
 
 
-//        // Notify controller that successful move was executed
-//        NotificationCenter.default.post(name: .moveExecuted, object: self)
+    //        // Notify controller that successful move was executed
+    //        NotificationCenter.default.post(name: .moveExecuted, object: self)
+        }
         
-        
-        
-        
+        // Otherwise do nothing...
         
         
     }
@@ -552,7 +554,14 @@ extension GameBoardVC {
     
     //TODO: - Cleanup this and put it in appropriate place
     @objc func startTimer() {
-        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+//        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+        
+        //TODO: - Change sound
+        // Audio to let user know it's their turn
+        AudioServicesPlayAlertSound(SystemSoundID(1028))
+        
+        //Start move timers
+        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired),countDownTimer: #selector(displayTimer))
         
         
     }

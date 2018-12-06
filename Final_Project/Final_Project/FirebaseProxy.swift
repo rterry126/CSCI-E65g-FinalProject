@@ -382,11 +382,11 @@ class FirebaseProxy {
         }
     }
     
-    func storeMoveFirestore(row: Int, column: Int, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
+    func storeMoveFirestore(row: Int?, column: Int?, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
         
         var docData =  [String: Any]()
         
-        docData = ["moveTime": FieldValue.serverTimestamp() , "row": row, "column": column, "player": playerID]
+        docData = ["moveTime": FieldValue.serverTimestamp() , "row": row ?? "", "column": column ?? "", "player": playerID]
         
         // Update one field, creating the document if it does not exist.
         // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.

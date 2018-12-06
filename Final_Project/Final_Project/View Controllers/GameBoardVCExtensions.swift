@@ -54,7 +54,7 @@ extension GameBoardVC: GameStateMachine {
     
     @objc func stateInitializing() {
         
-        Util.log("View Controller initializing. State changed to  -> 2")
+        Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
         
         
         readyPlayerOne.isHidden = true
@@ -104,21 +104,15 @@ extension GameBoardVC: GameStateMachine {
         
         Util.log("Machine state is \(StateMachine.state.rawValue)")
         
-        //TODO: - Change sound
-        // Audio to let user know it's their turn
-        AudioServicesPlayAlertSound(SystemSoundID(1103))
-        
         // Probably don't need to disable AND hide...
         newGameButtonOutlet.isEnabled = false
         newGameButtonOutlet.isHidden = true
         
-        
         // Allow inputs
         gameView?.isUserInteractionEnabled = true
         
-        //Start move timers
-        //(timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
-
+        //Start move timers - now triggered via listener when changing to this state
+        
         
     }
     
@@ -135,10 +129,10 @@ extension GameBoardVC: GameStateMachine {
         gameView?.isUserInteractionEnabled = false
         
      
+        // 0) Coordinates could be optional if move was forfeited. Chain it and let the proxy deal with it
+        let coordinates = notification.userInfo?["coordinates"] as? (row:Int, column:Int)
+        
         // 1) Unwrap info that was passed in notification
-        guard let coordinates = notification.userInfo!["coordinates"] as? (row:Int, column:Int) else {
-            fatalError("Cannot retrieve coordinates of move")
-        }
         
         //TODO: - Will eventually remove this as it won't be necessary. Player ID is set per device
         guard let playerID = notification.userInfo!["playerID"] as? GridState else {
@@ -149,9 +143,10 @@ extension GameBoardVC: GameStateMachine {
             fatalError("Cannot retrieve turn number")
         }
         print("player ID from stateWaitingForMoveConfir \(playerID)")
+        Util.log("move number storing in Firestore is \(moveNumber)")
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
-        FirebaseProxy.instance.storeMoveFirestore(row: coordinates.row, column: coordinates.column,
+        FirebaseProxy.instance.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
                                          playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
@@ -200,6 +195,9 @@ extension GameBoardVC: GameStateMachine {
 //                print("col \(move["column"])")
 
 //                let ID = self.modelGameLogic.whoseTurn
+                
+                
+                
                 let ID = GridState(rawValue: move["player"] as! String)
                 let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
                 print(coordinates)

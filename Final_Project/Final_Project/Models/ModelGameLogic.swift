@@ -204,6 +204,7 @@ extension GameLogicModel: GameLogicModelProtocol {
     
     // Or above like I previously thought on gameState. It will also change with successful move.
     // Logic - if it doesn't throw an error then it was successful. Observers will carry the rest??
+    // Called by tap handler delegate
     func executeMove(playerID ID: GridState, moveCoordinates coordinates: GridCoord) throws  {
         /*
             Check if game is over
