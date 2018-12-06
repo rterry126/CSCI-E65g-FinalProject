@@ -498,10 +498,10 @@ extension GameBoardVC {
     // Time fired, turnis forfeited. Need to bypass most of move logic, but still advance the game state.
     
     // @objc required because this is passed to #selector
-    @objc func timerFired() {
+    @objc func timerTurnForfeitedFired() {
         Util.log("Move Timer Fired, turn forfeited")
 //        self.successfulBoardMove()
-        modelGameLogic.incrementMoveCount() // normally handled in successfulBoardMove()
+//        modelGameLogic.incrementMoveCount() // normally handled in successfulBoardMove()
         
         // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
         // coordinates, empty move to change the state to waiting for move confirmation.
@@ -561,7 +561,7 @@ extension GameBoardVC {
         AudioServicesPlayAlertSound(SystemSoundID(1028))
         
         //Start move timers
-        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired),countDownTimer: #selector(displayTimer))
+        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
         
         
     }
