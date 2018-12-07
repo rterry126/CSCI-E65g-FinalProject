@@ -78,13 +78,13 @@ class GameLogicModel: NSObject, Codable {
             _numColumns = PrefKeys.BoardSize.columns.rawValue
         }
         let gridSize = Double(_numRows * _numColumns)
-        _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.65))
+        _maxTurns = Int.random(in: Int(gridSize * 0.5) ..< Int(gridSize * 0.75))
         //Set number of turns to even
         _maxTurns += (_maxTurns % 2 == 0) ? 0 : 1
         
         print("Max turns \(_maxTurns)")
         // For now set to a constant until I upload to Firstore and download to player 2
-        _maxTurns = 16
+//        _maxTurns = 16
         
         
         

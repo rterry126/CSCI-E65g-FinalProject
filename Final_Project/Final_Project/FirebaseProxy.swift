@@ -6,6 +6,7 @@
 //
 // Sources - Closures and @escaping - https://firebase.googleblog.com/2018/07/swift-closures-and-firebase-handling.html
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
+// Sources - Firestore listeners - https://firebase.google.com/docs/firestore/query-data/listen
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
@@ -19,6 +20,8 @@ class FirebaseProxy {
         Util.log("FirebaseProxy ==> Preferences Model: instantiate")
         return GamePrefModel.instance
     }()
+    
+    var modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
     
     // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
     
@@ -87,6 +90,8 @@ class FirebaseProxy {
             if !leaderBit {
                 Util.log("\nUpdated leader bit\n")
                 transaction.updateData(["leader_bit": true], forDocument: reference)
+                transaction.updateData(["maxTurns": self.modelGameLogic.maxTurns ], forDocument: reference)
+
                 // Update in model as well
             }
             else {
@@ -298,7 +303,9 @@ class FirebaseProxy {
                 var temp: [String: Any]
                 
                     if (diff.type == .added) {
+                        print("New move: \(diff.document.data())")
                         temp = diff.document.data()
+                        print("temp is \(temp)")
                         completion(temp, self.listener)
 
                     }
