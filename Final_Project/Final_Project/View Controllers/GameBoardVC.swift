@@ -253,7 +253,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
 //        timerMove.invalidate()
 //        timerWarning.invalidate()
-        timerCountDown.invalidate()
+//        timerCountDown.invalidate()
         
         // 12.4.18 for countdown timer. Eventually will be incorporated with above...
         textTimer.isHidden = true
@@ -564,7 +564,7 @@ extension GameBoardVC {
 //        //Start move timers
 //        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
         
-        let timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+        timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
         
         // Supposedly if timing isn't critical this is energy efficient.
        
@@ -573,7 +573,7 @@ extension GameBoardVC {
         
     }
     
-    @objc func displayTimer (_ timerCountDown: Timer) {
+    @objc func displayTimer () {
         
         // Try putting this here so things seem move in sync
         textTimer.isHidden = false // initialized as hidden via storyboard
