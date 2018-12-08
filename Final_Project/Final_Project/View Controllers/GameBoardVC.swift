@@ -557,9 +557,7 @@ extension GameBoardVC {
     @objc func startTimer() {
 //        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
         
-        //TODO: - Change sound
-        // Audio to let user know it's their turn
-        AudioServicesPlayAlertSound(SystemSoundID(1028))
+        
         
 //        //Start move timers
 //        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
