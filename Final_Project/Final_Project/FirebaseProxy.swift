@@ -400,13 +400,16 @@ class FirebaseProxy {
             docData["column"] = columnExists
             
         }
+        for item in docData {
+            print(item.value)
+        }
         
         // Update one field, creating the document if it does not exist.
         // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
         // If successful then we will update our board logical state and view state and change our state Machine
         
         
-        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: true) { err in
+        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: false) { err in
             if let err = err {
                 print("Error writing document: \(err)")
                 completion(err)
