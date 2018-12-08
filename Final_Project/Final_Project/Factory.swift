@@ -21,24 +21,24 @@ class Factory {
 //        return instance
 //    }()
     
-    
-    private static var _model: GameLogicModelProtocol = {
-        let m: GameLogicModelProtocol
-//        if let obj = Persistence.createModelFromPersistedData() {
-//            m = obj
+    //Changed on 12.8.18
+//    private static var _model: GameLogicModelProtocol = {
+//        let m: GameLogicModelProtocol
+////        if let obj = Persistence.createModelFromPersistedData() {
+////            m = obj
+////        }
+////        else {
+////            m = Model()
+////        }
+//        m = GameLogicModel()
+//        return m
+//    }()
+//
+//    public static var sharedModel: GameLogicModelProtocol {
+//        get {
+//            return _model
 //        }
-//        else {
-//            m = Model()
-//        }
-        m = GameLogicModel()
-        return m
-    }()
-    
-    public static var sharedModel: GameLogicModelProtocol {
-        get {
-            return _model
-        }
-    }
+//    }
     
 //    private static let stateInstance: StateMachineProtocol = {
 //        let instance = StateMachine()

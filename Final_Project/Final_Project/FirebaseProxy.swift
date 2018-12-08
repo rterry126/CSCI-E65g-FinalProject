@@ -21,7 +21,7 @@ class FirebaseProxy {
         return GamePrefModel.instance
     }()
     
-    var modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
+    var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
     // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
     
@@ -94,8 +94,15 @@ class FirebaseProxy {
 
                 // Update in model as well
             }
+            // Already have a player one
             else {
                 Util.log("\nUpdated leader reset for next game\n")
+                // Download number of turns
+                guard let maxTurns = document.data()?["maxTurns"] as? Int else {
+                    fatalError("Could not set maximum number of turns")
+                    
+                }
+                self.modelGameLogic.maxTurns = maxTurns
                 transaction.updateData(["leader_bit": false], forDocument: reference)
             }
             

@@ -82,7 +82,7 @@
 		E1B00AC3218E4A8B0032A66E /* ModelGameLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelGameLogic.swift; sourceTree = "<group>"; };
 		E1B00AC4218E4A8B0032A66E /* PreferencesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		E1B00AC5218E4A8B0032A66E /* GameBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardVC.swift; sourceTree = "<group>"; };
-		E1D832A821A0D8AD00ED51DB /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StateMachine.swift; path = "/Users/robert/Desktop/e65g/final-project-rterry126/Final_Project/Final_Project/StateMachine.swift"; sourceTree = "<absolute>"; };
+		E1D832A821A0D8AD00ED51DB /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		E1D832AA21A9B58F00ED51DB /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E1D832AC21A9B93600ED51DB /* GameBoardVCExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardVCExtensions.swift; sourceTree = "<group>"; };
 		FDBFE69B947E00CAF1D8D179 /* Pods-Final_Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final_Project.release.xcconfig"; path = "Pods/Target Support Files/Pods-Final_Project/Pods-Final_Project.release.xcconfig"; sourceTree = "<group>"; };

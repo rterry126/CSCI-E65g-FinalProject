@@ -137,7 +137,7 @@ class GameBoardVC: UIViewController {
     
     
     //MARK:- Instances Created
-    var modelGameLogic: GameLogicModelProtocol = Factory.sharedModel
+    var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("GameBoardVC ==> Preferences Model: instantiate")
