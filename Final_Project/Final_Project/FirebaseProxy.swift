@@ -7,6 +7,7 @@
 // Sources - Closures and @escaping - https://firebase.googleblog.com/2018/07/swift-closures-and-firebase-handling.html
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 // Sources - Firestore listeners - https://firebase.google.com/docs/firestore/query-data/listen
+// Sources - copying Firestore Collection - https://stackoverflow.com/questions/50788184/firestore-creating-a-copy-of-a-collection
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
@@ -198,21 +199,7 @@ class FirebaseProxy {
 //    //Added by Robert
 //    static func saveHistory(endOfGameState data: Data) {
 //
-////        // Add a new document with a generated ID
-////        var ref: DocumentReference? = nil
-////        ref = db.collection("history_test").addDocument(data: [
-////            "playerOneName": playerOneName,
-////            "playerTwoName": playerTwoName,
-////            "playerOneScore": playerOneScore,
-////            "playerTwoScore": playerTwoScore,
-////            "created_at": NSDate()
-////        ]) { err in
-////            if let err = err {
-////                print("Error adding document: \(err)")
-////            } else {
-////                print("Document added with ID: \(ref!.documentID)")
-////            }
-////        }
+
 //
 //        // Basic writes
 //
@@ -335,6 +322,8 @@ class FirebaseProxy {
     
     func uploadHistory(_ image: UIImage?) {
         
+        copyGame()
+        
         var imageData: Data? = nil
         // This should be passed in Via listener or something but use here for temporary
         let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
@@ -369,7 +358,42 @@ class FirebaseProxy {
     }
     
     
-    func copyGame ( completion: @escaping ([Game], Error?) -> Void) {
+    func copyGame () { //completion: @escaping ([Game], Error?) -> Void) {
+    
+//        let oldGame = Firestore.firestore().collection("activeGame")
+        
+        
+        
+        let oldGame = Firestore.firestore().collection("activeGame")
+//        let historicalGame = Firestore.firestore().collection("testAgain")
+        
+        oldGame.getDocuments { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                if let snapshot = querySnapshot {
+                    for document in snapshot.documents {
+                        let data = document.data()
+                        let batch = Firestore.firestore().batch()
+                        let docset = querySnapshot
+                        
+                        let historicalGame = Firestore.firestore().collection("testAgain").document()
+                        
+                        docset?.documents.forEach {_ in batch.setData(data, forDocument: historicalGame)}
+                        
+                        batch.commit(completion: { (error) in
+                            if let error = error {
+                                print("\(error)")
+                            } else {
+                                print("success")
+                            }
+                        })
+                    }
+                }
+            }
+        }
+        
+      
         
         
     }
