@@ -445,7 +445,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yyK-hb-Xgb">
-                                                    <rect key="frame" x="479" y="12" width="80" height="80"/>
+                                                    <rect key="frame" x="254" y="12" width="80" height="80"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="7hM-OP-nqL"/>
                                                         <constraint firstAttribute="width" constant="80" id="oZp-7n-895"/>
@@ -517,38 +517,12 @@
                     <view key="view" contentMode="scaleToFill" id="gVb-Jv-HI2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ns0-1d-h9i">
-                                <rect key="frame" x="166" y="167" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Static Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTS-OO-6Jh">
-                                <rect key="frame" x="100" y="324" width="175" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="ns0-1d-h9i" firstAttribute="top" secondItem="dF6-uK-srq" secondAttribute="top" constant="103" id="8V7-zc-rnb"/>
-                            <constraint firstItem="DTS-OO-6Jh" firstAttribute="leading" secondItem="dF6-uK-srq" secondAttribute="leading" constant="100" id="S4J-zv-sUf"/>
-                            <constraint firstItem="dF6-uK-srq" firstAttribute="trailing" secondItem="ns0-1d-h9i" secondAttribute="trailing" constant="167" id="WOf-UF-19W"/>
-                            <constraint firstItem="ns0-1d-h9i" firstAttribute="leading" secondItem="dF6-uK-srq" secondAttribute="leading" constant="166" id="ctf-yy-A4T"/>
-                            <constraint firstItem="dF6-uK-srq" firstAttribute="bottom" secondItem="DTS-OO-6Jh" secondAttribute="bottom" constant="366" id="rd9-K4-TqC"/>
-                            <constraint firstItem="dF6-uK-srq" firstAttribute="trailing" secondItem="DTS-OO-6Jh" secondAttribute="trailing" constant="100" id="y3g-AO-JnQ"/>
-                            <constraint firstItem="DTS-OO-6Jh" firstAttribute="top" secondItem="ns0-1d-h9i" secondAttribute="bottom" constant="136" id="y9l-27-6Lz"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="dF6-uK-srq"/>
                     </view>
                     <navigationItem key="navigationItem" title="History Detail" id="zBg-Wn-lUB">
                         <barButtonItem key="backBarButtonItem" title="Back" id="A8B-Rq-Sut"/>
                     </navigationItem>
-                    <connections>
-                        <outlet property="testLabel" destination="ns0-1d-h9i" id="yAT-3I-mTF"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VZn-ij-Vzn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

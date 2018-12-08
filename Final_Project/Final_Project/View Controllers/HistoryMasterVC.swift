@@ -89,8 +89,13 @@ class HistoryMasterViewController: UIViewController {
             if let indexPath = gameHistoryTableView.indexPathForSelectedRow {
                 let game = games[indexPath.row].playerOneName
 //                let game2 = games[indexPath.row].gameBoard
-                let detailVC = /*(segue.destination as! UINavigationController).topViewController*/ segue.destination as? HistoryDetailVC
-                detailVC?.username = game
+                
+                // 12.8.18 Commented out for now until I get detailview to work
+                
+//                let detailVC = /*(segue.destination as! UINavigationController).topViewController*/ segue.destination as? HistoryDetailVC
+//                detailVC?.username = game
+                
+                
 //                detailVC?.gameBoard = game2
 //                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 //                controller.navigationItem.leftItemsSupplementBackButton = true

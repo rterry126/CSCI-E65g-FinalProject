@@ -115,6 +115,7 @@ protocol GameGridViewProtocol: class {
 // TODO: - https://blog.bobthedeveloper.io/protocol-oriented-programming-view-in-swift-3-8bcb3305c427
 extension GameGridViewProtocol where Self: UIView {
     
+    
     func reloadOneSquare(_ rect: CGRect) {
         setNeedsDisplay(rect)
     }
@@ -182,6 +183,10 @@ extension GameGridViewProtocol where Self: UIView {
         // Set flag to render our grid. Must reload all squares, i.e. schedule a setNeedsDisplay()
         reloadAllSquares()
     }
+    
+    
+    
+    
 }
 
 
