@@ -91,9 +91,9 @@ class GameBoardVC: UIViewController {
     var numOfGridColumns: Int
     
     var totalTime = 5
-    var timerMove = Timer()
-    var timerWarning = Timer() // Warning timer
-    var countdownTimer = Timer() // Display countdown timer
+//    var timerMove = Timer()
+//    var timerWarning = Timer() // Warning timer
+    var timerCountDown = Timer() // Display countdown timer
     // TODO: - Put this timer interval into Preferences
     let timeToMakeMove = 5.0
     
@@ -251,9 +251,9 @@ extension GameBoardVC: GameLogicModelObserver {
         // invalid (it doesn't repeat) but need to invalidate timerMove.
         // 3. Player does NOT make move in time. This triggers func timerExpired and it handles the logic
         
-        timerMove.invalidate()
-        timerWarning.invalidate()
-        countdownTimer.invalidate()
+//        timerMove.invalidate()
+//        timerWarning.invalidate()
+        timerCountDown.invalidate()
         
         // 12.4.18 for countdown timer. Eventually will be incorporated with above...
         textTimer.isHidden = true
@@ -300,8 +300,9 @@ extension GameBoardVC: GameLogicModelObserver {
         // Kill/delete the move timers as they are no longer needed.
         // Could possibly delete these if 'in game' timer creation was moved from successfulBoardMove
         // but how it's coded now is simple and it works.
-        timerMove.invalidate()
-        timerWarning.invalidate()
+//        timerMove.invalidate()
+//        timerWarning.invalidate()
+        timerCountDown.invalidate()
         
         updateUI()
         
@@ -560,13 +561,19 @@ extension GameBoardVC {
         // Audio to let user know it's their turn
         AudioServicesPlayAlertSound(SystemSoundID(1028))
         
-        //Start move timers
-        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
+//        //Start move timers
+//        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
+        
+        let timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+        
+        // Supposedly if timing isn't critical this is energy efficient.
+       
+        timerCountDown.tolerance = 0.1
         
         
     }
     
-    @objc func displayTimer () {
+    @objc func displayTimer (_ timerCountDown: Timer) {
         
         // Try putting this here so things seem move in sync
         textTimer.isHidden = false // initialized as hidden via storyboard
@@ -578,6 +585,10 @@ extension GameBoardVC {
         
         textTimer.text = "\(timeFormatted(totalTime))" // Helper fuction to format
         
+        if totalTime == 2 { // play warning...
+            AudioServicesPlayAlertSound(SystemSoundID(1103))
+        }
+        
         if totalTime != 0 {
             totalTime -= 1
             
@@ -585,8 +596,9 @@ extension GameBoardVC {
         // Going to go ahead and incorporate into move made....
         } else {
             textTimer.isHidden = true
-            countdownTimer.invalidate()
+            timerCountDown.invalidate()
             totalTime = 5 // Reset for next move....
+            timerTurnForfeitedFired()
         }
         
         

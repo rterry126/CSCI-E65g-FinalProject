@@ -175,6 +175,7 @@ extension GameBoardVC: GameStateMachine {
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
         
+        
 //        blurView(view: gameView)
         
 //        var stateFirstCallback: Bool = true
@@ -182,7 +183,7 @@ extension GameBoardVC: GameStateMachine {
         Util.log("Listener activitated for opponent move")
         FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
             
-            
+            var docData: [String: Any] = [:]
             if StateMachine.state == .initialSnapshotOfGameBoard { // first snapshot, doesn't contain new move
                StateMachine.state = .waitingForOpponentMove // Now we can get the actual move
             }
@@ -198,14 +199,17 @@ extension GameBoardVC: GameStateMachine {
                 
                 
                 
-                let ID = GridState(rawValue: move["player"] as! String)
-                let coordinates = (row: move["row"], column: move["column"]) as! GridCoord
-                print(coordinates)
+                let playerID = GridState(rawValue: move["player"] as! String)
+                docData["playerID"] = playerID
+                if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
+                    docData["coordinates"] = coordinates
+                }
+//                print(coordinates)
 //                let userInfo = ["playerID": ID, "coordinates": coordinates ]
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
-                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: ["playerID": ID, "coordinates": coordinates])
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: docData)
                 
                 // 12.1.18 Commented out while trying to figure out why end of game not working for both players
                 
