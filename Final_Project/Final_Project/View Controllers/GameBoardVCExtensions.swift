@@ -45,7 +45,7 @@ extension GameBoardVC: GameStateMachine {
             StateMachine.state = .initializing
             
             let player =  success ? "Player One" : "Player Two"
-            Factory.displayAlert(target: self, message: "You are \(player)", title: "Election Complete")
+            Factory.displayAlert(target: self, message: "You are \(player). Turns are \(self.modelGameLogic.maxTurns)", title: "Election Complete")
 
         } // End of callback closure
     

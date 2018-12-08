@@ -23,6 +23,8 @@ enum GameLogicError: String,Error {
 
 class GameLogicModel: NSObject, Codable {
     
+    static let instance: GameLogicModelProtocol = GameLogicModel()
+    
     
     //TODO: Look at other instances which conform to more restrictive protocols, i.e. read only???
     
@@ -40,7 +42,9 @@ class GameLogicModel: NSObject, Codable {
     }
     
     // Set game state from persisted data IF it exists
-    required init(from decoder: Decoder) throws {
+    
+    // Below changed 12.8.18 when modify Singleton. Not sure if correct...
+    internal required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self) // defining our (keyed) container
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
@@ -63,7 +67,7 @@ class GameLogicModel: NSObject, Codable {
     
     
     // This is our default init IF game state isn't saved/persisted
-    override init() {
+    private override init() {
         
         //Board Size, retrieve from preferences
         // Returns 0 if key is non-existent
