@@ -116,6 +116,8 @@ extension HistoryMasterViewController: UITableViewDataSource {
     func tableView(_ gameHistoryTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Number of history items retrieved
+        
+        Util.log("\(games.count)")
         return games.count
     }
     
@@ -189,7 +191,7 @@ extension HistoryMasterViewController: UITableViewDataSource {
         
         if (editingStyle == .delete){
             let singeGameToDelete = games[indexPath.row]
-            _ = Firestore.firestore().collection("history_test").document(singeGameToDelete.id).delete()
+            _ = Firestore.firestore().collection("history").document(singeGameToDelete.id).delete()
         }
     }
 }
