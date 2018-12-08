@@ -288,7 +288,8 @@ extension GameBoardVC: GameLogicModelObserver {
         
         
     }
-    
+    // TODO: - change this to a state function and move to extension...
+    // TODL:- Also much Firestore cleanup and resetting needs to be here...
     @objc func endOfGame() {
         // Called when num of turns in model is increased to max turns.
         
@@ -297,14 +298,21 @@ extension GameBoardVC: GameLogicModelObserver {
         // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
-        // Kill/delete the move timers as they are no longer needed.
-        // Could possibly delete these if 'in game' timer creation was moved from successfulBoardMove
-        // but how it's coded now is simple and it works.
-//        timerMove.invalidate()
-//        timerWarning.invalidate()
+        
+        
+        // Kill/delete the move timer/ no longer needed
         timerCountDown.invalidate()
         
         updateUI()
+        
+        
+        let gameImage = gameView?.asImage()
+        
+        
+        // So we don't have double history entries
+        if modelGameLogic.amIPlayerOne {
+            FirebaseProxy.instance.uploadHistory(gameImage)
+        }
         
         // Commented out on 12.1.18 - Somehow end of game is letting play continue although
         //inputs are invalidated above

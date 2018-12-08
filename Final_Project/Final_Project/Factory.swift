@@ -90,24 +90,28 @@ class Factory {
     
     // A move timer, visual Countdown,  and a 2 second (until move expires) timer are created and returned via tuple.
     // Purpose of timerWarning is to play audio alert so it's action is 'hardcoded' in the closure.
-    static func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector,
-                             countDownTimer selectorCountDown: Selector ) -> (Timer,Timer, Timer) {
-        
-        let timerMove = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
-        
-        let timerWarning = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
-            AudioServicesPlayAlertSound(SystemSoundID(1103))
-        }
-        
-        let timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: target, selector: selectorCountDown, userInfo: nil, repeats: true)
-        
-        // Supposedly if timing isn't critical this is energy efficient.
-        timerMove.tolerance = 0.4
-        timerWarning.tolerance = 0.2
-        timerCountDown.tolerance = 0.1
-        
-        return (timerMove, timerWarning, timerCountDown)
-    }
+    
+    // Commented out 12.8.18 - Only use one timer now
+    
+    
+//    static func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector,
+//                             countDownTimer selectorCountDown: Selector ) -> (Timer,Timer, Timer) {
+//
+//        let timerMove = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
+//
+//        let timerWarning = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
+//            AudioServicesPlayAlertSound(SystemSoundID(1103))
+//        }
+//
+//        let timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: target, selector: selectorCountDown, userInfo: nil, repeats: true)
+//
+//        // Supposedly if timing isn't critical this is energy efficient.
+//        timerMove.tolerance = 0.4
+//        timerWarning.tolerance = 0.2
+//        timerCountDown.tolerance = 0.1
+//
+//        return (timerMove, timerWarning, timerCountDown)
+//    }
     
     /************** Alert Factory *********************/
     

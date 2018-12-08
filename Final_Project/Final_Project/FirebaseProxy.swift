@@ -333,6 +333,47 @@ class FirebaseProxy {
         }
     }
     
+    func uploadHistory(_ image: UIImage?) {
+        
+        var imageData: Data? = nil
+        // This should be passed in Via listener or something but use here for temporary
+        let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
+        
+        // Get image of gameboard
+        
+        //TODO: Force unwrapping now just to test
+        
+//        let resizedImage = resizeImage(image: image, newWidth: 80.0)
+//        let imageData = resizedImage.pngData()
+        
+        if let image = image {
+            
+            imageData = resizeImage(image: image, newWidth: 80.0).pngData()
+        }
+        
+        FirebaseProxy.db.collection("history").addDocument(data: [
+            "playerOneName": modelGamePrefs.playerOneName,
+            "playerTwoName": modelGamePrefs.playerTwoName,
+            "playerOneScore": scores.playerOne,
+            "playerTwoScore": scores.playerTwo,
+            "gameDate": NSDate(),
+            "gameBoardView": imageData
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("New History Document added ")
+            }
+        }
+
+    }
+    
+    
+    func copyGame ( completion: @escaping ([Game], Error?) -> Void) {
+        
+        
+    }
+    
     
     
     func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
@@ -341,7 +382,7 @@ class FirebaseProxy {
         
         var resultsArray = [Game]()
         // Create query.
-        historyQuery = Firestore.firestore().collection("history_test").order(by: "created_at", descending: true ).limit(to: 10)
+        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: 10)
         
         /*listener =*/  historyQuery?.addSnapshotListener { ( documents, error) in
             
