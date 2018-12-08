@@ -120,6 +120,8 @@ extension GameBoardVC: GameStateMachine {
     @objc func stateWaitingForMoveConfirmation(_ notification :Notification) {
         
         StateMachine.state = .waitingForMoveConfirmation
+        
+        timerCountDown.invalidate()
 
         // the GameLogicModel (executeMove) has determined that the move is valid (grid not occupied, in bounds,...)
         // Since logic model has determined it's a valid move, try to store in Firestore,
