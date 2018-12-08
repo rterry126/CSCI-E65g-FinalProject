@@ -322,7 +322,10 @@ class FirebaseProxy {
     
     func uploadHistory(_ image: UIImage?) {
         
-        copyGame()
+        // Create unique name to reference this collection. Current time will always be unique.
+        // Fetch as Epoch time so it's simply a number, convert to string
+        let gameMoves = "\(Date().timeIntervalSince1970)"
+        copyGame(referenceName: gameMoves )
         
         var imageData: Data? = nil
         // This should be passed in Via listener or something but use here for temporary
@@ -346,7 +349,8 @@ class FirebaseProxy {
             "playerOneScore": scores.playerOne,
             "playerTwoScore": scores.playerTwo,
             "gameDate": NSDate(),
-            "gameBoardView": imageData
+            "gameBoardView": imageData,
+            "gameMoves": gameMoves // Simply a reference to the collection where the moves are stored.
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
@@ -357,8 +361,8 @@ class FirebaseProxy {
 
     }
     
-    
-    func copyGame () { //completion: @escaping ([Game], Error?) -> Void) {
+    // Make copy of finished game so we can play it back later...
+    func copyGame (referenceName: String) { //completion: @escaping ([Game], Error?) -> Void) {
     
 //        let oldGame = Firestore.firestore().collection("activeGame")
         
@@ -377,7 +381,7 @@ class FirebaseProxy {
                         let batch = Firestore.firestore().batch()
                         let docset = querySnapshot
                         
-                        let historicalGame = Firestore.firestore().collection("testAgain").document()
+                        let historicalGame = Firestore.firestore().collection(referenceName).document()
                         
                         docset?.documents.forEach {_ in batch.setData(data, forDocument: historicalGame)}
                         
