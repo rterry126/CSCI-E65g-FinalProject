@@ -87,8 +87,7 @@ class GameLogicModel: NSObject, Codable {
         _maxTurns += (_maxTurns % 2 == 0) ? 0 : 1
         
         print("Max turns \(_maxTurns)")
-        // For now set to a constant until I upload to Firstore and download to player 2
-//        _maxTurns = 16
+        
         
         
         
