@@ -25,7 +25,7 @@ protocol StateMachineProtocol: class {
 protocol GameLogicModelObserver: class {
     func successfulBoardMove() // grid has changed
 
-    func endOfGame()
+    func stateEndOfGame()
 
     func updatePlayer()
 }

@@ -178,11 +178,7 @@ extension GameBoardVC: GameStateMachine {
     
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
-        
-        
-//        blurView(view: gameView)
-        
-//        var stateFirstCallback: Bool = true
+ 
         
         Util.log("Listener activitated for opponent move")
         FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
@@ -194,57 +190,30 @@ extension GameBoardVC: GameStateMachine {
             else {
                 
                 print("\(move)")
-                
-                //TODO: - parrse to ensure data is correct and move is correct//?
-//                print("row \(move["row"])")
-//                print("col \(move["column"])")
+
 
 //                let ID = self.modelGameLogic.whoseTurn
-                
-                
                 
                 let playerID = GridState(rawValue: move["player"] as! String)
                 docData["playerID"] = playerID
                 if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
                     docData["coordinates"] = coordinates
                 }
-//                print(coordinates)
+
 //                let userInfo = ["playerID": ID, "coordinates": coordinates ]
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
                 NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: docData)
                 
-                // 12.1.18 Commented out while trying to figure out why end of game not working for both players
-                
-//                StateMachine.state = .waitingForUserMove
             }
-            
         }
-        
-        
-        
     }
     
-//    func blurView(view: UIView?) {
-//        if let view = view {
-//            if !UIAccessibility.isReduceTransparencyEnabled {
-//                view.backgroundColor = .clear
-//
-//                let blurEffect = UIBlurEffect(style: .regular)
-//                let blurEffectView = UIVisualEffectView(effect: blurEffect)
-//                //always fill the view
-//                blurEffectView.frame = view.frame.offsetBy(dx: 0.0, dy: -94.0) // Only blur the board
-////                blurEffectView.frame = self.view.bounds
-//                blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//
-//                view.addSubview(blurEffectView) //if you have more UIViews, use an insertSubview API to place it where needed
-//            } else {
-//                view.backgroundColor = .black
-//            }
-//        }
-//    }
     
+   
+    
+
     
     
     //    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
