@@ -8,6 +8,7 @@
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 // Sources - Firestore listeners - https://firebase.google.com/docs/firestore/query-data/listen
 // Sources - copying Firestore Collection - https://stackoverflow.com/questions/50788184/firestore-creating-a-copy-of-a-collection
+// Sources - basic code to delete documents in a collection
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
@@ -62,6 +63,15 @@ class FirebaseProxy {
         }
     }
     
+    // Called at end of game
+    func resetPlayerOne()  {
+    
+        let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
+        reference.updateData(["leader_bit": false])
+    }
+    
+    
+    // Called app startup...
     func electPlayerOne(completion: @escaping ( Bool ) -> Void ) {
         
         let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
@@ -316,16 +326,19 @@ class FirebaseProxy {
                 
                 
                 }
-            
         }
     }
     
-    func uploadHistory(_ image: UIImage?) {
+    
+    
+    // Stores game results in Firestore; moves are stored in a separate colleciton with a reference to them.
+    // Might use the moves later for a detail hisotry view..
+    func storeGameResults(_ image: UIImage?, completion: @escaping (Error?) -> Void) {
         
         // Create unique name to reference this collection. Current time will always be unique.
         // Fetch as Epoch time so it's simply a number, convert to string
         let gameMoves = "\(Date().timeIntervalSince1970)"
-        copyGame(referenceName: gameMoves )
+        copyGameMoves(referenceName: gameMoves )
         
         var imageData: Data? = nil
         // This should be passed in Via listener or something but use here for temporary
@@ -354,15 +367,37 @@ class FirebaseProxy {
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
+                completion(err)
             } else {
                 print("New History Document added ")
+                completion(nil)
             }
         }
-
     }
     
-    // Make copy of finished game so we can play it back later...
-    func copyGame (referenceName: String) { //completion: @escaping ([Game], Error?) -> Void) {
+    func deleteGameMoves() {
+    
+        let oldGame = Firestore.firestore().collection("activeGame")
+        oldGame.getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                
+                if let snapshot = querySnapshot {
+                    for document in snapshot.documents {
+                        document.reference.delete()
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    // Make copy of finished game in Firestore so we can play it back later...
+    // Source cited
+    func copyGameMoves (referenceName: String) { //completion: @escaping ([Game], Error?) -> Void) {
     
 //        let oldGame = Firestore.firestore().collection("activeGame")
         
@@ -374,7 +409,8 @@ class FirebaseProxy {
         oldGame.getDocuments { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
-            } else {
+            }
+            else {
                 if let snapshot = querySnapshot {
                     for document in snapshot.documents {
                         let data = document.data()
@@ -388,18 +424,17 @@ class FirebaseProxy {
                         batch.commit(completion: { (error) in
                             if let error = error {
                                 print("\(error)")
-                            } else {
+                            }
+                            else {
+                                document
                                 print("success")
+                            
                             }
                         })
                     }
                 }
             }
         }
-        
-      
-        
-        
     }
     
     
@@ -505,8 +540,9 @@ class FirebaseProxy {
 
 func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
     
-    let scale = newWidth / image.size.width
-    let newHeight = image.size.height * scale
+//    let scale = newWidth / image.size.width
+    let newHeight = newWidth // Make it square. Current thumbnail looks strange
+//    let newHeight = image.size.height * scale
     UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
     image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
     let newImage = UIGraphicsGetImageFromCurrentImageContext()

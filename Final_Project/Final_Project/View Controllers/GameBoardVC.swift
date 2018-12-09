@@ -311,8 +311,25 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // So we don't have double history entries
         if modelGameLogic.amIPlayerOne {
-            FirebaseProxy.instance.uploadHistory(gameImage)
+            FirebaseProxy.instance.storeGameResults(gameImage) { err in
+            
+                if let error = err {
+                    // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
+                    
+                    self.present(Factory.createAlert(error), animated: true, completion: nil)
+                    
+                }
+                    // 4) Successful write to Firestore so continue with deleting old game
+                else {
+                    
+                    FirebaseProxy.instance.deleteGameMoves()
+                    
+                }
+                
+            }
         }
+        
+        FirebaseProxy.instance.resetPlayerOne()
         
         // Commented out on 12.1.18 - Somehow end of game is letting play continue although
         //inputs are invalidated above
