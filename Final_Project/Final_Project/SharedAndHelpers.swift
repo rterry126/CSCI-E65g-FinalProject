@@ -41,7 +41,7 @@ enum PrefKeys: CaseIterable {
         case columns = 7
     }
     enum MiscPrefs: String, CaseIterable {
-        case gameName = "Assignment 7 Game - Robert"
+        case gameName = "Final Project - Robert"
     }
     
     enum Colors: RawRepresentable, CaseIterable {

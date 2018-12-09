@@ -103,6 +103,7 @@ internal class PreferencesVC : UIViewController {
             // to change the name. So unwrap and if unwrapped value isn't nil or empty, update name,
             // otherwise do nothing and model name will stay the same
             
+            
             // 1. Is textBoxName nil?
             if let textBoxName = playerOneNameText.text {
                 // 2. Not nil but is it NOT empty. If not empty then store value, otherwise do nothing

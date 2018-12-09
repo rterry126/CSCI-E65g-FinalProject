@@ -45,7 +45,7 @@ extension GameBoardVC: GameStateMachine {
             StateMachine.state = .initializing
             
             let player =  success ? "Player One" : "Player Two"
-            Factory.displayAlert(target: self, message: "You are \(player). Turns are \(self.modelGameLogic.maxTurns)", title: "Election Complete")
+            Factory.displayAlert(target: self, message: "You are \(player).", title: "Election Complete")
 
         } // End of callback closure
     
@@ -88,6 +88,8 @@ extension GameBoardVC: GameStateMachine {
         // Button is initially deactivated and hidden via the storyboard setup.
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
+        
+        
         
         //Clear in memory cache
         // Doubt this is needed for initial first time run, as model is initialed from scratch, but

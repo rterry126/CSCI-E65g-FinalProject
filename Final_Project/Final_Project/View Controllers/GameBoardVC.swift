@@ -159,16 +159,6 @@ class GameBoardVC: UIViewController {
     
     //MARK: - Functions
     
-    //TODO: move to factory
-    // Not needed, moved other one to factory with optional title
-//    func displayAlert(message: String) {
-//        
-//        let alert = UIAlertController(title: "Game Error", message: message, preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-//        self.present(alert, animated: true, completion: nil)
-//    }
-    
-    
     
     func updateUI() {
         
@@ -178,14 +168,15 @@ class GameBoardVC: UIViewController {
         case .playerOne:
             textPlayer1.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerOneColor)
             textPlayer2.backgroundColor = UIColor.white
-            readyPlayerOne.isHidden = false
+            // Only display dot when it's player's turn
+            readyPlayerOne.isHidden = modelGameLogic.amIPlayerOne ? false : true
             readyPlayerTwo.isHidden = true
 
             
         case .playerTwo:
             textPlayer1.backgroundColor = UIColor.white
             textPlayer2.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerTwoColor)
-            readyPlayerTwo.isHidden = false
+            readyPlayerTwo.isHidden = !modelGameLogic.amIPlayerOne ? false : true
             readyPlayerOne.isHidden = true
             
         default: //Switch needs to be exhaustive. This should never execute.

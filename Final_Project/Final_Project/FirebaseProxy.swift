@@ -8,7 +8,7 @@
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 // Sources - Firestore listeners - https://firebase.google.com/docs/firestore/query-data/listen
 // Sources - copying Firestore Collection - https://stackoverflow.com/questions/50788184/firestore-creating-a-copy-of-a-collection
-// Sources - basic code to delete documents in a collection
+// Sources - basic code to delete documents in a collection - https://stackoverflow.com/questions/51792471/cloud-firestore-swift-how-to-delete-a-query-of-documents?rq=1
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
@@ -100,6 +100,9 @@ class FirebaseProxy {
             // leaderBit is current false, i.e. no player one. Go ahead and set
             if !leaderBit {
                 Util.log("\nUpdated leader bit\n")
+                // Go ahead and upload our player names.
+                // For now we'll use the playerOneName from each player to be THEIR name
+//                transaction.updateData(["playerOneName": self.modelGamePrefs.playerOneName], forDocument: reference)
                 transaction.updateData(["leader_bit": true], forDocument: reference)
                 transaction.updateData(["maxTurns": self.modelGameLogic.maxTurns ], forDocument: reference)
 
@@ -107,6 +110,9 @@ class FirebaseProxy {
             }
             // Already have a player one
             else {
+                // Although as a transaction this can run multiple times, it shouldn't affect our
+                // local model.
+                
                 Util.log("\nUpdated leader reset for next game\n")
                 // Download number of turns
                 guard let maxTurns = document.data()?["maxTurns"] as? Int else {
@@ -114,10 +120,13 @@ class FirebaseProxy {
                     
                 }
                 self.modelGameLogic.maxTurns = maxTurns
+                
+                // We'll use each device's PlayerOneName for the player's names
+//                transaction.updateData(["playerTwoName": self.modelGamePrefs.playerOneName], forDocument: reference)
                 transaction.updateData(["leader_bit": false], forDocument: reference)
             }
             
-            return !leaderBit // Ideally this should return True and in completion block below we set in model
+            return (!leaderBit) // Ideally this should return True and in completion block below we set in model
         })
         {(object, error) in
             guard let leaderBit = object as? Bool else {
