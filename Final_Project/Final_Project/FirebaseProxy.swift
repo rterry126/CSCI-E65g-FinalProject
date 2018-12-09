@@ -28,8 +28,8 @@ class FirebaseProxy {
     // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
     
     // Set preferences
-    lazy var documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName]
-    let mergeFields = ["playerOneName", "playerTwoName"]
+    lazy var documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
+    let mergeFields = ["playerOneName", "playerTwoName", "moveTime"]
     
     static let instance = FirebaseProxy()
     private init() {}
@@ -391,9 +391,9 @@ class FirebaseProxy {
                 }
             }
         }
-        
-        
     }
+    
+    
     
     // Make copy of finished game in Firestore so we can play it back later...
     // Source cited
