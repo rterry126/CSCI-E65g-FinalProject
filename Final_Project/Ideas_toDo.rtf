@@ -17,9 +17,9 @@ This is the first priority..\strike0\striked0 .\
 \
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural\partightenfactor0
 \ls2\ilvl0\cf0 {\listtext	1.	}Change pop up type to ask if they want to play again. One of those multii selection popups.\
-{\listtext	2.	}Random number of moves uploaded to Firestore to determine when game will end.\
+{\listtext	2.	}\strike \strikec0 Random number of moves uploaded to Firestore to determine when game will end.\
 \pard\tx940\tx1440\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li1440\fi-1440\pardirnatural\partightenfactor0
-\ls2\ilvl1\cf0 {\listtext	A.	}Wrap the election transaction with the uploading/downloading of the names, board size, player names, or somehow incorporate it.\
+\ls2\ilvl1\cf0 \strike0\striked0 {\listtext	A.	}Wrap the election transaction with the uploading/downloading of the names, board size, player names, or somehow incorporate it.\
 {\listtext	B.	}Maybe not put into the same function but ideally if you are player 1 then the information should be uploaded and guaranteed that player 2 will download.\
 {\listtext	C.	}IF you end up being player 2 then that should trigger download of ALL (transaction??) of the needed data to start the game...\
 \pard\tx220\tx720\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\li720\fi-720\pardirnatural\partightenfactor0
@@ -27,10 +27,12 @@ This is the first priority..\strike0\striked0 .\
 {\listtext	4.	}Upload game board size from player one, download to player 2.\
 {\listtext	5.	}\strike \strikec0 Beep to let you know it's your turn\
 \ls2\ilvl0\strike0\striked0 {\listtext	6.	}\strike \strikec0 Make board inactive when not your turn.\strike0\striked0 \
-{\listtext	7.	}Change colors of grid or put overlay when not your turn. -  Started on blurring...\
+\ls2\ilvl0
+\i {\listtext	7.	}Change colors of grid or put overlay when not your turn. -  Started on blurring...\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
-\cf0 \
-OK, to calculate the random move count we need the size of the board.\
+
+\i0 \cf0 \
+\strike \strikec0 OK, to calculate the random move count we need the size of the board.\
 \
 However this is in preferences. We first upload preferences when attaching to Firestore soo.... This could be retrieved by the model, calculated and then uploaded.\
 \
@@ -47,15 +49,15 @@ To troubleshoot write out the steps of what happens when a move is confirmed, ei
 POWER Square 2 Issues now\
 \
 1) It's letting a power square be played again.\
-2) only the person playing the power square has it colored appropriately. The other is normal color...\
+2) only the person playing the power square has it colored appropriately. The other is normal color...\strike0\striked0 \
 \
 \
 CLEANUP ALL THE FORCED UNWRAPS!!!!\
 \
 When game is over\
-1) Calculae the score\
+1) \strike \strikec0 Calculae the score\
 2) Tell users the score\
-3) Store score in history\
+3) Store score in history\strike0\striked0 \
 4) Update the game state which\
 5) locks the board and performs cleanup items and resets for new game...\
 \
