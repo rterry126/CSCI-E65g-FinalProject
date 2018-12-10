@@ -373,6 +373,11 @@ extension GameBoardVC: GameLogicModelObserver {
         // .destructive to color 'Yes' in red...
         alert.addAction(UIAlertAction(title: "Yes", style: .default , handler: {
             action in
+            
+            self.modelGameLogic.resetModel()
+//            modelGamePrefs = nil
+//            sharedFirebaseProxy = nil
+            
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as! GameBoardVC
             let navigationController = UINavigationController(rootViewController: nextViewController)
