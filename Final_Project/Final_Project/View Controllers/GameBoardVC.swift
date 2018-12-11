@@ -522,7 +522,7 @@ extension GameBoardVC {
             preferencesVC.modelGamePrefs = modelGamePrefs
             
             // Add our delegate here 
-            preferencesVC.delegate = self
+            //preferencesVC.delegate = self  // Commented out 12.11.18 due to cleaning up Preferences page. Don't need button to save
         }
     }
     

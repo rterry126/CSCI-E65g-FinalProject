@@ -8,6 +8,11 @@
 
 // Sources - Return to main view using button. Dismiss doesn't work for nav controllers - https://stackoverflow.com/questions/47322379/swift-how-to-dismiss-all-of-view-controllers-to-go-back-to-root
 // sources - Alert tutorial - https://learnappmaking.com/uialertcontroller-alerts-swift-how-to/
+// Sources - styling labels - https://stackoverflow.com/questions/2311591/how-to-draw-border-around-a-uilabel
+
+// Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
+// look, however I don't want to start all over with a new view controller, etc. This is quick way to
+// get the 'look' and not break anything...
 
 import UIKit
 
@@ -19,25 +24,33 @@ internal class PreferencesVC : UIViewController {
     // as it can't be guaranteed that object was created or passed.
     var modelGamePrefs: GamePrefModelProtocol?
     
-    // Delegate to save the model state. This VC has no knowledge of the model
-    weak open var delegate: PreferencesVCDelegate?// default is nil. weak reference
+//    // Delegate to save the model state. This VC has no knowledge of the model
+//    weak open var delegate: PreferencesVCDelegate?// default is nil. weak reference
     
     // Used to determine which button was pressed for color picker
     var buttonTag: Int = 0 //  Set to 0 (Player 1 button) so we can declare it here. Otherwise it needs to go into init() or viewDidLoad
     
     
-    @IBOutlet weak var playerOneNameText: UITextField!
-    @IBOutlet weak var playerTwoNameText: UITextField!
+    @IBOutlet weak var gameNameLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var player1ColorLabel: UILabel!
+    @IBOutlet weak var player2ColorLabel: UILabel!
+    @IBOutlet weak var gridSizeLabel: UILabel!
+    @IBOutlet weak var moveTimerLabel: UILabel!
+    
     @IBOutlet weak var gameNameText: UITextField!
+    @IBOutlet weak var myNameIsText: UITextField!
     
     @IBOutlet weak var playerOneColorBtn: UIButton!
     @IBOutlet weak var playerTwoColorBtn: UIButton!
     @IBOutlet weak var rowsSlider: UISlider!
     @IBOutlet weak var columnsSlider: UISlider!
+    @IBOutlet weak var timerSlider: UISlider!
     
     
     @IBOutlet weak var rowsText: UILabel!
     @IBOutlet weak var columnsText: UILabel!
+    @IBOutlet weak var timerText: UILabel!
     
     
     // Update the number of rows label when the slider is moved
@@ -48,24 +61,22 @@ internal class PreferencesVC : UIViewController {
         columnsText.text = Int(columnsSlider.value).description
     }
     
-    // Save the game state. I don't want to pass a reference to the game logic model here, plus
-    // I don't think that this VC should have 'knowledge' of it. Therefore use delegates. Just copied
-    // the way we did delegates for the GridView...
-    @IBAction func saveGameBtn(_ sender: Any) {
-        
-        // Let user know that game was successfully saved or Not
-        // Use the ternery operator so that we can use just one 'alert'
-        if let success = delegate?.preferencesVC(in: self) {
-//            if success {
-            let alert = UIAlertController(title: success ? "Success!" : "Failure", message: success ? "Game state was successfully saved." : "Unable to save game state", preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-            self.present(alert, animated: true)
-//            }
-        }
-    }
     
     
+    // Commented out 12.11.18 - Game is automatically saved after each turn
+//    @IBAction func saveGameBtn(_ sender: Any) {
+//
+//        // Let user know that game was successfully saved or Not
+//        // Use the ternery operator so that we can use just one 'alert'
+//        if let success = delegate?.preferencesVC(in: self) {
+////            if success {
+//            let alert = UIAlertController(title: success ? "Success!" : "Failure", message: success ? "Game state was successfully saved." : "Unable to save game state", preferredStyle: .alert)
+//
+//            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+//            self.present(alert, animated: true)
+////            }
+//        }
+//    }
     
     
     // 'Delete preferences' button. Added alert to give user chance to 'opt out'
@@ -105,18 +116,13 @@ internal class PreferencesVC : UIViewController {
             
             
             // 1. Is textBoxName nil?
-            if let textBoxName = playerOneNameText.text {
+            if let textBoxName = myNameIsText.text {
                 // 2. Not nil but is it NOT empty. If not empty then store value, otherwise do nothing
                 if  !(textBoxName.isEmpty) {
-                    prefModel.playerOneName = textBoxName
+                    prefModel.myNameIs = textBoxName
                 }
             }
             
-            if let textBoxName = playerTwoNameText.text {
-                if  !(textBoxName.isEmpty) {
-                    prefModel.playerTwoName = textBoxName
-                }
-            }
             
             if let textBoxName = gameNameText.text {
                 if  !(textBoxName.isEmpty) {
@@ -161,17 +167,32 @@ extension PreferencesVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        gameNameLabel.layer.borderWidth = 0.5
+        gameNameLabel.layer.borderColor = UIColor.black.cgColor
+        nameLabel.layer.borderWidth = 0.5
+        nameLabel.layer.borderColor = UIColor.black.cgColor
+        player1ColorLabel.layer.borderWidth = 0.5
+        player1ColorLabel.layer.borderColor = UIColor.black.cgColor
+        player2ColorLabel.layer.borderWidth = 0.5
+        player2ColorLabel.layer.borderColor = UIColor.black.cgColor
+        gridSizeLabel.layer.borderWidth = 0.5
+        gridSizeLabel.layer.borderColor = UIColor.black.cgColor
+        moveTimerLabel.layer.borderWidth = 0.5
+        moveTimerLabel.layer.borderColor = UIColor.black.cgColor
+        
         
         // Have preferences setter reflect the current values stored in the model...
         
         if let prefModel = modelGamePrefs {
-            playerOneNameText.text = prefModel.playerOneName
-            playerTwoNameText.text = prefModel.playerTwoName
+           
+            myNameIsText.text = prefModel.myNameIs
             gameNameText.text = prefModel.gameName
             rowsSlider.value = Float(prefModel.numRows)
             rowsText.text = Int(rowsSlider.value).description
             columnsSlider.value = Float(prefModel.numColumns)
             columnsText.text = Int(columnsSlider.value).description
+//            timerSlider.value = Float(prefModel.moveTimer) // Not implemented yet but here for layout
+            timerText.text = Int(timerSlider.value).description
             
             playerOneColorBtn.backgroundColor = hsbToUIColor(color: prefModel.playerOneColor)
             playerTwoColorBtn.backgroundColor = hsbToUIColor(color: prefModel.playerTwoColor)

@@ -94,30 +94,32 @@ extension GameBoardVC: GameGridViewDelegate {
 
 extension GameBoardVC: PreferencesVCDelegate {
     
-    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool {
-        var success: Bool
-        
-        // First time run: nothing was saved from before
-        print("First run. Creating and saving \(modelGameLogic)")
-        
-        // Data is optional
-        if let data = modelGameLogic.toJSONData() {
-            do {
-                try Persistence.save(data)
-                success = true
-            }
-            catch let e {
-                print("Sving failed: \(e)")
-                success = false
-            }
-            
-        }
-        else {
-            print("Unable to unwrap model prior to saving")
-            return false
-        }
-        return success
-    }
+    // Commented out 12.11.18 - Cleaning up Preferences and don't need a specific save button
+    // since game saves on each move
+//    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool {
+//        var success: Bool
+//
+//        // First time run: nothing was saved from before
+//        print("First run. Creating and saving \(modelGameLogic)")
+//
+//        // Data is optional
+//        if let data = modelGameLogic.toJSONData() {
+//            do {
+//                try Persistence.save(data)
+//                success = true
+//            }
+//            catch let e {
+//                print("Sving failed: \(e)")
+//                success = false
+//            }
+//
+//        }
+//        else {
+//            print("Unable to unwrap model prior to saving")
+//            return false
+//        }
+//        return success
+//    }
     
 }
 

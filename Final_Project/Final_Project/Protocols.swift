@@ -226,9 +226,10 @@ protocol GameGridViewDelegate : NSObjectProtocol {
 // don't want to expose the logic model to that view controller
 protocol PreferencesVCDelegate : NSObjectProtocol {
     
-    @available(iOS 2.0, *)
-    
-    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool
+// Removed 12.11.18 - See other comments on this date in PreferencesVC
+    //    @available(iOS 2.0, *)
+//
+//    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool
 }
 
 
