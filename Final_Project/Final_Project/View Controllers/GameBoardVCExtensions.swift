@@ -80,11 +80,42 @@ extension GameBoardVC: GameStateMachine {
         
     }
     
+    // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
+    @objc func stateWaitingToStartGame() {
+        
+//        var docData: [String: Any] = [:]
+        self.activityIndicator.stopAnimating()
+        FirebaseProxy.instance.listenPlayersJoin() {data, error, listener in
+            
+            // Different logic depending on whether waiting on player OR are Joinee
+            if self.modelGameLogic.amIPlayerOne {
+            
+                if let joined = (data["leader_bit"]) as? Bool {
+                    if !joined {
+                        listener.remove()
+                        StateMachine.state = .readyForGame
+                    }
+                }
+        }
+            else { // Player2's listener triggered
+                
+                if let gameStarted = (data["gameStarted"]) as? Bool {
+                    if gameStarted {
+                        listener.remove()
+                        StateMachine.state = .initialSnapshotOfGameBoard
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    
     @objc func stateReadyForGame() {
 
         Util.log("function stateReadyForGame triggered via listener")
         
-        self.activityIndicator.stopAnimating()
+//        self.activityIndicator.stopAnimating()
         // Button is initially deactivated and hidden via the storyboard setup.
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
@@ -155,7 +186,7 @@ extension GameBoardVC: GameStateMachine {
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                    
-                    self.present(Factory.createAlert(error), animated: true, completion: nil)
+                    self.present(Factory.displayAlert(error), animated: true, completion: nil)
                 
                 }
                 // 4) Successful write to Firestore so continue with game

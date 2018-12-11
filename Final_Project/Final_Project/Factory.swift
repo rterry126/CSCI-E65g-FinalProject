@@ -116,7 +116,7 @@ class Factory {
     /************** Alert Factory *********************/
     
     // NOt sure this is used but need to change name tomatch below
-    static func createAlert(_ error: Error, _ title: String = "Firestore Error") -> UIAlertController {
+    static func displayAlert(_ error: Error, _ title: String = "Firestore Error") -> UIAlertController {
         
         // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)

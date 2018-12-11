@@ -21,11 +21,11 @@ class StateMachine: StateMachineProtocol {
     
     static var state: State = .uninitialized {
         didSet {
-            
-            Util.log("state variable didSet to  --> \(self.state)")
-            
-            
-            let notificatonName: NSNotification.Name
+        
+        // Get the notification name when the case is valid and then post at the bottom of didSet block
+        // This just keeps from having to post in each case statement...
+    
+            let notificationName: NSNotification.Name
             
             switch state {
                 
@@ -33,19 +33,27 @@ class StateMachine: StateMachineProtocol {
                 return
                 
             case .electPlayerOne: // Added before the game is initialized. Whoever is player one will upload saved game, if it exists.
-                notificatonName = Notification.Name.electPlayerOne
+                notificationName = Notification.Name.electPlayerOne
                 Util.log("state changed to .electPlayerOne")
 
             case .initializing:
-                notificatonName = Notification.Name.initializing
+                notificationName = Notification.Name.initializing
                 Util.log("state changed to .initializing")
+                
+            case .waitingForPlayer2: // ONLY Player 1 should reach this state
+                notificationName = Notification.Name.waitingForPlayer2
+                Util.log("state changed to .waitingForPlayer2")
+                
+            case .waitingForGameStart: // ONLY Player 2. Basically same as ready for game but no button
+                notificationName = Notification.Name.waitingForGameStart
+                Util.log("state changed to .waitingForGameStart")
 
             case .readyForGame:
-                notificatonName = Notification.Name.readyForGame
+                notificationName = Notification.Name.readyForGame
                 Util.log("state changed to .readyForGame")
 
             case .waitingForUserMove:
-                notificatonName = Notification.Name.waitingForUserMove
+                notificationName = Notification.Name.waitingForUserMove
                 Util.log("state changed to .waitingForUserMove")
 
             case .waitingForMoveConfirmation:
@@ -54,7 +62,7 @@ class StateMachine: StateMachineProtocol {
                 return
                 
             case .initialSnapshotOfGameBoard:
-                notificatonName = Notification.Name.initialSnapshotOfGameBoard
+                notificationName = Notification.Name.initialSnapshotOfGameBoard
                 Util.log("state changed to .initial snapshot of board")
 
 
@@ -65,15 +73,11 @@ class StateMachine: StateMachineProtocol {
                 return
 
             case .gameOver:
-                notificatonName = Notification.Name.gameOver
+                notificationName = Notification.Name.gameOver
                 
             }
-            NotificationCenter.default.post(name: notificatonName, object: self) // Used to drive the game state
+            NotificationCenter.default.post(name: notificationName, object: self) // Used to drive the game state
             NotificationCenter.default.post(name: .stateChanged , object: self) // Just used to update state label on game screen
-            
-
-//                NotificationCenter.default.post(name: .waitingForOpponentMove, object: self) //, userInfo: ["state": StateMachine.State.RawValue()])
-//            }
             
         }
     }
@@ -83,6 +87,8 @@ class StateMachine: StateMachineProtocol {
         case uninitialized = "Welcome"
         case electPlayerOne = "Determining Player One"
         case initializing = "Initializing"
+        case waitingForPlayer2 = "Waiting for player to join"
+        case waitingForGameStart = "Waiting for Player 1 to start game"
         case readyForGame = "Ready for game"
         case waitingForUserMove = "Ready for Your Move"
         case waitingForMoveConfirmation = "Waiting for confirmation of Your move"

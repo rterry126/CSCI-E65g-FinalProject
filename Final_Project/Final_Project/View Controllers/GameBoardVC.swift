@@ -57,7 +57,11 @@ class GameBoardVC: UIViewController {
         // New game button pressed. Change state
         
         if modelGameLogic.amIPlayerOne {
-            StateMachine.state = .waitingForUserMove
+            
+            
+            FirebaseProxy.instance.startGame {
+                StateMachine.state = .waitingForUserMove
+            }
         }
         else {
             print("new game button pushed and I am player two")
@@ -111,11 +115,11 @@ class GameBoardVC: UIViewController {
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
-    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)),(.readyForGame, #selector(stateReadyForGame)),
-        (.waitingForUserMove, #selector(stateWaitingForUserMove)), (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+    var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)), (.waitingForPlayer2, #selector(stateWaitingToStartGame)),
+        (.waitingForGameStart, #selector(stateWaitingToStartGame)), (.readyForGame, #selector(stateReadyForGame)),(.waitingForUserMove, #selector(stateWaitingForUserMove)),
+        (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
         (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
-                                                (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),
-                                                (.gameOver, #selector(stateEndOfGame))]
+        (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),(.gameOver, #selector(stateEndOfGame))]
     
     
     //MARK: - Init()
@@ -321,7 +325,7 @@ extension GameBoardVC: GameLogicModelObserver {
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                     
-                    self.present(Factory.createAlert(error), animated: true, completion: nil)
+                    self.present(Factory.displayAlert(error), animated: true, completion: nil)
                     
                 }
                     // 4) Successful write to Firestore so continue with deleting old game

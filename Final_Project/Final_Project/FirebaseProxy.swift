@@ -68,13 +68,17 @@ class FirebaseProxy {
     
         let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
         reference.updateData(["leader_bit": false])
+        reference.updateData(["gameStarted": false])
     }
+    
+    
     
     
     // Called app startup...
     func electPlayerOne(completion: @escaping ( Bool ) -> Void ) {
         
         let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
+        let maxTurns = self.modelGameLogic.maxTurns
         
         FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
             let document: DocumentSnapshot
@@ -103,15 +107,14 @@ class FirebaseProxy {
                 // Go ahead and upload our player names.
                 // For now we'll use the playerOneName from each player to be THEIR name
 //                transaction.updateData(["playerOneName": self.modelGamePrefs.playerOneName], forDocument: reference)
-                transaction.updateData(["leader_bit": true], forDocument: reference)
-                transaction.updateData(["maxTurns": self.modelGameLogic.maxTurns ], forDocument: reference)
+                let dataToUpdate = ["leader_bit": true,"gameStarted": false, "maxTurns": maxTurns] as [String : Any]
+                transaction.updateData(dataToUpdate, forDocument: reference)
 
                 // Update in model as well
             }
+                
             // Already have a player one
             else {
-                // Although as a transaction this can run multiple times, it shouldn't affect our
-                // local model.
                 
                 Util.log("\nUpdated leader reset for next game\n")
                 // Download number of turns
@@ -143,6 +146,64 @@ class FirebaseProxy {
         }
     }
     
+    func startGame(completion: @escaping () -> Void) {
+    
+        Util.log("startGame function")
+        FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { err in
+            if let err = err {
+                _ = Factory.displayAlert(err)
+            } else {
+                Util.log("Game is on!")
+                completion()
+            }
+        }
+        
+        
+    }
+    
+    //TODO: - Fix returning errors if we have them to calling function
+    func listenPlayersJoin(completion: @escaping ([String: Any], Error?, ListenerRegistration) -> Void) {
+        
+        let joinQuery = Firestore.firestore().collection("elect_leader").limit(to: 1)
+        
+        let listener =  joinQuery.addSnapshotListener { querySnapshot, error in
+            guard let snapshot = querySnapshot else {
+        
+        
+        listener = FirebaseProxy.db.collection("elect_leader").document("123456")
+            .addSnapshotListener { documentSnapshot, error in
+                guard let document = documentSnapshot else {
+                    print("Error fetching document: \(error!)")
+                    return
+                }
+//                guard let data = document.data() else {
+//                    print("Document data was empty.")
+//                    return
+//                }
+//                let source = document.metadata.hasPendingWrites ? "Local" : "Server"
+//                print("\(source) data: \(document.data() ?? [:])")
+//
+//                print("Current data: \(data)")
+//                completion(data, nil, self.listener)
+        
+        
+            document.documentChanges.forEach { diff in
+                
+                var temp: [String: Any]
+                
+                if (diff.type == .modified) {
+                    temp = diff.document.data()
+
+    //              print("Modified city: \(diff.document.data())")
+                    completion(data, nil, self.listener)
+
+                }
+            }
+        }
+        
+        
+    }
+    
     // Async closure so call completion handler when done to continue
     func requestInitialize()  {
         
@@ -168,7 +229,13 @@ class FirebaseProxy {
                 //No active game to upload the preferences into document zero '0'
                 rootCollectionRef.document("\(0)").setData(self.documentData, mergeFields: self.mergeFields, completion: nil)
                 // Initializing is successful, change state
-                StateMachine.state = .readyForGame
+//                StateMachine.state = .readyForGame
+                if self.modelGameLogic.amIPlayerOne {
+                    StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
+                }
+                else {
+                    StateMachine.state = .waitingForGameStart // Player2's state
+                }
                 return
                 
             }
@@ -181,7 +248,14 @@ class FirebaseProxy {
             self.activeRootObj = rootCollectionRef.document(rootID)
            
             // Initializing is successful, change state
-            StateMachine.state = .readyForGame
+//            StateMachine.state = .readyForGame
+            if self.modelGameLogic.amIPlayerOne {
+                StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
+            }
+            else {
+                StateMachine.state = .waitingForGameStart // Player2's start
+            }
+
             
         }
     }
@@ -202,7 +276,14 @@ class FirebaseProxy {
                     // If so then it shouldn't go to readForGame but pick up game in route...
                     
                     // Switch state from initializing to initialized; notify everyone
-                    StateMachine.state = .readyForGame
+//                    StateMachine.state = .readyForGame
+//                    if self.modelGameLogic.amIPlayerOne {
+//                        StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
+//                    }
+//                    else {
+//                        StateMachine.state = .waitingForGameStart // Player2's state
+//                    }
+
                     
                     
                 }
@@ -435,7 +516,7 @@ class FirebaseProxy {
                                 print("\(error)")
                             }
                             else {
-                                document
+//                                document
                                 print("success")
                             
                             }
