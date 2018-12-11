@@ -83,6 +83,8 @@ protocol GameLogicModelProtocol: class, Codable {
 
 protocol GamePrefModelProtocol: class {
     
+    var myNameIs:String { get set }
+    
     var playerOneName:String { get set }
     var playerTwoName:String { get set }
     

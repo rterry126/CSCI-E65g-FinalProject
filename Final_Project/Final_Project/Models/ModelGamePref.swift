@@ -26,6 +26,9 @@ class GamePrefModel {
     private init() {
         
         //MARK: - Set Player names
+        //Game Name
+        _myNameIs = defaults.string(forKey: "\(PrefKeys.MiscPrefs.myNameIs)") ?? PrefKeys.MiscPrefs.myNameIs.rawValue
+        
         // Player One name
         // Either set the saved value OR if that is nil retrieve the default value from enum
         _playerOneName = defaults.string(forKey: "\(PrefKeys.Players.playerOne)") ?? PrefKeys.Players.playerOne.rawValue
@@ -66,6 +69,23 @@ class GamePrefModel {
     
     
     //MARK: Private variables
+    private var _myNameIs: String {
+        
+        didSet {
+            print("Model ==> Model: didSet(_myNameIs) updated to \(_myNameIs)")
+            
+            // Persist name anytime it is changed
+            defaults.set("\(_myNameIs)", forKey: "\(PrefKeys.MiscPrefs.myNameIs)")
+            
+            // So we will use the same observer as for the names... No reason to make a separate one.
+            
+//            NotificationCenter.default.post(name: .namesChanged, object: self)
+            
+        }
+        
+        
+    }
+    
     private var _playerOneName: String {
         didSet {
             print("Model ==> Model: didSet(_playerOneName) updated to \(_playerOneName)")
@@ -157,6 +177,15 @@ class GamePrefModel {
 //MARK: Extension - Game Model Protocol
 extension GamePrefModel: GamePrefModelProtocol {
     
+    
+    var myNameIs: String {
+        get {
+            return _myNameIs
+        }
+        set {
+            _myNameIs = newValue
+        }
+    }
     
     var playerOneName: String {
         get {

@@ -42,6 +42,7 @@ enum PrefKeys: CaseIterable {
     }
     enum MiscPrefs: String, CaseIterable {
         case gameName = "Final Project - Robert"
+        case myNameIs = "Robert"
     }
     
     enum Colors: RawRepresentable, CaseIterable {
