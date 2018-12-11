@@ -161,18 +161,14 @@ class FirebaseProxy {
         
     }
     
+    var listenerJoin : ListenerRegistration!
     //TODO: - Fix returning errors if we have them to calling function
     func listenPlayersJoin(completion: @escaping ([String: Any], Error?, ListenerRegistration) -> Void) {
         
         let joinQuery = Firestore.firestore().collection("elect_leader").limit(to: 1)
         
-        let listener =  joinQuery.addSnapshotListener { querySnapshot, error in
+        listenerJoin =  joinQuery.addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
-        
-        
-        listener = FirebaseProxy.db.collection("elect_leader").document("123456")
-            .addSnapshotListener { documentSnapshot, error in
-                guard let document = documentSnapshot else {
                     print("Error fetching document: \(error!)")
                     return
                 }
@@ -187,7 +183,7 @@ class FirebaseProxy {
 //                completion(data, nil, self.listener)
         
         
-            document.documentChanges.forEach { diff in
+            snapshot.documentChanges.forEach { diff in
                 
                 var temp: [String: Any]
                 
@@ -195,7 +191,7 @@ class FirebaseProxy {
                     temp = diff.document.data()
 
     //              print("Modified city: \(diff.document.data())")
-                    completion(data, nil, self.listener)
+                    completion(temp, nil, self.listenerJoin)
 
                 }
             }

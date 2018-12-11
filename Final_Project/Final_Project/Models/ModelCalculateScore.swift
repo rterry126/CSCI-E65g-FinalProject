@@ -8,7 +8,7 @@
 
 // Source - array find and replace - https://developer.apple.com/documentation/swift/array
 
-
+// 
 import Foundation
 
 class CalculateScore {
@@ -33,17 +33,12 @@ class CalculateScore {
         var p1 = 0
         var p2 = 0
         
-
-        //            var mask = (array[mask1IndexRow][mask1IndexCol], array[mask2IndexRow][mask2IndexCol]) == (array[mask2IndexRow][mask2IndexCol], array[mask3IndexRow][mask3IndexCol])
-        
         // 1) do lateral, check consective squares in a row
         for row in array { // this advances the rows. It should go to the last row
-            print(row)
             // have to use indexes; since the 'matrix' doesn't have empty spaces, row.count is
             // the number of columns
             for columnIndex in 0 ..< row.count - 2 {
                 
-                print(row[columnIndex], row[columnIndex+1])
                 let firstSquare = (row[columnIndex], row[columnIndex+1])
                 let secondSquare = (row[columnIndex+1], row[columnIndex+2])
                 
@@ -65,11 +60,6 @@ class CalculateScore {
                 
                 
             }
-            print("\n")
-            print("Player 1 score \(p1)")
-            print("Player 2 score \(p2)")
-            print("\n")
-            
         }
         
         print("starting vertical summing....")
@@ -102,10 +92,6 @@ class CalculateScore {
                     }
                 }
             }
-            print("\n")
-            print("Player 1 score \(p1)")
-            print("Player 2 score \(p2)")
-            print("\n")
         }
         
         // 3) Attempt forward diagonal
@@ -114,8 +100,6 @@ class CalculateScore {
             
             for rowIndex in stride(from: array.count - 3, through: 0, by: -1){
                 
-                print("column index \(columnIndex)")
-                print("row index \(rowIndex)")
                 let firstSquare = (array[rowIndex][columnIndex], array[rowIndex+1][columnIndex+1])
                 let secondSquare = (array[rowIndex+1][columnIndex+1], array[rowIndex+2][columnIndex+2])
                 
@@ -143,8 +127,6 @@ class CalculateScore {
             
             for rowIndex in stride(from: array.count - 3, through: 0, by: -1){
                 
-                print("column index \(columnIndex)")
-                print("row index \(rowIndex)")
                 let firstSquare = (array[rowIndex][columnIndex], array[rowIndex+1][columnIndex-1])
                 let secondSquare = (array[rowIndex+1][columnIndex-1], array[rowIndex+2][columnIndex-2])
                 
@@ -170,10 +152,7 @@ class CalculateScore {
     }
     
     //        gameTotalBruteForce(array: gameBoard)
-    //
-    //        print("p1 \(p1)")
-    //        print("p2 \(p2)")
-    //
+   
     //        // Check our logic, kinda...
     //        assert(p1 == 3)
     //        assert(p2 == 4)
