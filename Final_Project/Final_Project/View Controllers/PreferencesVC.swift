@@ -37,6 +37,9 @@ internal class PreferencesVC : UIViewController {
     @IBOutlet weak var player2ColorLabel: UILabel!
     @IBOutlet weak var gridSizeLabel: UILabel!
     @IBOutlet weak var moveTimerLabel: UILabel!
+    @IBOutlet weak var spacerLabel1: UILabel!
+    @IBOutlet weak var spacerLabel2: UILabel!
+    @IBOutlet weak var spacerLabel3: UILabel!
     
     @IBOutlet weak var gameNameText: UITextField!
     @IBOutlet weak var myNameIsText: UITextField!
@@ -179,6 +182,12 @@ extension PreferencesVC {
         gridSizeLabel.layer.borderColor = UIColor.black.cgColor
         moveTimerLabel.layer.borderWidth = 0.5
         moveTimerLabel.layer.borderColor = UIColor.black.cgColor
+        spacerLabel1.layer.borderWidth = 0.5
+        spacerLabel1.layer.borderColor = UIColor.black.cgColor
+        spacerLabel2.layer.borderWidth = 0.5
+        spacerLabel2.layer.borderColor = UIColor.black.cgColor
+        spacerLabel3.layer.borderWidth = 0.5
+        spacerLabel3.layer.borderColor = UIColor.black.cgColor
         
         
         // Have preferences setter reflect the current values stored in the model...
