@@ -70,8 +70,11 @@ extension GameBoardVC: GameStateMachine {
     // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
     @objc func stateWaitingToStartGame() {
         
-//        var docData: [String: Any] = [:]
+        Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
+        
         self.activityIndicator.stopAnimating()
+        
+        // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
         FirebaseProxy.instance.listenPlayersJoin() {data, error, listener in
             
             // Different logic depending on whether waiting on player OR are Joinee
@@ -96,7 +99,7 @@ extension GameBoardVC: GameStateMachine {
                 }
         }
                 
-            // Player2's listener triggered
+            // Player 2's listener triggered
             else {
                 
                 // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
@@ -118,13 +121,11 @@ extension GameBoardVC: GameStateMachine {
     }
     
     
-    
+    // Only applicable to Player 1
     @objc func stateReadyForGame() {
 
         Util.log("function stateReadyForGame triggered via listener")
         
-//        self.activityIndicator.stopAnimating()
-        // Button is initially deactivated and hidden via the storyboard setup.
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
         

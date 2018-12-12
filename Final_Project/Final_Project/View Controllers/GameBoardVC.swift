@@ -58,6 +58,7 @@ class GameBoardVC: UIViewController {
         
         if modelGameLogic.amIPlayerOne {
             
+            updateUI() //
             
             FirebaseProxy.instance.startGame {
                 StateMachine.state = .waitingForUserMove
@@ -69,8 +70,10 @@ class GameBoardVC: UIViewController {
             //TODO: - Put this somewhere else.
             
             // Probably don't need to disable AND hide...
-            newGameButtonOutlet.isEnabled = false
-            newGameButtonOutlet.isHidden = true
+            // 12.12.18 Not needed for P2???
+            
+//            newGameButtonOutlet.isEnabled = false
+//            newGameButtonOutlet.isHidden = true
             
             StateMachine.state = .initialSnapshotOfGameBoard
         }
@@ -420,7 +423,7 @@ extension GameBoardVC {
     }
     
     
-    // Pass reference to modelGamePrefs to PreferencesVC (injection dependancy?). 
+    // Pass reference to modelGamePrefs to PreferencesVC (injection dependancy?).
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let preferencesVC = segue.destination as? PreferencesVC {
