@@ -23,29 +23,29 @@ protocol StateMachineProtocol: class {
 
 
 protocol GameLogicModelObserver: class {
+    
     func successfulBoardMove() // grid has changed
-
-    func stateEndOfGame()
-
     func updatePlayer()
 }
 
-protocol GamePrefModelObserver: class {
-    func namesChanged()
 
+protocol GamePrefModelObserver: class {
+   
+    func namesChanged()
     func colorsChanged()
 }
 
 protocol GameStateMachine: class {
     
-//    func getDatabaseHandle(notification : NSNotification) -> Firestore
-    
+    func updateGameStateLabel()
+    func stateElectPlayerOne()
     func stateInitializing()
+    func stateWaitingToStartGame()
     func stateReadyForGame()
     func stateWaitingForUserMove()
-    func stateElectPlayerOne()
     func stateWaitingForMoveConfirmation(_ notification :Notification)
     func stateWaitingForOpponent()
+    func stateEndOfGame()
 
 }
 
@@ -185,10 +185,6 @@ extension GameGridViewProtocol where Self: UIView {
         // Set flag to render our grid. Must reload all squares, i.e. schedule a setNeedsDisplay()
         reloadAllSquares()
     }
-    
-    
-    
-    
 }
 
 

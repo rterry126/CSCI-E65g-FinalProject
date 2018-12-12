@@ -242,7 +242,102 @@ extension GameBoardVC: GameStateMachine {
     }
     
     
-   
+    // TODO:- Also much Firestore cleanup and resetting needs to be here...
+    @objc func stateEndOfGame() {
+        // Called when num of turns in model is increased to max turns.
+        
+        let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
+        //        Factory.displayAlert(target: self, message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)", title: "End of Game")
+        //        // Disable inputs
+        gameView?.isUserInteractionEnabled = false
+        
+        
+        
+        // Kill/delete the move timer/ no longer needed
+        timerCountDown.invalidate()
+        
+        updateUI()
+        
+        // Going to save a Thumbnail for the history
+        let gameImage = gameView?.asImage()
+        
+        
+        // So we don't have double history entries
+        if modelGameLogic.amIPlayerOne {
+            FirebaseProxy.instance.storeGameResults(gameImage) { err in
+                
+                if let error = err {
+                    // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
+                    
+                    self.present(Factory.displayAlert(error), animated: true, completion: nil)
+                    
+                }
+                    // 4) Successful write to Firestore so continue with deleting old game
+                else {
+                    
+                    FirebaseProxy.instance.deleteGameMoves()
+                    
+                }
+                
+            }
+        }
+        
+        FirebaseProxy.instance.resetPlayerOne()
+        
+        // Commented out on 12.1.18 - Somehow end of game is letting play continue although
+        //inputs are invalidated above
+        
+        //        // Delete saved game, otherwise we are in a loop that just fetches saved game
+        //        do {
+        //            Util.log("End of game. Deleting saved game state \(modelGameLogic)")
+        //
+        //            try Persistence.deleteSavedGame()
+        //
+        //            // Get image of gameboard
+        //            //TODO: Force unwrapping now just to test
+        //            let image = gameView!.asImage()
+        //            sharedFirebaseProxy.storeGameBoardImage(image: image)
+        //
+        //
+        //        }
+        //        catch let e {
+        //            Util.log("Deleting previous game failed: \(e)")
+        //        }
+        //
+        
+        
+        // Play again?
+        // So as I understand the code that is the action, we are resetting the view controller,
+        // which causes it to reload. This is what I want, as viewDidLoad will run again and
+        // the default initialization will be run.
+        
+        // commented out on 11/10. Initializing new game code has been modifed due to singleton/Firebase
+        
+        let alert = UIAlertController(title: "End of Game", message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)\nPlay Again?", preferredStyle: .alert)
+        
+        //        if let gameBoardVC = window?.rootViewController?.children[0] as? GameBoardVC {
+        //            gameBoardVC.modelGamePrefs = GamePrefModel()
+        //        }
+        // .destructive to color 'Yes' in red...
+        alert.addAction(UIAlertAction(title: "Yes", style: .default , handler: {
+            action in
+            
+            self.modelGameLogic.resetModel()
+            //            modelGamePrefs = nil
+            //            sharedFirebaseProxy = nil
+            
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as! GameBoardVC
+            let navigationController = UINavigationController(rootViewController: nextViewController)
+            let appdelegate = UIApplication.shared.delegate as! AppDelegate
+            appdelegate.window!.rootViewController = navigationController
+            
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        self.present(alert, animated: true)
+        
+        
+    }
     
 
     
