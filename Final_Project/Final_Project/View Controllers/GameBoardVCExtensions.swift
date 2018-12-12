@@ -124,12 +124,8 @@ extension GameBoardVC: GameStateMachine {
     // Only applicable to Player 1
     @objc func stateReadyForGame() {
 
-        Util.log("function stateReadyForGame triggered via listener")
-        
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
-        
-        
         
         //Clear in memory cache
         // Doubt this is needed for initial first time run, as model is initialed from scratch, but
@@ -162,6 +158,7 @@ extension GameBoardVC: GameStateMachine {
     @objc func stateWaitingForMoveConfirmation(_ notification :Notification) {
         
         StateMachine.state = .waitingForMoveConfirmation
+        Util.log("Machine state is \(StateMachine.state.rawValue)")
         
         timerCountDown.invalidate()
 
@@ -169,7 +166,6 @@ extension GameBoardVC: GameStateMachine {
         // Since logic model has determined it's a valid move, try to store in Firestore,
         activityIndicator.startAnimating()
         
-//        StateMachine.state = .waitingForMoveConfirmation
         gameView?.isUserInteractionEnabled = false
         
      
@@ -178,12 +174,13 @@ extension GameBoardVC: GameStateMachine {
         
         // 1) Unwrap info that was passed in notification
         
-        //TODO: - Will eventually remove this as it won't be necessary. Player ID is set per device
-        guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+        guard let playerID = notification.userInfo?["playerID"] as? GridState else {
+            Factory.displayAlert(target: self, message: "Error retrieving or unwrapping playerID", title: "Move Confirmation")
             fatalError("Cannot retrieve playerID")
         }
         
-        guard let moveNumber = notification.userInfo!["moveCount"] as? Int else {
+        guard let moveNumber = notification.userInfo?["moveCount"] as? Int else {
+            Factory.displayAlert(target: self, message: "Error retrieving or unwrapping moveCount", title: "Move Confirmation")
             fatalError("Cannot retrieve turn number")
         }
         print("player ID from stateWaitingForMoveConfir \(playerID)")
@@ -195,7 +192,7 @@ extension GameBoardVC: GameStateMachine {
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                    
-                    self.present(Factory.displayAlert(error), animated: true, completion: nil)
+                    Factory.displayAlert(target: self, error: error)
                 
                 }
                 // 4) Successful write to Firestore so continue with game
@@ -256,7 +253,7 @@ extension GameBoardVC: GameStateMachine {
         // Called when num of turns in model is increased to max turns.
         
         let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
-        //        Factory.displayAlert(target: self, message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)", title: "End of Game")
+        
         //        // Disable inputs
         gameView?.isUserInteractionEnabled = false
         
@@ -278,7 +275,7 @@ extension GameBoardVC: GameStateMachine {
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                     
-                    self.present(Factory.displayAlert(error), animated: true, completion: nil)
+                    Factory.displayAlert(target: self, error: error)
                     
                 }
                     // 4) Successful write to Firestore so continue with deleting old game

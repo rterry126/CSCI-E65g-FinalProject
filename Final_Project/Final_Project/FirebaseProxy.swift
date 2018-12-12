@@ -149,10 +149,9 @@ class FirebaseProxy {
     func startGame(completion: @escaping () -> Void) {
     
         Util.log("startGame function")
-        FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { err in
-            if let err = err {
-                _ = Factory.displayAlert(err)
-            } else {
+        FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { error in
+            if let error = error {
+                Factory.displayAlert(target: GameBoardVC.self, error: error)
                 Util.log("Game is on!")
                 completion()
             }
