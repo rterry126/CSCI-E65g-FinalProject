@@ -168,7 +168,6 @@ extension GameBoardVC: GameStateMachine {
         
         gameView?.isUserInteractionEnabled = false
         
-     
         // 0) Coordinates could be optional if move was forfeited. Chain it and let the proxy deal with it
         let coordinates = notification.userInfo?["coordinates"] as? (row:Int, column:Int)
         
@@ -183,56 +182,66 @@ extension GameBoardVC: GameStateMachine {
             Factory.displayAlert(target: self, message: "Error retrieving or unwrapping moveCount", title: "Move Confirmation")
             fatalError("Cannot retrieve turn number")
         }
-        print("player ID from stateWaitingForMoveConfir \(playerID)")
+        
         Util.log("move number storing in Firestore is \(moveNumber)")
+        
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
         FirebaseProxy.instance.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
                                          playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
+                
+                // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
                 if let error = err {
-                    // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
-                   
+                    
                     Factory.displayAlert(target: self, error: error)
                 
                 }
-                // 4) Successful write to Firestore so continue with game
+                // 4) Have successful write to Firestore so continue with game
                 else {
                    
                     // A) Update game state model and the view
+                    // B) Change state machine to .initialSnapshotOfGameBoard
+                    // State change moved to increment turn logic for sequencing issues
+                   
                     NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
                     
                     self.activityIndicator.stopAnimating()
-                    
-                    // B) Change state machine
-                    // Move this to the increment turn logic
-//                    StateMachine.state = .initialSnapshotOfGameBoard
-                    
-                    
                 }
-        }
+        } // End of completion handler
         
     }
+    
     
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
  
         
         Util.log("Listener activitated for opponent move")
+        // 1) opponentMoveFirestore sets a Firestore listener. 2) Must discard initial snapshot
+        // 3) and wait for actual move data 4) Finally kill the listener until we're waiting on
+        // opponent move again.
+        
+        // Closure is completion handler. Is triggered by A) Initial snapshot and B) Actual move
+        // Ideally should be called twice; ignore data in first call...
         FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
             
             var docData: [String: Any] = [:]
-            if StateMachine.state == .initialSnapshotOfGameBoard { // first snapshot, doesn't contain new move
-               StateMachine.state = .waitingForOpponentMove // Now we can get the actual move
+            
+            // first snapshot, doesn't contain new move
+            if StateMachine.state == .initialSnapshotOfGameBoard {
+               
+                // Advance the state. Now we'll use the listener information
+               StateMachine.state = .waitingForOpponentMove
             }
+            
+            // else we have an actual move
             else {
                 
-                print("\(move)")
+//                print("\(move)")
 
-
-//                let ID = self.modelGameLogic.whoseTurn
-                
-                let playerID = GridState(rawValue: move["player"] as! String)
+                if let playerID = GridState(rawValue: move["player"] as? String) {
                 docData["playerID"] = playerID
+                }
                 if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
                     docData["coordinates"] = coordinates
                 }
