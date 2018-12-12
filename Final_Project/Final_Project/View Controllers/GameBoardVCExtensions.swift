@@ -6,11 +6,15 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
-// Sources - Blurring a view - https://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view
 
 import UIKit
 import Firebase
 import AVFoundation
+
+// The various states drive these functions. Ostensibly they are view controller related; putting them
+// in an extension seems to organize it better logically and physically code wise...
+
+// For the most part the functions are triggered by the listeners by the same name.
 
 
 //MARK: - GameStateMachine extension
@@ -28,18 +32,14 @@ extension GameBoardVC: GameStateMachine {
     
     @objc func stateElectPlayerOne() {
         
-//        activityIndicator.startAnimating() // Transaction on Firstore, this could take a while
         
         Util.log("Player election function called in proxy")
         FirebaseProxy.instance.electPlayerOne() { success in
             
             if success {
-
-                // For now write this directly to MOdel, however would like to eventually move to listener
-
                 self.modelGameLogic.amIPlayerOne = true
-                
             }
+            
             // Both players need to initialize
             // Now advance to state .initializing
             StateMachine.state = .initializing
@@ -48,10 +48,10 @@ extension GameBoardVC: GameStateMachine {
             Factory.displayAlert(target: self, message: "You are \(player).", title: "Election Complete")
 
         } // End of callback closure
-    
-        
     }
     
+    
+   // Initializing the game state (moves) in Firestore. We already have handle as we've elected P1
     @objc func stateInitializing() {
         
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
@@ -60,24 +60,11 @@ extension GameBoardVC: GameStateMachine {
         readyPlayerOne.isHidden = true
         readyPlayerTwo.isHidden = true
         
-        activityIndicator.startAnimating()
+        activityIndicator.startAnimating() // Show activity while we initialize the game state
         
-//        //TODO: - currently just using instance (static) variable of 'state' vice a singleton implementation
-//        // VC has loaded so we change state to 2 - initializing
-//        StateMachine.state = .initializing
-        
-        
-        // This doesn't really do anything???
-        //        fireStoreDB = FirebaseProxy.db // Get handle to our database
-        
-        // TODO: - I don't think this needs to be in a completion handler. The next state is called asynchronously and this doesn't do anything.
-        FirebaseProxy.instance.requestInitialize() //{
-//            Util.log("Initialization Completion handler called. ")
-////            sleep(5)
-////            self.activityIndicator.stopAnimating() // This is moved to state 3
-//        }
-        
-        
+
+        // Next state is called asynchronously from within initialization code
+        FirebaseProxy.instance.requestInitialize()
     }
     
     // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
@@ -88,6 +75,10 @@ extension GameBoardVC: GameStateMachine {
         FirebaseProxy.instance.listenPlayersJoin() {data, error, listener in
             
             // Different logic depending on whether waiting on player OR are Joinee
+            
+            // When Player 2 joines, leader_bit is reset to false. So
+            // 1) IF Player 1, 2) try to get the leader_bit 3) IF it's false, then P2 has joined
+            // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
             
                 if let joined = (data["leader_bit"]) as? Bool {
@@ -96,19 +87,36 @@ extension GameBoardVC: GameStateMachine {
                         StateMachine.state = .readyForGame
                     }
                 }
-        }
-            else { // Player2's listener triggered
                 
+                // else... something has gone wrong with leader_bit, but let's try to start the game
+                // anyway instead of fatal error. Worse case is that no one will respond on other end.
+                else {
+                    listener.remove()
+                    StateMachine.state = .readyForGame
+                }
+        }
+                
+            // Player2's listener triggered
+            else {
+                
+                // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
+                // the other player's move (via the .initialSnapshot... state)
                 if let gameStarted = (data["gameStarted"]) as? Bool {
                     if gameStarted {
                         listener.remove()
                         StateMachine.state = .initialSnapshotOfGameBoard
                     }
                 }
-                
+                // else... something has gone wrong with gameState bit, but let's try to start the game
+                // anyway instead of fatal error. Worse case is that move never comes...
+                else {
+                    listener.remove()
+                    StateMachine.state = .initialSnapshotOfGameBoard
+                }
             }
         }
     }
+    
     
     
     @objc func stateReadyForGame() {
