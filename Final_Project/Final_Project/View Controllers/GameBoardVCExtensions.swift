@@ -239,9 +239,12 @@ extension GameBoardVC: GameStateMachine {
                 
 //                print("\(move)")
 
-                if let playerID = GridState(rawValue: move["player"] as? String) {
-                docData["playerID"] = playerID
+                if let gridState = move["player"] as? String {
+                    docData["playerID"] = GridState(rawValue: gridState)
                 }
+//                if let playerID = GridState(rawValue: move["player"] as? String) {
+//                docData["playerID"] = playerID
+//                }
                 if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
                     docData["coordinates"] = coordinates
                 }

@@ -152,9 +152,11 @@ class FirebaseProxy {
         FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { error in
             if let error = error {
                 Factory.displayAlert(target: GameBoardVC.self, error: error)
-                Util.log("Game is on!")
-                completion()
+//                Util.log("Game is on!")
+//                completion()
             }
+            Util.log("Game is on!")
+            completion()
         }
         
         
