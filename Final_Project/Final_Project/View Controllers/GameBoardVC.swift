@@ -103,13 +103,13 @@ class GameBoardVC: UIViewController {
     var timeToMakeMove: Double  // Timer interval which triggers move forfeiture
     var timeDisplay: Int // variable that is modified and used to display time remaining. Initially set from above
     
-
-
     var timerCountDown = Timer() // Display countdown timer
     
+    // Set a light gray for empty. Scale is 0.0 to 1.0 for these RGB values so divide by 255 to
+    // normalize to this scale. Normally they are 0 to 255.
+    var colorEmpty = UIColor.init(hue: 0.0, saturation: 0.0, brightness: 0.93, alpha: 1.0)
     
-//    // Get handle to this later in the 'initializing' state
-//    var fireStoreDB: Firestore
+    
     
     //Listeners and their selectors
     //Keep them all in one place and then initialize in viewDidLoad via Helper Function
@@ -147,8 +147,11 @@ class GameBoardVC: UIViewController {
     
     
     
-    //MARK:- Instances Created
-    var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
+    //MARK:- Instances Created - Singletons
+    var modelGameLogic: GameLogicModelProtocol = {
+        Util.log("GameBoardVC ==> Preferences Model: instantiate")
+        return GameLogicModel.instance
+    }()
     
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("GameBoardVC ==> Preferences Model: instantiate")
@@ -163,9 +166,6 @@ class GameBoardVC: UIViewController {
     
     
     
-    // Set a light gray for empty. Scale is 0.0 to 1.0 for these RGB values so divide by 255 to
-    // normalize to this scale. Normally they are 0 to 255.
-    var colorEmpty = UIColor.init(hue: 0.0, saturation: 0.0, brightness: 0.93, alpha: 1.0)
     
     
     //MARK: - Functions
@@ -244,7 +244,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // 2. Player does NOT make move in time. This triggers (via timer) func timerExpired and it handles the logic
         
 
-                textTimer.isHidden = true
+        textTimer.isHidden = true
         timeDisplay = Int(timeToMakeMove) // Reset for next move....
         textTimer.text = "\(timeFormatted(timeDisplay))" // label has reset time value for next time
         // otherwise it would have old/previous value before it's updated.
@@ -257,11 +257,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // First increment count. If moves are remaining then a observer to update the player will be called
         // Otherwise, if last move, a observer to execute end of game routines will be called
        
-        // Set timer for next move. If end of game then these will be invalidated in endOfGame. Could
-        // complicate this by having endOfGame return a bool, move this below .incrementMoveCount
-        // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
-        // cleaner
-        
+        // Set timer for next move. If end of game then these will be invalidated in endOfGame.
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -270,8 +266,6 @@ extension GameBoardVC: GameLogicModelObserver {
         // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
        
-        
-        
     }
    
     
@@ -286,11 +280,6 @@ extension GameBoardVC: GameLogicModelObserver {
         saveGameState(modelGameLogic)
         updateUI()
     }
-    
-    
-    
-    
-    
 }
 
 
@@ -322,7 +311,6 @@ extension GameBoardVC {
         // Pass our state observers and selectors to our factory function to create the observers
         Factory.createObserver(observer: self, listeners: observerStateMachine)
         
-//       StateMachine.state = .initializing
         StateMachine.state = .electPlayerOne
 
 
@@ -408,8 +396,8 @@ extension GameBoardVC {
     }
     
     
+    // Segue to the Preferences view....
     // Pass reference to modelGamePrefs to PreferencesVC (injection dependancy?).
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let preferencesVC = segue.destination as? PreferencesVC {
             preferencesVC.modelGamePrefs = modelGamePrefs
@@ -419,13 +407,14 @@ extension GameBoardVC {
         }
     }
     
-    // Time fired, turnis forfeited. Need to bypass most of move logic, but still advance the game state.
+    
+    
+    // Time fired, turn is forfeited. Need to bypass most of move logic, but still advance the game state.
     
     // @objc required because this is passed to #selector
     @objc func timerTurnForfeitedFired() {
         Util.log("Move Timer Fired, turn forfeited")
-//        self.successfulBoardMove()
-//        modelGameLogic.incrementMoveCount() // normally handled in successfulBoardMove()
+
         
         // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
         // coordinates, empty move to change the state to waiting for move confirmation.
@@ -443,35 +432,35 @@ extension GameBoardVC {
         Util.log("update Game View called via listener")
         
         // 1) Get coordinates, only update view if we have coordinates, otherwise forfeited move so skip
-        if let location = notification.userInfo!["coordinates"] as? (row:Int, column:Int) {
+        if let location = notification.userInfo?["coordinates"] as? (row:Int, column:Int) {
+            
             // TODO: - Should be able to remove this later
-            print("Coordinates printing from updateGameView \(location)")
-            guard let playerID = notification.userInfo!["playerID"] as? GridState else {
+//            print("Coordinates printing from updateGameView \(location)")
+            guard let playerID = notification.userInfo?["playerID"] as? GridState else {
+                Factory.displayAlert(target: self, message: "Error retrieving or unwrapping playerID", title: "Move Confirmation")
                 fatalError("Cannot retrieve playerID")
+                
             }
         
-            print(location.column)
-            print(location.row)
-            print(playerID)
+//            print(location.column)
+//            print(location.row)
+//            print(playerID)
+            
+           // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
         
             // 2) Update the Logic Model Array
             modelGameLogic.gameBoard[location.row][location.column] = playerID
         
-            print(modelGameLogic.gameBoard[location.row][location.column])
+//            print(modelGameLogic.gameBoard[location.row][location.column])
         
             // 3) Update the View Grid
             gameView?.changeGridState(x: location.column, y: location.row)
         
-            // 4) Still need to update the game state
-            // So it's updated via same listener that triggers this
-
-
-    //        // Notify controller that successful move was executed
-    //        NotificationCenter.default.post(name: .moveExecuted, object: self)
+            // 4) Still need to update the game state, via listenr that triggers this function
+            
         }
         
-        // Otherwise do nothing...
-        
+        // Otherwise do NOT update board view or game model, as move was FORFEITED (no coordinates passed)
         
     }
     
@@ -490,13 +479,11 @@ extension GameBoardVC {
     @objc func displayTimer () {
         // Since this is called every 1 seconds, we need a persistent variable to 'remember' where in the countdown we are:
         
-        // Try putting this here so things seem move in sync
+        // This is here so visual timer is in sync
         textTimer.isHidden = false // initialized as hidden via storyboard
         
-        // Redeclare to integer so we don't have to continually convert
-//        var totalTime = Int(timeToMakeMove)
-        // total time is modifed so it doesn't persist each second function is called. Needs to
-        // be global but cannot use the var timeToMakeMove. Needs much cleanup...
+        
+        // timeDisplay is modified and we need it to persist.  It's a global variable.
         
         textTimer.text = "\(timeFormatted(timeDisplay))" // Helper fuction to format
         
@@ -506,18 +493,14 @@ extension GameBoardVC {
         
         if timeDisplay != 0 {
             timeDisplay -= 1
-            
-        // Keep this for now but eventually this will be incorporated into a) time expires OR b) Move made
-        // Going to go ahead and incorporate into move made....
-        } else {
+        }
+        else {
             textTimer.isHidden = true
             timerCountDown.invalidate()
             //TODO: this is slopppy I think
             timeDisplay = Int(timeToMakeMove) // Reset for next move....
             timerTurnForfeitedFired()
         }
-        
-        
         
     }
 }
