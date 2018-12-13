@@ -100,8 +100,9 @@ class GameBoardVC: UIViewController {
     
     // TODO: - See if I can clean this up into 1 variable; maybe us in/out var
     
-    var totalTime: Int // variable that is modified and used to display time remaining
     var timeToMakeMove: Double  // Timer interval which triggers move forfeiture
+    var timeDisplay: Int // variable that is modified and used to display time remaining. Initially set from above
+    
 
 
     var timerCountDown = Timer() // Display countdown timer
@@ -138,8 +139,8 @@ class GameBoardVC: UIViewController {
         self.numOfGridRows = modelGamePrefs.numRows
         self.numOfGridColumns = modelGamePrefs.numColumns
         
-        self.totalTime = modelGamePrefs.moveTime
-        self.timeToMakeMove = Double(totalTime)
+        self.timeToMakeMove = Double(modelGamePrefs.moveTime)
+        self.timeDisplay = Int(timeToMakeMove)
         
         super.init(coder: aDecoder)
     }
@@ -203,11 +204,8 @@ class GameBoardVC: UIViewController {
     }
 }
 
+// TODO:- Look at what additional info needs to be saved to restore (maxmoves at a minimum...)
 // Used to save game state after each turn. Threaded to not block main game or affect UX
-// After further reading, not sure I should be making a copy of the model prior to
-// saving. Highly unlikel that it would be modified (move made) while this is reading model
-// but proper form should I make a copy of it?
-
 func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     
     DispatchQueue.global(qos: .background).async {
@@ -216,7 +214,6 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
         //Returns an optional
         if let data = modelGameLogic.toJSONData() {
             
-        
             do {
                 try Persistence.save(data)
             }
@@ -239,30 +236,18 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 extension GameBoardVC: GameLogicModelObserver {
    
     
-    
-    
     @objc func successfulBoardMove() {
-        
-        //TODO: - 12.1.18 Will need to eventually move the stateMachine update here
-        // to work with the timer and loss of turn if not executed in time...
         
         
         // A couple of possibilities here:
-        // 1. Player makes move within alloted time AND before warning. Invalidate All timers since
-        // they aren't needed.
-        // 2. Play makes move within alloted time but NOT before warning sound. timerWarning is already
-        // invalid (it doesn't repeat) but need to invalidate timerMove.
-        // 3. Player does NOT make move in time. This triggers func timerExpired and it handles the logic
+        // 1. Player makes move within alloted time. Invalidate timer
+        // 2. Player does NOT make move in time. This triggers (via timer) func timerExpired and it handles the logic
         
-//        timerMove.invalidate()
-//        timerWarning.invalidate()
-//        timerCountDown.invalidate()
-        
-        // 12.4.18 for countdown timer. Eventually will be incorporated with above...
-        textTimer.isHidden = true
-        totalTime = 5 // Reset for next move....
-        textTimer.text = "\(timeFormatted(totalTime))" // label has reset time value for next time
-        // otherwise it has previous value before it's updated.
+
+                textTimer.isHidden = true
+        timeDisplay = Int(timeToMakeMove) // Reset for next move....
+        textTimer.text = "\(timeFormatted(timeDisplay))" // label has reset time value for next time
+        // otherwise it would have old/previous value before it's updated.
         
         
         // Model informs controller successful move has occurred then controller
@@ -272,14 +257,11 @@ extension GameBoardVC: GameLogicModelObserver {
         // First increment count. If moves are remaining then a observer to update the player will be called
         // Otherwise, if last move, a observer to execute end of game routines will be called
        
-        // Set timers for next move. If end of game then these will be invalidated in endOfGame. Could
+        // Set timer for next move. If end of game then these will be invalidated in endOfGame. Could
         // complicate this by having endOfGame return a bool, move this below .incrementMoveCount
         // and put in if/else. OR just have endOfGame invalidate. Kind of sloppy but keeps code
         // cleaner
         
-        // Commented out 11/24 while building state machine
-
-//        (timerMove, timerWarning) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerFired))
         
         // First increment count. If moves are remaining then a listener to update the player will be called
         // Otherwise, if last move, a listener to execute end of game routines will be called
@@ -496,23 +478,17 @@ extension GameBoardVC {
     
     //TODO: - Cleanup this and put it in appropriate place
     @objc func startTimer() {
-//        countdownTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
-        
-        
-        
-//        //Start move timers
-//        (timerMove, timerWarning, countdownTimer) = Factory.createTimers(timeToMakeMove: timeToMakeMove, target: self, functionToRun: #selector(timerTurnForfeitedFired),countDownTimer: #selector(displayTimer))
-        
+
         timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
         
         // Supposedly if timing isn't critical this is energy efficient.
        
         timerCountDown.tolerance = 0.1
         
-        
     }
     
     @objc func displayTimer () {
+        // Since this is called every 1 seconds, we need a persistent variable to 'remember' where in the countdown we are:
         
         // Try putting this here so things seem move in sync
         textTimer.isHidden = false // initialized as hidden via storyboard
@@ -522,14 +498,14 @@ extension GameBoardVC {
         // total time is modifed so it doesn't persist each second function is called. Needs to
         // be global but cannot use the var timeToMakeMove. Needs much cleanup...
         
-        textTimer.text = "\(timeFormatted(totalTime))" // Helper fuction to format
+        textTimer.text = "\(timeFormatted(timeDisplay))" // Helper fuction to format
         
-        if totalTime == 2 { // play warning...
+        if timeDisplay == 2 { // play warning...
             AudioServicesPlayAlertSound(SystemSoundID(1103))
         }
         
-        if totalTime != 0 {
-            totalTime -= 1
+        if timeDisplay != 0 {
+            timeDisplay -= 1
             
         // Keep this for now but eventually this will be incorporated into a) time expires OR b) Move made
         // Going to go ahead and incorporate into move made....
@@ -537,7 +513,7 @@ extension GameBoardVC {
             textTimer.isHidden = true
             timerCountDown.invalidate()
             //TODO: this is slopppy I think
-            totalTime = Int(timeToMakeMove) // Reset for next move....
+            timeDisplay = Int(timeToMakeMove) // Reset for next move....
             timerTurnForfeitedFired()
         }
         
