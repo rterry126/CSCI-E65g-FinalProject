@@ -225,7 +225,7 @@ extension GameBoardVC: GameStateMachine {
         // Ideally should be called twice; ignore data in first call...
         FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
             
-            var docData: [String: Any] = [:]
+            var userInfo: [String: Any] = [:]
             
             // first snapshot, doesn't contain new move
             if StateMachine.state == .initialSnapshotOfGameBoard {
@@ -240,20 +240,17 @@ extension GameBoardVC: GameStateMachine {
 //                print("\(move)")
 
                 if let gridState = move["player"] as? String {
-                    docData["playerID"] = GridState(rawValue: gridState)
-                }
-//                if let playerID = GridState(rawValue: move["player"] as? String) {
-//                docData["playerID"] = playerID
-//                }
-                if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
-                    docData["coordinates"] = coordinates
+                    userInfo["playerID"] = GridState(rawValue: gridState)
                 }
 
-//                let userInfo = ["playerID": ID, "coordinates": coordinates ]
+                if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
+                    userInfo["coordinates"] = coordinates
+                }
+
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
-                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: docData)
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo: userInfo)
                 
             }
         }
@@ -263,12 +260,12 @@ extension GameBoardVC: GameStateMachine {
     // TODO:- Also much Firestore cleanup and resetting needs to be here...
     @objc func stateEndOfGame() {
         // Called when num of turns in model is increased to max turns.
+        // Should be called by both devices simultaneously
         
         let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
         
-        //        // Disable inputs
+        // Disable inputs
         gameView?.isUserInteractionEnabled = false
-        
         
         
         // Kill/delete the move timer/ no longer needed
@@ -276,7 +273,8 @@ extension GameBoardVC: GameStateMachine {
         
         updateUI()
         
-        // Going to save a Thumbnail for the history
+        // Save a Thumbnail for the history
+        // method is extension of the custom view. Source cited in GameBoardView
         let gameImage = gameView?.asImage()
         
         
@@ -294,16 +292,13 @@ extension GameBoardVC: GameStateMachine {
                 else {
                     
                     FirebaseProxy.instance.deleteGameMoves()
-                    
                 }
-                
             }
         }
         
         FirebaseProxy.instance.resetPlayerOne()
         
-        // Commented out on 12.1.18 - Somehow end of game is letting play continue although
-        //inputs are invalidated above
+        // Commented out on 12.1.18 -
         
         //        // Delete saved game, otherwise we are in a loop that just fetches saved game
         //        do {
@@ -356,24 +351,5 @@ extension GameBoardVC: GameStateMachine {
         
         
     }
-    
 
-    
-    
-    //    @objc func getDatabaseHandle(notification : NSNotification) -> Firestore {
-    //
-    //        if let info = notification.userInfo as? Dictionary<String,Int> {
-    //            // Check if value present before using it
-    //            if let s = info["state"] {
-    //                print(s)
-    //                if s == 2 { // If we are in initializing state then get handle to Firestore
-    //                    fireStoreDB = FirebaseProxy.db
-    //                }
-    //            }
-    //        }
-    //        else {
-    //            print("no value for key\n")
-    //        }
-    //        return fireStoreDB
-    //    }
 }
