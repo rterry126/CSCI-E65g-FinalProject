@@ -46,12 +46,12 @@ extension GameBoardVC: GameStateMachine {
             
             let player =  success ? "Player One" : "Player Two"
             Factory.displayAlert(target: self, message: "You are \(player).", title: "Election Complete")
-
+            
         } // End of callback closure
     }
     
     
-   // Initializing the game state (moves) in Firestore. We already have handle as we've elected P1
+    // Initializing the game state (moves) in Firestore. We already have handle as we've elected P1
     @objc func stateInitializing() {
         
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
@@ -62,7 +62,7 @@ extension GameBoardVC: GameStateMachine {
         
         activityIndicator.startAnimating() // Show activity while we initialize the game state
         
-
+        
         // Next state is called asynchronously from within initialization code
         FirebaseProxy.instance.requestInitialize()
     }
@@ -83,23 +83,23 @@ extension GameBoardVC: GameStateMachine {
             // 1) IF Player 1, 2) try to get the leader_bit 3) IF it's false, then P2 has joined
             // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
-            
+                
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {
                         listener.remove()
                         StateMachine.state = .readyForGame
                     }
                 }
-                
-                // else... something has gone wrong with leader_bit, but let's try to start the game
-                // anyway instead of fatal error. Worse case is that no one will respond on other end.
+                    
+                    // else... something has gone wrong with leader_bit, but let's try to start the game
+                    // anyway instead of fatal error. Worse case is that no one will respond on other end.
                 else {
                     listener.remove()
                     StateMachine.state = .readyForGame
                 }
-        }
+            }
                 
-            // Player 2's listener triggered
+                // Player 2's listener triggered
             else {
                 
                 // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
@@ -110,8 +110,8 @@ extension GameBoardVC: GameStateMachine {
                         StateMachine.state = .initialSnapshotOfGameBoard
                     }
                 }
-                // else... something has gone wrong with gameState bit, but let's try to start the game
-                // anyway instead of fatal error. Worse case is that move never comes...
+                    // else... something has gone wrong with gameState bit, but let's try to start the game
+                    // anyway instead of fatal error. Worse case is that move never comes...
                 else {
                     listener.remove()
                     StateMachine.state = .initialSnapshotOfGameBoard
@@ -123,18 +123,18 @@ extension GameBoardVC: GameStateMachine {
     
     // Only applicable to Player 1
     @objc func stateReadyForGame() {
-
+        
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
         
         //Clear in memory cache
         // Doubt this is needed for initial first time run, as model is initialed from scratch, but
         // keep for now.
-//        modelGameLogic.resetModel()
+        //        modelGameLogic.resetModel()
         
         Util.log("Waiting for New Game button press")
         Util.log("Machine state is \(StateMachine.state.rawValue)")
-
+        
     }
     
     
@@ -161,7 +161,7 @@ extension GameBoardVC: GameStateMachine {
         Util.log("Machine state is \(StateMachine.state.rawValue)")
         
         timerCountDown.invalidate()
-
+        
         // the GameLogicModel (executeMove) has determined that the move is valid (grid not occupied, in bounds,...)
         // Since logic model has determined it's a valid move, try to store in Firestore,
         activityIndicator.startAnimating()
@@ -188,33 +188,30 @@ extension GameBoardVC: GameStateMachine {
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
         FirebaseProxy.instance.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
-                                         playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
-                
-                // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
-                if let error = err {
-                    
-                    Factory.displayAlert(target: self, error: error)
-                
-                }
+                                                  playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
+                                                    
+            // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
+            if let error = err {
+                Factory.displayAlert(target: self, error: error)
+            }
                 // 4) Have successful write to Firestore so continue with game
-                else {
-                   
-                    // A) Update game state model and the view
-                    // B) Change state machine to .initialSnapshotOfGameBoard
-                    // State change moved to increment turn logic for sequencing issues
-                   
-                    NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
-                    
-                    self.activityIndicator.stopAnimating()
-                }
+            else {
+                
+                // A) Update game state model and the view
+                // B) Change state machine to .initialSnapshotOfGameBoard
+                // State change moved to increment turn logic for sequencing issues
+                
+                NotificationCenter.default.post(name: .moveStoredFirestore, object: self, userInfo:notification.userInfo)
+                
+                self.activityIndicator.stopAnimating()
+            }
         } // End of completion handler
-        
     }
     
     
     // Triggered by listener when state changes to .waitingForOpponentMove
     @objc func stateWaitingForOpponent() {
- 
+        
         
         Util.log("Listener activitated for opponent move")
         // 1) opponentMoveFirestore sets a Firestore listener. 2) Must discard initial snapshot
@@ -229,24 +226,24 @@ extension GameBoardVC: GameStateMachine {
             
             // first snapshot, doesn't contain new move
             if StateMachine.state == .initialSnapshotOfGameBoard {
-               
+                
                 // Advance the state. Now we'll use the listener information
-               StateMachine.state = .waitingForOpponentMove
+                StateMachine.state = .waitingForOpponentMove
             }
-            
-            // else we have an actual move
+                
+                // else we have an actual move
             else {
                 
-//                print("\(move)")
-
+                //                print("\(move)")
+                
                 if let gridState = move["player"] as? String {
                     userInfo["playerID"] = GridState(rawValue: gridState)
                 }
-
+                
                 if let coordinates = (row: move["row"], column: move["column"]) as? GridCoord {
                     userInfo["coordinates"] = coordinates
                 }
-
+                
                 listener.remove() // don't want or need notifications while it's our move
                 
                 // Set listener to update the game state model and the view
@@ -351,5 +348,5 @@ extension GameBoardVC: GameStateMachine {
         
         
     }
-
+    
 }

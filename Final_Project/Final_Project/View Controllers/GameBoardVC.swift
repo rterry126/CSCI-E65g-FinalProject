@@ -51,32 +51,33 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var textTimer: UILabel! // Initially hidden via storyboard...
     
     
-    
+    // Modifed and commented out 12.13.18 - Don't think we need player 2 or logic here as only button
+    // is for Player 1
     @IBAction func newGameButton(_ sender: UIButton) {
         
         // New game button pressed. Change state
         
-        if modelGameLogic.amIPlayerOne {
-            
-            updateUI() //
+//        if modelGameLogic.amIPlayerOne {
+        
+            updateUI() 
             
             FirebaseProxy.instance.startGame {
                 StateMachine.state = .waitingForUserMove
             }
-        }
-        else {
-            print("new game button pushed and I am player two")
-            
-            //TODO: - Put this somewhere else.
-            
-            // Probably don't need to disable AND hide...
-            // 12.12.18 Not needed for P2???
-            
-//            newGameButtonOutlet.isEnabled = false
-//            newGameButtonOutlet.isHidden = true
-            
-            StateMachine.state = .initialSnapshotOfGameBoard
-        }
+//        }
+//        else {
+//            print("new game button pushed and I am player two")
+//
+//            //TODO: - Put this somewhere else.
+//
+//            // Probably don't need to disable AND hide...
+//            // 12.12.18 Not needed for P2???
+//
+////            newGameButtonOutlet.isEnabled = false
+////            newGameButtonOutlet.isHidden = true
+//
+//            StateMachine.state = .initialSnapshotOfGameBoard
+//        }
 
         
     }
