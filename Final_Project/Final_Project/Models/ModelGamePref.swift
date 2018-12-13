@@ -25,10 +25,17 @@ class GamePrefModel {
     //MARK: - Set stored or default preferences
     private init() {
         
-        //MARK: - Set Player names
-        //Game Name
+        // Returns 0 if key is non-existent
+        // Set to default value stored in enum if key is non existent. 
+        _moveTime = defaults.integer(forKey: "\(PrefKeys.GameTime.moveTime)")
+        if _moveTime == 0 {
+            _moveTime = PrefKeys.GameTime.moveTime.rawValue
+        }
+        
         _myNameIs = defaults.string(forKey: "\(PrefKeys.MiscPrefs.myNameIs)") ?? PrefKeys.MiscPrefs.myNameIs.rawValue
         
+        //MARK: - Set Player names
+        //Game Name
         // Player One name
         // Either set the saved value OR if that is nil retrieve the default value from enum
         _playerOneName = defaults.string(forKey: "\(PrefKeys.Players.playerOne)") ?? PrefKeys.Players.playerOne.rawValue
@@ -69,6 +76,17 @@ class GamePrefModel {
     
     
     //MARK: Private variables
+    private var _moveTime: Int {
+        
+        didSet {
+            print("Model ==> Model: didSet(__movetime) updated to \(_moveTime)")
+            // Persist time anytime it is changed
+            defaults.set("\(_moveTime)", forKey: "\(PrefKeys.GameTime.moveTime)")
+            
+          
+        }
+    }
+    
     private var _myNameIs: String {
         
         didSet {
@@ -177,6 +195,14 @@ class GamePrefModel {
 //MARK: Extension - Game Model Protocol
 extension GamePrefModel: GamePrefModelProtocol {
     
+    var moveTime: Int {
+        get {
+            return _moveTime
+        }
+        set {
+            _moveTime = newValue
+        }
+    }
     
     var myNameIs: String {
         get {

@@ -13,6 +13,7 @@ import UIKit
 // Source - RawRepresentable apple-reference-documentation://hsct8jXImn
 // Source - Enumeration and user defaults - https://medium.com/swift-programming/swift-userdefaults-protocol-4cae08abbf92
 // Source - use of getHue - https://www.hackingwithswift.com/example-code/uicolor/how-to-read-the-red-green-blue-and-alpha-color-components-from-a-uicolor
+// Source - Time format - https://teamtreehouse.com/community/swift-countdown-timer-of-60-seconds
 
 
 
@@ -43,6 +44,9 @@ enum PrefKeys: CaseIterable {
     enum MiscPrefs: String, CaseIterable {
         case gameName = "Final Project - Robert"
         case myNameIs = "Robert"
+    }
+    enum GameTime: Int, CaseIterable {
+        case moveTime = 5
     }
     
     enum Colors: RawRepresentable, CaseIterable {
@@ -76,14 +80,6 @@ enum GridState: String, CaseIterable, Codable {
     case playerTwoPower = "Player Two Power"
 }
 
-
-//enum GameState: String, CaseIterable, Codable {
-//    
-//    case ongoing = "Ongoing"
-//    case completedDraw = "Completed - Draw"
-//    case completedOne = "Completed - Player One wins"
-//    case completedTwo = "Completed - Player Two wins"
-//}
 
 //MARK: - Type aliases
 
@@ -165,9 +161,6 @@ func arrayToTuple(_ hsbArray: [Double]) -> HSBColor {
 
 func timeFormatted(_ totalSeconds: Int) -> String {
     let seconds: Int = totalSeconds % 60
-//    let minutes: Int = (totalSeconds / 60) % 60
-    //     let hours: Int = totalSeconds / 3600
-//    return String(format: "%02d:%02d", minutes, seconds)
     return String(format: " :%02d", seconds)
 
 }

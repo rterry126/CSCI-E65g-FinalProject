@@ -98,12 +98,14 @@ class GameBoardVC: UIViewController {
     var numOfGridRows: Int
     var numOfGridColumns: Int
     
-    var totalTime = 5
-//    var timerMove = Timer()
-//    var timerWarning = Timer() // Warning timer
+    // TODO: - See if I can clean this up into 1 variable; maybe us in/out var
+    
+    var totalTime: Int // variable that is modified and used to display time remaining
+    var timeToMakeMove: Double  // Timer interval which triggers move forfeiture
+
+
     var timerCountDown = Timer() // Display countdown timer
-    // TODO: - Put this timer interval into Preferences
-    let timeToMakeMove = 5.0
+    
     
 //    // Get handle to this later in the 'initializing' state
 //    var fireStoreDB: Firestore
@@ -136,10 +138,10 @@ class GameBoardVC: UIViewController {
         self.numOfGridRows = modelGamePrefs.numRows
         self.numOfGridColumns = modelGamePrefs.numColumns
         
+        self.totalTime = modelGamePrefs.moveTime
+        self.timeToMakeMove = Double(totalTime)
         
         super.init(coder: aDecoder)
-        
-  
     }
     
     
@@ -534,7 +536,8 @@ extension GameBoardVC {
         } else {
             textTimer.isHidden = true
             timerCountDown.invalidate()
-            totalTime = 5 // Reset for next move....
+            //TODO: this is slopppy I think
+            totalTime = Int(timeToMakeMove) // Reset for next move....
             timerTurnForfeitedFired()
         }
         
