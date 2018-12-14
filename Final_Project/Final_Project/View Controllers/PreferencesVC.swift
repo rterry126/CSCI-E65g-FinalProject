@@ -9,6 +9,7 @@
 // Sources - Return to main view using button. Dismiss doesn't work for nav controllers - https://stackoverflow.com/questions/47322379/swift-how-to-dismiss-all-of-view-controllers-to-go-back-to-root
 // sources - Alert tutorial - https://learnappmaking.com/uialertcontroller-alerts-swift-how-to/
 // Sources - styling labels - https://stackoverflow.com/questions/2311591/how-to-draw-border-around-a-uilabel
+// Sources - ScrollView - https://www.youtube.com/watch?v=nfHBCQ3c4Mg
 
 // Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
 // look, however I don't want to start all over with a new view controller, etc. This is quick way to
