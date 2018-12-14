@@ -10,6 +10,9 @@
 // sources - Alert tutorial - https://learnappmaking.com/uialertcontroller-alerts-swift-how-to/
 // Sources - styling labels - https://stackoverflow.com/questions/2311591/how-to-draw-border-around-a-uilabel
 // Sources - ScrollView - https://www.youtube.com/watch?v=nfHBCQ3c4Mg
+// Sources - Dismiss Keyboard via Return - https://stackoverflow.com/questions/24180954/how-to-hide-keyboard-in-swift-on-pressing-return-key
+// Sources - Dismiss Keyboard via Tap gesture - https://medium.com/@KaushElsewhere/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
+
 
 // Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
 // look, however I don't want to start all over with a new view controller, etc. This is quick way to
@@ -17,7 +20,7 @@
 
 import UIKit
 
-internal class PreferencesVC : UIViewController {
+internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     
     private let colorPickerVC = ColorPickerViewController()
     
@@ -55,6 +58,7 @@ internal class PreferencesVC : UIViewController {
     @IBOutlet weak var rowsText: UILabel!
     @IBOutlet weak var columnsText: UILabel!
     @IBOutlet weak var timerText: UILabel!
+    
     
     
     // Update the number of rows label when the slider is moved
@@ -175,6 +179,16 @@ extension PreferencesVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Used to dismiss keyboard on actual device via 'Return' key
+        self.gameNameText.delegate = self
+        self.myNameIsText.delegate = self
+        
+        // Dismiss editing text boxes via tap
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+
+        
         gameNameLabel.layer.borderWidth = 0.5
         gameNameLabel.layer.borderColor = UIColor.black.cgColor
         nameLabel.layer.borderWidth = 0.5
@@ -234,6 +248,12 @@ extension PreferencesVC {
             buttonTag = buttonPressed.tag
         }
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
 }
 
 
