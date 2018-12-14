@@ -42,7 +42,7 @@ class CalculateScore {
                 let firstSquare = (row[columnIndex], row[columnIndex+1])
                 let secondSquare = (row[columnIndex+1], row[columnIndex+2])
                 
-                let mask = firstSquare == secondSquare
+                let mask = firstSquare == secondSquare // First tuple (A,B) == (B,C) second tuple
                 
                 if mask { // So if we have 3 consecutive squares
                     switch row[columnIndex] {

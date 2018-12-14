@@ -63,6 +63,10 @@ internal class PreferencesVC : UIViewController {
     @IBAction func columnsSliderSet(_ sender: Any) {
         columnsText.text = Int(columnsSlider.value).description
     }
+    @IBAction func timerSliderSet(_ sender: Any) {
+        timerText.text = Int(timerSlider.value).description
+        
+    }
     
     
     
@@ -148,11 +152,11 @@ internal class PreferencesVC : UIViewController {
                 print("Button 2 background color not set. Unable to save to preferences")
             }
             
-            //TODO: - Look at saving this in the model logic vice the pref model
             // UPdate our game grid size rows/colunns. This won't be reflected immediately as it's
             // only used when the view is be initialized
             prefModel.numRows = Int(rowsSlider.value)
             prefModel.numColumns = Int(columnsSlider.value)
+            prefModel.moveTime = Int(timerSlider.value)
             
             self.navigationController?.popToRootViewController(animated: true)
             // Initially set a nameChanged listener here but made more sense to set in the model where
@@ -200,7 +204,7 @@ extension PreferencesVC {
             rowsText.text = Int(rowsSlider.value).description
             columnsSlider.value = Float(prefModel.numColumns)
             columnsText.text = Int(columnsSlider.value).description
-//            timerSlider.value = Float(prefModel.moveTimer) // Not implemented yet but here for layout
+            timerSlider.value = Float(prefModel.moveTime) 
             timerText.text = Int(timerSlider.value).description
             
             playerOneColorBtn.backgroundColor = hsbToUIColor(color: prefModel.playerOneColor)

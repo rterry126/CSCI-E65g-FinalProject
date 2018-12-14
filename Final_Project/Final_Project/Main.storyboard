@@ -373,7 +373,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" textContentType="name"/>
                             </textField>
-                            <slider opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minValue="3" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="20m-V1-pDi">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minValue="3" maxValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="20m-V1-pDi">
                                 <rect key="frame" x="113" y="414" width="54" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="COx-Rb-5Uq"/>
@@ -381,6 +381,7 @@
                                 </constraints>
                                 <connections>
                                     <action selector="rowsSliderSet:" destination="bAJ-Sm-LUu" eventType="valueChanged" id="PB8-ak-zu9"/>
+                                    <action selector="timerSliderSet:" destination="bAJ-Sm-LUu" eventType="valueChanged" id="zqf-8z-fT8"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfd-NV-4Fw">
