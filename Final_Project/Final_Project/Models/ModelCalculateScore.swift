@@ -7,9 +7,14 @@
 //
 
 // Source - array find and replace - https://developer.apple.com/documentation/swift/array
+// This is a brute force implemetation to find 3 or more in a row horizontally, vertically, and diagonally.
+// Due to time constraints and ease of reading code, it's inefficient as it loops through grid 4 times.
+// Small size of array means this is fairly quick. Could just go through each location once, however
+// code would be much more complex, as each axis and diagonal has it's own limits. It's not pretty
+// but it works well for this small size.
 
-// 
-import Foundation
+
+//import Foundation
 
 class CalculateScore {
     
@@ -57,12 +62,9 @@ class CalculateScore {
                         
                     }
                 }
-                
-                
             }
         }
         
-        print("starting vertical summing....")
         // 2) do vertical, check consective squares in a column
         // Have to use a little different approach, since we cannot pull out a column like we can a row
         
@@ -71,7 +73,6 @@ class CalculateScore {
             // the number of columns
             for rowIndex in 0 ..< array.count - 2 {
                 
-                print(array[rowIndex][columnIndex], array[rowIndex+1][columnIndex])
                 let firstSquare = (array[rowIndex][columnIndex], array[rowIndex+1][columnIndex])
                 let secondSquare = (array[rowIndex+1][columnIndex], array[rowIndex+2][columnIndex])
                 

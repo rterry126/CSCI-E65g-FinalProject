@@ -74,6 +74,7 @@ class StateMachine: StateMachineProtocol {
 
             case .gameOver:
                 notificationName = Notification.Name.gameOver
+                Util.log("state changed to .gameOver")
                 
             }
             NotificationCenter.default.post(name: notificationName, object: self) // Used to drive the game state

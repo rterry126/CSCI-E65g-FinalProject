@@ -24,10 +24,8 @@ extension GameBoardVC: GameStateMachine {
     
     // As game state changes through initialization AND play, listener will modify the text field
     @objc func updateGameStateLabel() {
-        
         // Update game state text field.
         textGameStatus.text = StateMachine.state.rawValue
-        
     }
     
     @objc func stateElectPlayerOne() {
@@ -287,14 +285,16 @@ extension GameBoardVC: GameStateMachine {
         //Kill any remaining listeners
         sharedFirebaseProxy.listenerQuery.remove()
         
-        updateUI()
-        
+        //////////
         //Kill the observers. Needed if play again.
         
         //TODO: Might not need to kill all of these OR it might affect preferences AND History
         Factory.killObserver(observer: self, listeners: observerStateMachine)
         Factory.killObserver(observer: self, listeners: observerLogicModel)
         Factory.killObserver(observer: self, listeners: observerPreferencesModel)
+        
+        updateGameStateLabel() // Listener isn't activating this at game end. Force update for now.
+//        updateUI()
         
         // Save a Thumbnail for the history
         // method is extension of the custom view. Source cited in GameBoardView
