@@ -5,7 +5,7 @@
 //  Created by Robert Terry on 11/24/18.
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
-
+// Sources - reset tab controller - https://stackoverflow.com/questions/45303292/how-to-reset-root-view-controller
 
 import UIKit
 import Firebase
@@ -338,7 +338,6 @@ extension GameBoardVC: GameStateMachine {
         // which causes it to reload. This is what I want, as viewDidLoad will run again and
         // the default initialization will be run.
         
-        // commented out on 11/10. Initializing new game code has been modifed due to singleton/Firebase
         
         let alert = UIAlertController(title: "End of Game", message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)\nPlay Again?", preferredStyle: .alert)
         
@@ -366,6 +365,11 @@ extension GameBoardVC: GameStateMachine {
             let navigationController = UINavigationController(rootViewController: nextViewController)
             
             appdelegate.window?.rootViewController = navigationController
+            
+            let tabBarController = storyBoard.instantiateViewController(withIdentifier: "myTabBarController") as! UITabBarController
+            UIApplication.shared.keyWindow?.rootViewController = tabBarController
+            UIApplication.shared.keyWindow?.makeKeyAndVisible()
+
             
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))

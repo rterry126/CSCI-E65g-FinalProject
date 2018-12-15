@@ -189,6 +189,8 @@ extension PreferencesVC {
         self.view.addGestureRecognizer(tap)
 
         
+        // A better preferences page would use a table view; however since this VC was already in program it was easier to modify
+        // to look like a table. Below is just code to give certain cells a border.
         gameNameLabel.layer.borderWidth = 0.5
         gameNameLabel.layer.borderColor = UIColor.black.cgColor
         nameLabel.layer.borderWidth = 0.5
