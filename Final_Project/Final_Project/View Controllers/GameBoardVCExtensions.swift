@@ -284,6 +284,9 @@ extension GameBoardVC: GameStateMachine {
         // Kill/delete the move timer/ no longer needed
         timerCountDown.invalidate()
         
+        //Kill any remaining listeners
+        sharedFirebaseProxy.listenerQuery.remove()
+        
         updateUI()
         
         // Save a Thumbnail for the history
@@ -293,7 +296,7 @@ extension GameBoardVC: GameStateMachine {
         
         // So we don't have double history entries
         if modelGameLogic.amIPlayerOne {
-            FirebaseProxy.instance.storeGameResults(gameImage) { err in
+            sharedFirebaseProxy.storeGameResults(gameImage) { err in
                 
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
@@ -304,32 +307,23 @@ extension GameBoardVC: GameStateMachine {
                     // 4) Successful write to Firestore so continue with deleting old game
                 else {
                     
-                    FirebaseProxy.instance.deleteGameMoves()
+                    self.sharedFirebaseProxy.deleteGameMoves()
                 }
             }
         }
         
-        FirebaseProxy.instance.resetPlayerOne()
+        sharedFirebaseProxy.resetPlayerOne()
         
-        // Commented out on 12.1.18 -
         
-        //        // Delete saved game, otherwise we are in a loop that just fetches saved game
-        //        do {
-        //            Util.log("End of game. Deleting saved game state \(modelGameLogic)")
-        //
-        //            try Persistence.deleteSavedGame()
-        //
-        //            // Get image of gameboard
-        //            //TODO: Force unwrapping now just to test
-        //            let image = gameView!.asImage()
-        //            sharedFirebaseProxy.storeGameBoardImage(image: image)
-        //
-        //
-        //        }
-        //        catch let e {
-        //            Util.log("Deleting previous game failed: \(e)")
-        //        }
-        //
+            // Delete saved game, otherwise we are in a loop that just fetches saved game
+            do {
+                Util.log("End of game. Deleting saved game state \(modelGameLogic)")
+                try Persistence.deleteSavedGame()
+            }
+            catch let e {
+                Util.log("Deleting previous game failed: \(e)")
+            }
+        
         
         
         // Play again?
@@ -372,6 +366,7 @@ extension GameBoardVC: GameStateMachine {
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         self.present(alert, animated: true)
         
+        // Ideally reloading the VC should carry the rest of the reset
         
     }
     

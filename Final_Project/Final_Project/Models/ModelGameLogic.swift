@@ -61,6 +61,8 @@ class GameLogicModel: NSObject, Codable {
         
         //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
         _maxTurns = 10
+        _amIPlayerOne = false
+        _powerSquareUsed = false
         
         super.init()
     }
@@ -95,6 +97,8 @@ class GameLogicModel: NSObject, Codable {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _moveCount = 0
         _whoseTurn = GridState.playerOne
+        _amIPlayerOne = false
+        _powerSquareUsed = false
         
         // This will need to be replaced by state machine variable when restoring game, which will vary
         // depending on turn
@@ -133,12 +137,6 @@ class GameLogicModel: NSObject, Codable {
             if oldValue == (_maxTurns - 1)  {
                 
                 Util.log("getting ready to initialize .gameOver state")
-                // So result is hard coded for now
-                //TODO: future implementation let the game playing logic set this...
-                
-                // Commented out 12.1.18 - Superceded by state machine
-//                _gameState = .completedDraw
-                
                 StateMachine.state = .gameOver
             }
             else {
@@ -166,21 +164,10 @@ class GameLogicModel: NSObject, Codable {
     private var _maxTurns: Int // Random and set in init()
     private var _whoseTurn: GridState // Start with player one
     
-    // When game starts the state is .ongoing, however if state changes notification should happen
+    private var _amIPlayerOne: Bool
+    private var _powerSquareUsed: Bool
     
-    // Commented out 12.1.18 - variable decpreciated and superceded by state machine
     
-//    private var _gameState: GameState {
-//        didSet {
-//            Util.log("Model ==> Model: didSet(_gameState) updated to \(_gameState)")
-//            NotificationCenter.default.post(name: .gameState, object: self)
-//
-//        }
-//    }
-    
-    private var _amIPlayerOne = false
-    
-    private var _powerSquareUsed = false
 }
 
 
@@ -306,7 +293,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
-    //TODO: - Not curently used 11/30
+    // Used if want to play another game. Just copied default init(); seems to be no way to trigger acutal init again so duplicating code.
     func resetModel() {
         
         //Board Size, retrieve from preferences
@@ -325,9 +312,12 @@ extension GameLogicModel: GameLogicModelProtocol {
         _gameBoard  = Array(repeating: Array(repeating: GridState.empty, count: _numColumns), count: _numRows)
         _moveCount = 0
         _whoseTurn = GridState.playerOne
-//        _gameState = GameState.ongoing // Commented out 12.1.18
+        _amIPlayerOne = false
+        _powerSquareUsed = false
         
         Util.log("Model has been reset")
+        print("printing game board after reseting")
+        print(_gameBoard)
         
     }
     

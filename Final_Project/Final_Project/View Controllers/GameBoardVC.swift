@@ -58,29 +58,12 @@ class GameBoardVC: UIViewController {
         
         // New game button pressed. Change state
         
-//        if modelGameLogic.amIPlayerOne {
+        updateUI()
         
-            updateUI() 
-            
-            FirebaseProxy.instance.startGame {
-                StateMachine.state = .waitingForUserMove
-            }
-//        }
-//        else {
-//            print("new game button pushed and I am player two")
-//
-//            //TODO: - Put this somewhere else.
-//
-//            // Probably don't need to disable AND hide...
-//            // 12.12.18 Not needed for P2???
-//
-////            newGameButtonOutlet.isEnabled = false
-////            newGameButtonOutlet.isHidden = true
-//
-//            StateMachine.state = .initialSnapshotOfGameBoard
-//        }
-
-        
+        FirebaseProxy.instance.startGame {
+            StateMachine.state = .waitingForUserMove
+        }
+     
     }
     
     
@@ -447,18 +430,12 @@ extension GameBoardVC {
                 fatalError("Cannot retrieve playerID")
                 
             }
-        
-//            print(location.column)
-//            print(location.row)
-//            print(playerID)
             
            // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
         
             // 2) Update the Logic Model Array
             modelGameLogic.gameBoard[location.row][location.column] = playerID
-        
-//            print(modelGameLogic.gameBoard[location.row][location.column])
-        
+            
             // 3) Update the View Grid
             gameView?.changeGridState(x: location.column, y: location.row)
         
