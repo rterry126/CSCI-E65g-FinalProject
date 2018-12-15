@@ -60,7 +60,7 @@ class GameBoardVC: UIViewController {
         
         updateUI()
         
-        FirebaseProxy.instance.startGame {
+        sharedFirebaseProxy.startGame {
             StateMachine.state = .waitingForUserMove
         }
      

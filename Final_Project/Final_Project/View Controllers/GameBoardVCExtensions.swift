@@ -32,7 +32,7 @@ extension GameBoardVC: GameStateMachine {
         
         
         Util.log("Player election function called in proxy")
-        FirebaseProxy.instance.electPlayerOne() { success, name in
+        sharedFirebaseProxy.electPlayerOne() { success, name in
             
             if success {
                 self.modelGameLogic.amIPlayerOne = true
@@ -71,7 +71,7 @@ extension GameBoardVC: GameStateMachine {
         activityIndicator.startAnimating() // Show activity while we initialize the game state
         
         // Next state is called asynchronously from within initialization code
-        FirebaseProxy.instance.requestInitialize()
+        sharedFirebaseProxy.requestInitialize()
     }
     
     
@@ -83,7 +83,7 @@ extension GameBoardVC: GameStateMachine {
         self.activityIndicator.stopAnimating()
         
         // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
-        FirebaseProxy.instance.listenPlayersJoin() {data, error, listener in
+        sharedFirebaseProxy.listenPlayersJoin() {data, error, listener in
             
             // Different logic depending on whether waiting on player OR are Joinee
             
@@ -201,7 +201,7 @@ extension GameBoardVC: GameStateMachine {
         
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
-        FirebaseProxy.instance.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
+        sharedFirebaseProxy.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
                                                   playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
                                                     
             // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
@@ -234,7 +234,7 @@ extension GameBoardVC: GameStateMachine {
         
         // Closure is completion handler. Is triggered by A) Initial snapshot and B) Actual move
         // Ideally should be called twice; ignore data in first call...
-        FirebaseProxy.instance.opponentMoveFirestore() { move, listener in
+        sharedFirebaseProxy.opponentMoveFirestore() { move, listener in
             
             var userInfo: [String: Any] = [:]
             
