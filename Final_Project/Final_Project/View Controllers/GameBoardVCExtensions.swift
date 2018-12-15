@@ -39,13 +39,16 @@ extension GameBoardVC: GameStateMachine {
             if success {
                 self.modelGameLogic.amIPlayerOne = true
                 // If I'm player 1 then name is my name
-                self.modelGamePrefs.playerOneName = self.modelGamePrefs.myNameIs
+                // Pure hack to get padding onto name so it displays better
+                self.modelGamePrefs.playerOneName = " \(self.modelGamePrefs.myNameIs) "
+                // Set this to empty for now, otherwise previous Player 2's name is displayed
+                self.modelGamePrefs.playerTwoName = ""
             }
             // Player 2 logic
             else {
-                self.modelGamePrefs.playerOneName = name
+                self.modelGamePrefs.playerOneName = " \(name) "
                 // Set own name
-                self.modelGamePrefs.playerTwoName = self.modelGamePrefs.myNameIs
+                self.modelGamePrefs.playerTwoName = " \(self.modelGamePrefs.myNameIs) "
             }
             
             // Both players need to initialize
@@ -94,7 +97,9 @@ extension GameBoardVC: GameStateMachine {
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {
                         listener.remove()
-                        self.modelGamePrefs.playerTwoName = data["playerTwoName"] as? String ?? "Player Two"
+                        let name = data["playerTwoName"] as? String ?? "Player Two"
+                        // Again, hack to get padding for better display
+                        self.modelGamePrefs.playerTwoName = " \(name) "
                         StateMachine.state = .readyForGame
                     }
                 }
@@ -103,7 +108,9 @@ extension GameBoardVC: GameStateMachine {
                     // anyway instead of fatal error. Worse case is that no one will respond on other end.
                 else {
                     listener.remove()
-                    self.modelGamePrefs.playerTwoName = data["playerTwoName"] as? String ?? "Player Two"
+                    let name = data["playerTwoName"] as? String ?? "Player Two"
+                    // Again, hack to get padding for better display
+                    self.modelGamePrefs.playerTwoName = " \(name) "
                     StateMachine.state = .readyForGame
                 }
             }

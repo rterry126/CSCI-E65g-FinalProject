@@ -33,6 +33,7 @@
 
 // Source - display countdown timer - https://teamtreehouse.com/community/swift-countdown-timer-of-60-seconds
 // Source - Sound IDs - https://github.com/TUNER88/iOSSystemSoundsLibrary
+// Source - color conversion for textbox boarder - https://stackoverflow.com/questions/38460327/how-set-swift-3-uitextfield-border-color
 
 import UIKit
 import Firebase
@@ -174,19 +175,24 @@ class GameBoardVC: UIViewController {
     func updateUI() {
         
         // Update player colors
+        // Boarder stroke taken (mostly) from preferences. Additioal sources cited above.
         switch modelGameLogic.whoseTurn {
             
         case .playerOne:
-            textPlayer1.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerOneColor)
-            textPlayer2.backgroundColor = UIColor.white
+            textPlayer1.layer.borderWidth = 2.5
+            textPlayer1.layer.borderColor = hsbToUIColor(color: modelGamePrefs.playerOneColor).cgColor
+            textPlayer2.layer.borderWidth = 0.0
+
             // Only display dot when it's player's turn
             readyPlayerOne.isHidden = modelGameLogic.amIPlayerOne ? false : true
             readyPlayerTwo.isHidden = true
 
             
         case .playerTwo:
-            textPlayer1.backgroundColor = UIColor.white
-            textPlayer2.backgroundColor = hsbToUIColor(color: modelGamePrefs.playerTwoColor)
+            textPlayer2.layer.borderWidth = 2.5
+            textPlayer2.layer.borderColor = hsbToUIColor(color: modelGamePrefs.playerTwoColor).cgColor
+            
+            textPlayer1.layer.borderWidth = 0.0
             readyPlayerTwo.isHidden = !modelGameLogic.amIPlayerOne ? false : true
             readyPlayerOne.isHidden = true
             
