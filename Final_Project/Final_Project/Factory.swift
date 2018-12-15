@@ -80,7 +80,21 @@ class Factory {
             print(String(describing: observer))
             print("Listener array not set.")
         }
-        
+    }
+    
+    
+    static func killObserver(observer: Any, listeners: observerArray)  {
+    
+        // If array is 'empty' it isn't nil (I tested this) so let's log that an empty array was passed.
+        if listeners.count > 0 {
+            for listener in listeners {
+                NotificationCenter.default.removeObserver(observer, name: listener.name, object: nil)
+            }
+        }
+        else {
+            print(String(describing: observer))
+            print("Listener not removed.")
+        }
         
     }
     

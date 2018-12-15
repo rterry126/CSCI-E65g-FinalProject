@@ -289,6 +289,13 @@ extension GameBoardVC: GameStateMachine {
         
         updateUI()
         
+        //Kill the observers. Needed if play again.
+        
+        //TODO: Might not need to kill all of these OR it might affect preferences AND History
+        Factory.killObserver(observer: self, listeners: observerStateMachine)
+        Factory.killObserver(observer: self, listeners: observerLogicModel)
+        Factory.killObserver(observer: self, listeners: observerPreferencesModel)
+        
         // Save a Thumbnail for the history
         // method is extension of the custom view. Source cited in GameBoardView
         let gameImage = gameView?.asImage()
@@ -343,8 +350,6 @@ extension GameBoardVC: GameStateMachine {
             action in
             
             self.modelGameLogic.resetModel()
-            //            modelGamePrefs = nil
-            //            sharedFirebaseProxy = nil
             
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
             
