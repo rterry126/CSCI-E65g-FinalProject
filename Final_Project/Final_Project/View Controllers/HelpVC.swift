@@ -58,8 +58,14 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
         
         activityIndicator.startAnimating()  // Start animation as soon as view loads
 
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
+        if let myURL = myURL {
+            let myRequest = URLRequest(url: myURL)
+            webView.load(myRequest)
+        }
+        else {
+            print("Unable to retrieve help page.")
+        }
+        
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

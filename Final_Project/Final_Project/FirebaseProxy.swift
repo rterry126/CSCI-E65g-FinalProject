@@ -10,6 +10,8 @@
 // Sources - copying Firestore Collection - https://stackoverflow.com/questions/50788184/firestore-creating-a-copy-of-a-collection
 // Sources - basic code to delete documents in a collection - https://stackoverflow.com/questions/51792471/cloud-firestore-swift-how-to-delete-a-query-of-documents?rq=1
 
+// Sources - resize UIImage (thumbnail creation) - https://stackoverflow.com/questions/31966885/resize-uiimage-to-200x200pt-px
+
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
 import Firebase
@@ -162,6 +164,7 @@ class FirebaseProxy {
         
     }
     
+    
     var listenerJoin : ListenerRegistration!
     //TODO: - Fix returning errors if we have them to calling function
     func listenPlayersJoin(completion: @escaping ([String: Any], Error?, ListenerRegistration) -> Void) {
@@ -170,7 +173,7 @@ class FirebaseProxy {
         
         listenerJoin =  joinQuery.addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
-                    print("Error fetching document: \(error!)")
+                print("Error fetching document: \(String(describing: error))")
                     return
                 }
 //                guard let data = document.data() else {
@@ -383,7 +386,7 @@ class FirebaseProxy {
         
         listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else {
-                    print("Error fetching snapshots: \(error!)")
+                    print("Error fetching snapshots: \(String(describing: error))")
                     return
                 }
 //                print(snapshot.documentChanges.count)
@@ -440,7 +443,7 @@ class FirebaseProxy {
         
         if let image = image {
             
-            imageData = resizeImage(image: image, newWidth: 80.0).pngData()
+            imageData = resizeImage(image: image, newWidth: 80.0)?.pngData()
         }
         
         FirebaseProxy.db.collection("history").addDocument(data: [
@@ -565,7 +568,7 @@ class FirebaseProxy {
     func storeGameBoardImage(image: UIImage) {
         
         let resizedImage = resizeImage(image: image, newWidth: 80.0)
-        let imageData = resizedImage.pngData()
+        let imageData = resizedImage?.pngData()
         var docData = [String: Data]()
         
         // TODO: - Since this is unwrapped, only try to store it below if the unwrapping was successful.
@@ -625,17 +628,14 @@ class FirebaseProxy {
 
 // Put in helper functions eventually
 
-func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
     
-//    let scale = newWidth / image.size.width
     let newHeight = newWidth // Make it square. Current thumbnail looks strange
-//    let newHeight = image.size.height * scale
     UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
     image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
     let newImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
-    //TODO: Remove optional
-    return newImage!
+    return newImage
     
 }
 

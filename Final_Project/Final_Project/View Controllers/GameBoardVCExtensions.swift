@@ -337,10 +337,20 @@ extension GameBoardVC: GameStateMachine {
             //            sharedFirebaseProxy = nil
             
             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as! GameBoardVC
+            
+            guard let nextViewController = storyBoard.instantiateViewController(withIdentifier: "GameBoardVC") as? GameBoardVC else {
+                print("Cannot start new game")
+                fatalError("Cannot Start new game")
+            }
+            
+            guard let appdelegate = UIApplication.shared.delegate as? AppDelegate else {
+                print("Cannot start new game")
+                fatalError("Cannot Start new game")
+            }
+            
             let navigationController = UINavigationController(rootViewController: nextViewController)
-            let appdelegate = UIApplication.shared.delegate as! AppDelegate
-            appdelegate.window!.rootViewController = navigationController
+            
+            appdelegate.window?.rootViewController = navigationController
             
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
