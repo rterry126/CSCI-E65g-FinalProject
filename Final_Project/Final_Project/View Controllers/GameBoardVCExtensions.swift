@@ -34,10 +34,18 @@ extension GameBoardVC: GameStateMachine {
         
         
         Util.log("Player election function called in proxy")
-        FirebaseProxy.instance.electPlayerOne() { success in
+        FirebaseProxy.instance.electPlayerOne() { success, name in
             
             if success {
                 self.modelGameLogic.amIPlayerOne = true
+                // If I'm player 1 then name is my name
+                self.modelGamePrefs.playerOneName = self.modelGamePrefs.myNameIs
+            }
+            // Player 2 logic
+            else {
+                self.modelGamePrefs.playerOneName = name
+                // Set own name
+                self.modelGamePrefs.playerTwoName = self.modelGamePrefs.myNameIs
             }
             
             // Both players need to initialize
@@ -56,22 +64,21 @@ extension GameBoardVC: GameStateMachine {
         
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
         
-        
         readyPlayerOne.isHidden = true
         readyPlayerTwo.isHidden = true
         
         activityIndicator.startAnimating() // Show activity while we initialize the game state
         
-        
         // Next state is called asynchronously from within initialization code
         FirebaseProxy.instance.requestInitialize()
     }
     
+    
+    
     // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
+    // Let's players know game is ready to start AND updates Player 2's name in Player 1 device
     @objc func stateWaitingToStartGame() {
-        
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
-        
         self.activityIndicator.stopAnimating()
         
         // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
@@ -87,6 +94,7 @@ extension GameBoardVC: GameStateMachine {
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {
                         listener.remove()
+                        self.modelGamePrefs.playerTwoName = data["playerTwoName"] as? String ?? "Player Two"
                         StateMachine.state = .readyForGame
                     }
                 }
@@ -95,6 +103,7 @@ extension GameBoardVC: GameStateMachine {
                     // anyway instead of fatal error. Worse case is that no one will respond on other end.
                 else {
                     listener.remove()
+                    self.modelGamePrefs.playerTwoName = data["playerTwoName"] as? String ?? "Player Two"
                     StateMachine.state = .readyForGame
                 }
             }

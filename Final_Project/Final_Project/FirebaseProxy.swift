@@ -77,18 +77,22 @@ class FirebaseProxy {
     
     
     // Called app startup...
-    func electPlayerOne(completion: @escaping ( Bool ) -> Void ) {
+    // 1) Determines P1 & P2 2) Sets maxNum of turns 3) Uploads each player's name 4) Sets P1's name
+    // when for P2 when it calls.
+    func electPlayerOne(completion: @escaping ( Bool, String ) -> Void ) {
         
         let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
         let maxTurns = self.modelGameLogic.maxTurns
+        var playerOneName = self.modelGamePrefs.myNameIs
+        let playerTwoName = self.modelGamePrefs.myNameIs
         
-        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> Any? in
+        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> (Bool?, String?) in
             let document: DocumentSnapshot
             do {
                 try document = transaction.getDocument(reference)
             } catch let fetchError as NSError {
                 errorPointer?.pointee = fetchError
-                return nil
+                return (nil,nil)
             }
             guard let leaderBit = document.data()?["leader_bit"] as? Bool else {
                 
@@ -100,41 +104,38 @@ class FirebaseProxy {
                     ]
                 )
                 errorPointer?.pointee = error
-                return nil
+                return (nil,nil)
             }
             print("leader Bit from Firestore \(leaderBit)")
             // leaderBit is current false, i.e. no player one. Go ahead and set
             if !leaderBit {
                 Util.log("\nUpdated leader bit\n")
-                // Go ahead and upload our player names.
-                // For now we'll use the playerOneName from each player to be THEIR name
-//                transaction.updateData(["playerOneName": self.modelGamePrefs.playerOneName], forDocument: reference)
-                let dataToUpdate = ["leader_bit": true,"gameStarted": false, "maxTurns": maxTurns] as [String : Any]
+                
+                let dataToUpdate = ["leader_bit": true,"gameStarted": false, "maxTurns": maxTurns, "playerOneName": playerOneName] as [String : Any]
                 transaction.updateData(dataToUpdate, forDocument: reference)
 
-                // Update in model as well
             }
-                
-            // Already have a player one
+            // Else this is Player 2 logic
             else {
                 
                 Util.log("\nUpdated leader reset for next game\n")
                 // Download number of turns
                 guard let maxTurns = document.data()?["maxTurns"] as? Int else {
                     fatalError("Could not set maximum number of turns")
-                    
                 }
+                //TODO:  This sets maxTurns for Player 2. Not sure how to get it out of here...
                 self.modelGameLogic.maxTurns = maxTurns
                 
-                // We'll use each device's PlayerOneName for the player's names
-//                transaction.updateData(["playerTwoName": self.modelGamePrefs.playerOneName], forDocument: reference)
-                transaction.updateData(["leader_bit": false], forDocument: reference)
+                playerOneName = document.data()?["playerOneName"] as? String ?? "Player 11"
+                    
+               let dataToUpdate = ["leader_bit": false, "playerTwoName": playerTwoName] as [String : Any]
+               
+                transaction.updateData(dataToUpdate, forDocument: reference)
             }
-            
-            return (!leaderBit) // Ideally this should return True and in completion block below we set in model
+            return (!leaderBit, playerOneName) // Ideally this should return True and in completion block below we set in model
         })
         {(object, error) in
-            guard let leaderBit = object as? Bool else {
+            guard let object = object as? (leaderBit: Bool, playerOneName: String) else {
                 Util.log("Unable to set leader bit")
                 return
             }
@@ -142,11 +143,14 @@ class FirebaseProxy {
                 Util.log("Transaction failed: \(error)")
             } else {
                 Util.log("Transaction successfully committed!")
-                completion(leaderBit)
+                completion(object.leaderBit, object.playerOneName)
 
             }
         }
     }
+    
+    
+    
     
     func startGame(completion: @escaping () -> Void) {
     
@@ -154,14 +158,11 @@ class FirebaseProxy {
         FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { error in
             if let error = error {
                 Factory.displayAlert(target: GameBoardVC.self, error: error)
-//                Util.log("Game is on!")
 //                completion()
             }
             Util.log("Game is on!")
             completion()
         }
-        
-        
     }
     
     
@@ -176,17 +177,7 @@ class FirebaseProxy {
                 print("Error fetching document: \(String(describing: error))")
                     return
                 }
-//                guard let data = document.data() else {
-//                    print("Document data was empty.")
-//                    return
-//                }
-//                let source = document.metadata.hasPendingWrites ? "Local" : "Server"
-//                print("\(source) data: \(document.data() ?? [:])")
-//
-//                print("Current data: \(data)")
-//                completion(data, nil, self.listener)
-        
-        
+
             snapshot.documentChanges.forEach { diff in
                 
                 var temp: [String: Any]
@@ -194,14 +185,11 @@ class FirebaseProxy {
                 if (diff.type == .modified) {
                     temp = diff.document.data()
 
-    //              print("Modified city: \(diff.document.data())")
                     completion(temp, nil, self.listenerJoin)
 
                 }
             }
         }
-        
-        
     }
     
     // Async closure so call completion handler when done to continue
