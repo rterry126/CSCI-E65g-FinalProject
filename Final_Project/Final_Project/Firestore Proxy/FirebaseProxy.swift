@@ -20,9 +20,10 @@ import Firebase
 class FirebaseProxy {
     
     //MARK: - Stored Properties
-    private var documents: [DocumentSnapshot] = []
-    private var listenerHistory : ListenerRegistration!
+    var documents: [DocumentSnapshot] = []
+    var listenerHistory : ListenerRegistration!
     var listener : ListenerRegistration!
+    var listenerJoin : ListenerRegistration!
     
     
     // Set Firestore listener
@@ -89,13 +90,7 @@ class FirebaseProxy {
         }
     }
     
-    // Called at end of game
-    func resetPlayerOne()  {
     
-        let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
-        reference.updateData(["leader_bit": false])
-        reference.updateData(["gameStarted": false])
-    }
     
     
     
@@ -105,45 +100,12 @@ class FirebaseProxy {
     
     
     
-    func startGame(completion: @escaping () -> Void) {
-    
-        Util.log("startGame function")
-        FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { error in
-            if let error = error {
-                Factory.displayAlert(target: GameBoardVC.self, error: error)
-//                completion()
-            }
-            Util.log("Game is on!")
-            completion()
-        }
-    }
     
     
-    var listenerJoin : ListenerRegistration!
-    //TODO: - Fix returning errors if we have them to calling function
-    func listenPlayersJoin(completion: @escaping ([String: Any], Error?, ListenerRegistration) -> Void) {
-        
-        let joinQuery = Firestore.firestore().collection("elect_leader").limit(to: 1)
-        
-        listenerJoin =  joinQuery.addSnapshotListener { querySnapshot, error in
-            guard let snapshot = querySnapshot else {
-                print("Error fetching document: \(String(describing: error))")
-                    return
-                }
-
-            snapshot.documentChanges.forEach { diff in
-                
-                var temp: [String: Any]
-                
-                if (diff.type == .modified) {
-                    temp = diff.document.data()
-
-                    completion(temp, nil, self.listenerJoin)
-
-                }
-            }
-        }
-    }
+    
+   
+    
+    
     
     // Async closure so call completion handler when done to continue
     func requestInitialize()  {
@@ -236,275 +198,18 @@ class FirebaseProxy {
         }
     
     
-//
-//    //Added by Robert
-//    static func saveHistory(endOfGameState data: Data) {
-//
 
-//
-//        // Basic writes
-//
-//        let collection = Firestore.firestore().collection("history_test")
-//
-//        let restaurant = Restaurant(
-//            name: name,
-//            category: category,
-//            city: city,
-//            price: price,
-//            ratingCount: 10,
-//            averageRating: 0,
-//            photo: photo
-//        )
-//
-//        let restaurantRef = collection.addDocument(data: restaurant.dictionary)
-//
-//        let batch = Firestore.firestore().batch()
-//        guard let user = Auth.auth().currentUser else { continue }
-//        var average: Float = 0
-//        for _ in 0 ..< 10 {
-//            let rating = Int(arc4random_uniform(5) + 1)
-//            average += Float(rating) / 10
-//            let text = rating > 3 ? "good" : "food was too spicy"
-//            let review = Review(rating: rating,
-//                                userID: user.uid,
-//                                username: user.displayName ?? "Anonymous",
-//                                text: text,
-//                                date: Date())
-//            let ratingRef = restaurantRef.collection("ratings").document()
-//            batch.setData(review.dictionary, forDocument: ratingRef)
-//        }
-//        batch.updateData(["avgRating": average], forDocument: restaurantRef)
-//        batch.commit(completion: { (error) in
-//            guard let error = error else { return }
-//            print("Error generating reviews: \(error). Check your Firestore permissions.")
-//        })
-//
-//    }
-//
-    
-//
-//
-//
-
-//
-//
-//
-
-
-
-//    /************** Inbound (mostly) Firestore Functions  ****************/
-//
-//    private var documents: [DocumentSnapshot] = []
-//
-//    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
-//    // It automatically updates
-//    private var listenerHistory : ListenerRegistration!
-//    var listener : ListenerRegistration!
-//
-//
-//    // Set Firestore listener
-//    var historyQuery: Query? {
-//        didSet {
-//            if let listener = listenerHistory{
-//                listener.remove()
-//            }
-//        }
-//    }
-//
-//    // Set Firestore listener
-//    var moveQuery: Query? {
-//        didSet {
-//            if let listener = listener {
-//                listener.remove()
-//            }
-//        }
-//    }
-//
-//
-//    func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
-//        print("opponent move Firestore function")
-//
-//        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
-//
-//        listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
-//                guard let snapshot = querySnapshot else {
-//                    print("Error fetching snapshots: \(String(describing: error))")
-//                    return
-//                }
-////                print(snapshot.documentChanges.count)
-//
-//
-//            snapshot.documentChanges.forEach { diff in
-//
-//                var temp: [String: Any]
-//
-//                    if (diff.type == .added) {
-//                        print("New move: \(diff.document.data())")
-//                        temp = diff.document.data()
-//                        print("temp is \(temp)")
-//                        completion(temp, self.listener)
-//
-//                    }
-////                    if (diff.type == .modified) {
-////                        temp = diff.document.data()
-////
-//////                        print("Modified city: \(diff.document.data())")
-////                        completion(temp)
-////
-////                    }
-////                    if (diff.type == .removed) {
-////                        print("Removed city: \(diff.document.data())")
-////                    }
-//
-//
-//                }
-//        }
-//    }
-//
-    
-    
-    // Stores game results in Firestore; moves are stored in a separate colleciton with a reference to them.
-    // Might use the moves later for a detail hisotry view..
-    func storeGameResults(_ image: UIImage?, completion: @escaping (Error?) -> Void) {
-        
-        // Create unique name to reference this collection. Current time will always be unique.
-        // Fetch as Epoch time so it's simply a number, convert to string
-        let gameMoves = "\(Date().timeIntervalSince1970)"
-        copyGameMoves(referenceName: gameMoves )
-        
-        var imageData: Data? = nil
-        // This should be passed in Via listener or something but use here for temporary
-        let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
-        
-        // Get image of gameboard
-        
-        //TODO: Force unwrapping now just to test
-        
-//        let resizedImage = resizeImage(image: image, newWidth: 80.0)
-//        let imageData = resizedImage.pngData()
-        
-        if let image = image {
-            
-            imageData = resizeImage(image: image, newWidth: 80.0)?.pngData()
-        }
-        
-        FirebaseProxy.db.collection("history").addDocument(data: [
-            "playerOneName": modelGamePrefs.playerOneName,
-            "playerTwoName": modelGamePrefs.playerTwoName,
-            "playerOneScore": scores.playerOne,
-            "playerTwoScore": scores.playerTwo,
-            "gameDate": NSDate(),
-            "gameBoardView": imageData,
-            "gameMoves": gameMoves // Simply a reference to the collection where the moves are stored.
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-                completion(err)
-            } else {
-                print("New History Document added ")
-                completion(nil)
-            }
-        }
-    }
-    
-    func deleteGameMoves() {
-    
-        let oldGame = Firestore.firestore().collection("activeGame")
-        oldGame.getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            }
-            else {
-                
-                if let snapshot = querySnapshot {
-                    for document in snapshot.documents {
-                        document.reference.delete()
-                    }
-                }
-            }
-        }
-    }
     
     
     
-    // Make copy of finished game in Firestore so we can play it back later...
-    // Source cited
-    func copyGameMoves (referenceName: String) { //completion: @escaping ([Game], Error?) -> Void) {
-    
-//        let oldGame = Firestore.firestore().collection("activeGame")
-        
-        
-        
-        let oldGame = Firestore.firestore().collection("activeGame")
-//        let historicalGame = Firestore.firestore().collection("testAgain")
-        
-        oldGame.getDocuments { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            }
-            else {
-                if let snapshot = querySnapshot {
-                    for document in snapshot.documents {
-                        let data = document.data()
-                        let batch = Firestore.firestore().batch()
-                        let docset = querySnapshot
-                        
-                        let historicalGame = Firestore.firestore().collection(referenceName).document()
-                        
-                        docset?.documents.forEach {_ in batch.setData(data, forDocument: historicalGame)}
-                        
-                        batch.commit(completion: { (error) in
-                            if let error = error {
-                                print("\(error)")
-                            }
-                            else {
-//                                document
-                                print("success")
-                            
-                            }
-                        })
-                    }
-                }
-            }
-        }
-    }
     
     
     
-    func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
-        
-        print("Function downloadHistory called")
-        
-        var resultsArray = [Game]()
-        // Create query.
-        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: 10)
-        
-        listenerHistory =  historyQuery?.addSnapshotListener { ( documents, error) in
-            
-            guard let snapshot = documents else {
-                if let error = error {
-                    print(error)
-                    // Return error to async calling closure in HistoryMasterVC
-                    completion(resultsArray, error)
-//                    return
-                }
-                return
-            }
-                // Basically go through the sequence and pull out the data...
-                resultsArray = snapshot.documents.map { (document) -> Game in
-                    if let game = Game(dictionary: document.data(), id: document.documentID) {
-                        print("History \(game.id) => \(game.playerTwoName )")
-                        return game
-                    }
-                    else {
-                        fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
-                    }
-                }
-                // Return results to async calling closure in HistoryMasterVC
-                print("results array size is \(resultsArray.count)")
-                completion(resultsArray, nil)
-        }
-    }
+    
+    
+    
+    
+   
     
     /************** Outbound (mostly) Firestore Functions  ****************/
     func storeGameBoardImage(image: UIImage) {

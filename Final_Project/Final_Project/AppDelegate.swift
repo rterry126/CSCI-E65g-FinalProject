@@ -127,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Reset certain items in Firestore if user quits prior to end of game
         Util.log("applicationWillResignActive called")
-        FirebaseProxy.instance.resetPlayerOne()
+        FirebaseProxy.instance.resetElection()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {

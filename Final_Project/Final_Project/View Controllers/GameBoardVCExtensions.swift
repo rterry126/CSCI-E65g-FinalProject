@@ -315,12 +315,12 @@ extension GameBoardVC: GameStateMachine {
                     // 4) Successful write to Firestore so continue with deleting old game
                 else {
                     
-                    self.sharedFirebaseProxy.deleteGameMoves()
+                    self.sharedFirebaseProxy.deleteCompletedGame()
                 }
             }
         }
         
-        sharedFirebaseProxy.resetPlayerOne()
+        sharedFirebaseProxy.resetElection()
         
         
             // Delete saved game, otherwise we are in a loop that just fetches saved game

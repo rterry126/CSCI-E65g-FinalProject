@@ -39,6 +39,29 @@ extension FirebaseProxy {
             }
         }
     }
+    
+    
+    // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
+    func listenPlayersJoin(completion: @escaping ([String: Any], Error?, ListenerRegistration) -> Void) {
+        
+        let joinQuery = Firestore.firestore().collection("elect_leader").limit(to: 1)
+        
+        listenerJoin =  joinQuery.addSnapshotListener { querySnapshot, error in
+            guard let snapshot = querySnapshot else {
+                print("Error fetching document: \(String(describing: error))")
+                return
+            }
+            
+            snapshot.documentChanges.forEach { diff in
+                
+                var temp: [String: Any]
+                if (diff.type == .modified) {
+                    temp = diff.document.data()
+                    completion(temp, nil, self.listenerJoin)
+                }
+            }
+        }
+    }
  
     
     

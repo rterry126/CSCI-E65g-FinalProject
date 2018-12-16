@@ -5,6 +5,7 @@
 //  Created by Robert Terry on 12/16/18.
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
+// Sources - func downloadHistory - mapping -  https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 
 import Foundation
 import Firebase
@@ -62,8 +63,6 @@ extension FirebaseProxy {
                 guard let maxTurns = document.data()?["maxTurns"] as? Int else {
                     fatalError("Could not set maximum number of turns")
                 }
-//                //TODO:  This sets maxTurns for Player 2. Not sure how to get it out of here...
-//                self.modelGameLogic.maxTurns = maxTurns
                 
                 playerOneName = document.data()?["playerOneName"] as? String ?? "Player 1"
                 
@@ -89,6 +88,168 @@ extension FirebaseProxy {
             }
         }
     }
+    
+    
+    
+    // Used to let Player 2 know game has started
+    func startGame(completion: @escaping () -> Void) {
+        
+        Util.log("startGame function")
+        FirebaseProxy.db.collection("elect_leader").document("123456").setData(["gameStarted": true], merge: true) { error in
+            if let error = error {
+                Factory.displayAlert(target: GameBoardVC.self, error: error)
+                //                completion()
+            }
+            Util.log("Game is on!")
+            completion()
+        }
+    }
+    
+    
+    // Have to brute force delete the game move (document) by move. Cannot just delete the collection
+    func deleteCompletedGame() {
+        
+        let oldGame = Firestore.firestore().collection("activeGame")
+        oldGame.getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                
+                if let snapshot = querySnapshot {
+                    for document in snapshot.documents {
+                        document.reference.delete()
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    
+    // Called at end of game
+    func resetElection()  {
+        
+        let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
+        reference.updateData(["leader_bit": false])
+        reference.updateData(["gameStarted": false])
+    }
+    
+    
+    //MARK: - History Functions
+    
+    // Stores game results in Firestore;
+    // moves were  stored in a separate collection with a reference to them; however that is inactive for now
+    // Might use the moves later for a detail history view..
+    func storeGameResults(_ image: UIImage?, completion: @escaping (Error?) -> Void) {
+        
+        // Create unique name to reference this collection. Current time will always be unique.
+        // Fetch as Epoch time so it's simply a number, convert to string
+        
+        // Not currently used; kept for future implementation
+//        let gameMoves = "\(Date().timeIntervalSince1970)"
+//        copyGameMoves(referenceName: gameMoves )
+        
+        var imageData: Data? = nil
+        // This should be passed in Via listener or something but use here for temporary
+        let scores = CalculateScore.gameTotalBruteForce(passedInArray: modelGameLogic.gameBoard)
+        
+        // Get thumbnail image of gameboard
+        if let image = image {
+            
+            imageData = resizeImage(image: image, newWidth: 80.0)?.pngData()
+        }
+        
+        FirebaseProxy.db.collection("history").addDocument(data: [
+            "playerOneName": modelGamePrefs.playerOneName,
+            "playerTwoName": modelGamePrefs.playerTwoName,
+            "playerOneScore": scores.playerOne,
+            "playerTwoScore": scores.playerTwo,
+            "gameDate": NSDate(),
+            "gameBoardView": imageData as Any
+            //"gameMoves": gameMoves // Simply a reference to the collection where the moves are stored.
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+                completion(err)
+            } else {
+                print("New History Document added ")
+                completion(nil)
+            }
+        }
+    }
+    
+    
+    func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
+        
+        print("Function downloadHistory called")
+        
+        var resultsArray = [Game]()
+        // Create query.
+        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: 10)
+        
+        listenerHistory =  historyQuery?.addSnapshotListener { ( documents, error) in
+            
+            guard let snapshot = documents else {
+                if let error = error {
+                    print(error)
+                    // Return error to async calling closure in HistoryMasterVC
+                    completion(resultsArray, error)
+                }
+                return
+            }
+            // Basically go through the sequence and pull out the data...
+            resultsArray = snapshot.documents.map { (document) -> Game in
+                if let game = Game(dictionary: document.data(), id: document.documentID) {
+                    print("History \(game.id) => \(game.playerTwoName )")
+                    return game
+                }
+                else {
+                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+                }
+            }
+            // Return results to async calling closure in HistoryMasterVC
+            print("results array size is \(resultsArray.count)")
+            completion(resultsArray, nil)
+        }
+    }
+    
+    // Make copy of finished game in Firestore so we can play it back later... Currently not used.
+    // Source cited
+    func copyGameMoves (referenceName: String) {
+        
+        let oldGame = Firestore.firestore().collection("activeGame")
+        oldGame.getDocuments { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                if let snapshot = querySnapshot {
+                    for document in snapshot.documents {
+                        let data = document.data()
+                        let batch = Firestore.firestore().batch()
+                        let docset = querySnapshot
+                        
+                        let historicalGame = Firestore.firestore().collection(referenceName).document()
+                        
+                        docset?.documents.forEach {_ in batch.setData(data, forDocument: historicalGame)}
+                        
+                        batch.commit(completion: { (error) in
+                            if let error = error {
+                                print("\(error)")
+                            }
+                            else {
+                                print("success")
+                                
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
 
+    
+    
 
 }
