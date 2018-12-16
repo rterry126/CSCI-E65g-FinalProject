@@ -67,13 +67,20 @@ class FirebaseProxy {
     }
     
     
-    func uploadGame(_ gameModel: GameLogicModelProtocol) {
+    func uploadGame(_ gameModel: GameLogicModelProtocol, completion: @escaping () -> Void) {
         
         
 //     print(gameModel.gameBoard)
         var fakeMoveNumber = 1
         // Get new write batch
         let batch = Firestore.firestore().batch()
+        
+        // Create 'header' document
+        let headerToStore: [String : Any] = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
+        
+        // Setup our header document
+        let header = Firestore.firestore().collection("activeGame").document("\(0)")
+        batch.setData(headerToStore, forDocument: header)
         
         for row in 0..<gameModel.gameBoard.count {
             for column in 0..<gameModel.gameBoard[0].count {
@@ -87,8 +94,8 @@ class FirebaseProxy {
                     // add a moveTime field to keep the data consistent. Move numbers won't correspond to the actual move numbers
                     // but this doesn't matter, we're just resetting the board state.
                     
-                    // Create moves to upload
                     
+                    // Create moves to upload
                     let dataToStore:[String : Any] = ["moveTime": FieldValue.serverTimestamp(),"column": column, "row": row, "player": gameModel.gameBoard[row][column].rawValue ]
                     
                     
@@ -107,47 +114,9 @@ class FirebaseProxy {
                 print("Error writing batch \(err)")
             } else {
                 print("Batch write succeeded.")
+                completion()
             }
         }
-        
-        
-//        var docData: [String: Any] = ["moveTime": FieldValue.serverTimestamp(), "player": playerID]
-//
-//        // Coordinates are optionals, in case of forfeited move. Only store the fields IF they have values. Will make checking
-//        // much easier for the other player...
-//        if let rowExists = row, let columnExists = column {
-//            docData["row"] = rowExists
-//            docData["column"] = columnExists
-//
-//        }
-//        for item in docData {
-//            print(item.value)
-//        }
-//
-//        // Update one field, creating the document if it does not exist.
-//        // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
-//        // If successful then we will update our board logical state and view state and change our state Machine
-//
-//
-//        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: false) { err in
-//            if let err = err {
-//                print("Error writing document: \(err)")
-//                completion(err)
-//            }
-//            else {
-//                Util.log("Document successfully written!")
-//                completion(nil)
-//            }
-//        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
     // Called at end of game
@@ -277,150 +246,130 @@ class FirebaseProxy {
         }
     }
     
-    // Async closure so call completion handler when done to continue
-    func requestInitialize()  {
+    func equestInitialize() {
         
-//        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
-
-        
-        rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
+    
+        // Different initialization logic depending on which player. Election is complete when this is called
+        if modelGameLogic.amIPlayerOne {
             
-            (snapshot: QuerySnapshot?, error: Error?)  in
+            // 1) Clean up any orphaned game moves
+//            deleteGameMoves()
             
-            guard let rootObjSnapshot: QueryDocumentSnapshot = snapshot?.documents.first else {
-                
-                //TODO:- Move this to calling function and return the error.
-//                UIViewController.present(Factory.createAlert(error), animated: true, completion: nil)
-                
-                NSLog("Cannot find active game: \(error?.localizedDescription ?? "Missing Error")")
-                
-                // Robert - so if there is no active game we'll need to initialize the activeRoot
-                // when the game is started I think...
-//                self.activeRootObj = nil // see didSet observer for handling
-                
-                //No active game to upload the preferences into document zero '0'
-                rootCollectionRef.document("\(0)").setData(self.documentData, mergeFields: self.mergeFields, completion: nil)
-                // Initializing is successful, change state
-//                StateMachine.state = .readyForGame
-                if self.modelGameLogic.amIPlayerOne {
-                    StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
-                }
-                else {
-                    StateMachine.state = .waitingForGameStart // Player2's state
-                }
-                return
-                
-            }
+            // 2) Set 'header' document
+//            rootCollectionRef.document("\(0)").setData(["moveTime": FieldValue.serverTimestamp() ])
+            rootCollectionRef.document("\(0)").setData(self.documentData, mergeFields: self.mergeFields, completion: nil)
+//             { err in
+//                if let err = err {
+//                    print("Error writing document: \(err)")
+//                } else {
+//                    StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
+//
+//                    print("Document successfully written!")
+//                }
+//            }
             
-            let rootID: String = rootObjSnapshot.documentID
-            Util.log("FirebaseProxy --> Root ID is \(rootID)")
+            // 3) Upload saved game if it exists
             
-            // Take an active game reference and turn it into the actual data
             
-            self.activeRootObj = rootCollectionRef.document(rootID)
-           
-            // Initializing is successful, change state
-//            StateMachine.state = .readyForGame
-            if self.modelGameLogic.amIPlayerOne {
-                StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
-            }
-            else {
-                StateMachine.state = .waitingForGameStart // Player2's start
-            }
-
+            
+        }
+        else {
+            
+            StateMachine.state = .waitingForGameStart // Player2's state
             
         }
     }
     
-        private var activeRootObj: DocumentReference? {
     
-            didSet {
     
-                if let _ = activeRootObj {
+    // Async closure so call completion handler when done to continue
+    func requestInitialize()  {
+        
+        if modelGameLogic.amIPlayerOne {
+            
+            Util.log("requestInitialize thinks I am Player one")
+            
+            // 1) Clean up any orphaned game moves
+            deleteGameMoves() {
+            
+                // 2) Initialize previous game if it exists
+            
+                do {
+                    let restoredObject = try Persistence.restore()
+                    guard let mdo = restoredObject as? GameLogicModelProtocol else {
+                        print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
+                        return
+                    }
+                    // Let's try setting a reference to our restored state
+                    self.modelGameLogic = mdo
                     
                     
-//                    activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
+                    // Call proxy to upload state to Firestore
+                    self.uploadGame(self.modelGameLogic) {
                     
-                    Util.log("activeRootObj didSet run, preferences loaded into Firebase")
-                    
-                    
-                    // Robert - So this is if there is an active game???
-                    // If so then it shouldn't go to readForGame but pick up game in route...
-                    
-                    // Switch state from initializing to initialized; notify everyone
-//                    StateMachine.state = .readyForGame
-//                    if self.modelGameLogic.amIPlayerOne {
-//                        StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
-//                    }
-//                    else {
-//                        StateMachine.state = .waitingForGameStart // Player2's state
-//                    }
-
-                    
-                    
+                        print("Success: in restoring game state")
+                    }
                 }
-                else {
-    
-                    // Switch to permanent error state; don't worry about recovery now
+                catch let e {
+                    print("Restore failed: \(e).")
+                    
+                    // So evidently if it fails here to restore saved model it uses the default init()
+                    // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+                    
+                    //            var modelGameLogic: GameLogicModelProtocol =
+                    //               GameLogicModel()
                 }
             }
+            
         }
-    
-    
-//
-//    //Added by Robert
-//    static func saveHistory(endOfGameState data: Data) {
-//
+        
+  
+            print(self.modelGameLogic.amIPlayerOne)
+            if self.modelGameLogic.amIPlayerOne {
+                
+                StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
+            }
+            else {
+                FirebaseProxy.db.collection("activeGame").getDocuments() { (querySnapshot, err) in
+                    
+                    
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    }
+                    else {
+                        
+                        for document in querySnapshot!.documents {
+                            if document.documentID != "\(0)" {
+                                print("\(document.documentID) => \(document.data())")
+                                
+                                let move = document.data()
+                                
+                                guard let gridState = move["player"] as? String else {
+                                    print("Error retrieving move player ID")
+                                    return
+                                }
+                                var player = GridState(rawValue: gridState) ?? .empty
+                                guard let row = move["row"] as? Int else {
+                                    print("Error retrieving move row")
+                                    return
+                                }
+                                guard let column = move["column"] as? Int  else {
+                                    print("Error retrieving move column")
+                                    return
+                                }
+                               
+                                self.modelGameLogic.gameBoard[row][column] = player
+                            }
+                            
+                            // Restore player 2 function goes here
+                        }
+                    }
+                }
 
-//
-//        // Basic writes
-//
-//        let collection = Firestore.firestore().collection("history_test")
-//
-//        let restaurant = Restaurant(
-//            name: name,
-//            category: category,
-//            city: city,
-//            price: price,
-//            ratingCount: 10,
-//            averageRating: 0,
-//            photo: photo
-//        )
-//
-//        let restaurantRef = collection.addDocument(data: restaurant.dictionary)
-//
-//        let batch = Firestore.firestore().batch()
-//        guard let user = Auth.auth().currentUser else { continue }
-//        var average: Float = 0
-//        for _ in 0 ..< 10 {
-//            let rating = Int(arc4random_uniform(5) + 1)
-//            average += Float(rating) / 10
-//            let text = rating > 3 ? "good" : "food was too spicy"
-//            let review = Review(rating: rating,
-//                                userID: user.uid,
-//                                username: user.displayName ?? "Anonymous",
-//                                text: text,
-//                                date: Date())
-//            let ratingRef = restaurantRef.collection("ratings").document()
-//            batch.setData(review.dictionary, forDocument: ratingRef)
-//        }
-//        batch.updateData(["avgRating": average], forDocument: restaurantRef)
-//        batch.commit(completion: { (error) in
-//            guard let error = error else { return }
-//            print("Error generating reviews: \(error). Check your Firestore permissions.")
-//        })
-//
-//    }
-//
-    
-//
-//
-//
-
-//
-//
-//
+                StateMachine.state = .waitingForGameStart // Player2's start
+            }
+        }
 
 
 
@@ -539,7 +488,7 @@ class FirebaseProxy {
         }
     }
     
-    func deleteGameMoves() {
+    func deleteGameMoves(completion: @escaping () -> Void) {
     
         let oldGame = Firestore.firestore().collection("activeGame")
         oldGame.getDocuments() { (querySnapshot, err) in
@@ -554,7 +503,9 @@ class FirebaseProxy {
                     }
                 }
             }
+            completion()
         }
+        
     }
     
     

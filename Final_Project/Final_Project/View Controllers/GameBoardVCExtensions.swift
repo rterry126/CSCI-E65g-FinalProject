@@ -82,6 +82,17 @@ extension GameBoardVC: GameStateMachine {
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
         self.activityIndicator.stopAnimating()
         
+        
+        for row in 0..<numOfGridRows {
+            for column in 0..<numOfGridColumns {
+                self.gameView?.changeGridState(x: column, y: row)
+            }
+        }
+        
+        // Now that I've told it above what colors belong to each square set a 'needs update'
+        gameView?.reloadAllSquares()
+        
+        
         // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
         sharedFirebaseProxy.listenPlayersJoin() {data, error, listener in
             
@@ -314,7 +325,7 @@ extension GameBoardVC: GameStateMachine {
                     // 4) Successful write to Firestore so continue with deleting old game
                 else {
                     
-                    self.sharedFirebaseProxy.deleteGameMoves()
+                    self.sharedFirebaseProxy.deleteGameMoves() {}
                 }
             }
         }

@@ -265,8 +265,12 @@ extension GameBoardVC: GameLogicModelObserver {
         // Simple function that alternates turns and returns whose turn it is
         modelGameLogic.setTurn()
         
-        // Save game state in background and asynchronously
-        saveGameState(modelGameLogic)
+        // Save game state in background and asynchronously IF I am Player 1. Only Player 1 will restore so to keep straight who is who
+        // on restore only let 1 device save the game...
+        if modelGameLogic.amIPlayerOne {
+            saveGameState(modelGameLogic)
+        }
+        
         updateUI()
     }
 }
@@ -303,32 +307,34 @@ extension GameBoardVC {
         StateMachine.state = .electPlayerOne
 
 
-        
-      
-        // Below commented on 11/9 when implementing singleton pattern
-        do {
-            let restoredObject = try Persistence.restore()
-            guard let mdo = restoredObject as? GameLogicModelProtocol else {
-                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
-                return
-            }
-            // Let's try setting a reference to our restored state
-            modelGameLogic = mdo
-            
-            // Call proxy to upload state to Firestore
-            sharedFirebaseProxy.uploadGame(modelGameLogic)
-
-            print("Success: in restoring game state")
-        }
-        catch let e {
-            print("Restore failed: \(e).")
-
-            // So evidently if it fails here to restore saved model it uses the default init()
-            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
-
-//            var modelGameLogic: GameLogicModelProtocol =
-//               GameLogicModel()
-        }
+//        // Only Player 1 can restore a game...
+////        if modelGameLogic.amIPlayerOne {
+//            // Below commented on 11/9 when implementing singleton pattern
+//            do {
+//                let restoredObject = try Persistence.restore()
+//                guard let mdo = restoredObject as? GameLogicModelProtocol else {
+//                    print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
+//                    return
+//                }
+//                // Let's try setting a reference to our restored state
+//                modelGameLogic = mdo
+//                
+//                
+//                // Call proxy to upload state to Firestore
+//                sharedFirebaseProxy.uploadGame(modelGameLogic)
+//
+//                print("Success: in restoring game state")
+//            }
+//            catch let e {
+//                print("Restore failed: \(e).")
+//
+//                // So evidently if it fails here to restore saved model it uses the default init()
+//                // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+//
+//    //            var modelGameLogic: GameLogicModelProtocol =
+//    //               GameLogicModel()
+//            }
+//        }
 
         
         // Setup Custom View, i.e. game board

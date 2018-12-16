@@ -62,7 +62,7 @@ class GameLogicModel: NSObject, Codable {
         // - add power square used??
 //        _gameState = gameStateVal
         
-        _amIPlayerOne = false
+        _amIPlayerOne = true // Since only player 1 will upload a game
         _powerSquareUsed = false // For simplicity we'll just let both players use power square again...
         
         super.init()
