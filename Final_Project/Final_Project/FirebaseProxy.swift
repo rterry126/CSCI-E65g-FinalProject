@@ -346,7 +346,7 @@ class FirebaseProxy {
     // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
     // It automatically updates
     private var listenerHistory : ListenerRegistration!
-    var listenerQuery : ListenerRegistration!
+    var listener : ListenerRegistration!
 
     
     // Set Firestore listener
@@ -359,10 +359,9 @@ class FirebaseProxy {
     }
     
     // Set Firestore listener
-    //TODO: - DO I need spearate queries? What does the listener removal do?
     var moveQuery: Query? {
         didSet {
-            if let listener = listenerQuery {
+            if let listener = listener {
                 listener.remove()
             }
         }
@@ -374,7 +373,7 @@ class FirebaseProxy {
         
         moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
         
-        listenerQuery =  moveQuery?.addSnapshotListener { querySnapshot, error in
+        listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(String(describing: error))")
                     return
@@ -390,7 +389,7 @@ class FirebaseProxy {
                         print("New move: \(diff.document.data())")
                         temp = diff.document.data()
                         print("temp is \(temp)")
-                        completion(temp, self.listenerQuery)
+                        completion(temp, self.listener)
 
                     }
 //                    if (diff.type == .modified) {

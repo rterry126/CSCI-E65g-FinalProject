@@ -283,7 +283,7 @@ extension GameBoardVC: GameStateMachine {
         timerCountDown.invalidate()
         
         //Kill any remaining listeners
-        sharedFirebaseProxy.listenerQuery.remove()
+        sharedFirebaseProxy.listener.remove()
         
         //////////
         //Kill the observers. Needed if play again.

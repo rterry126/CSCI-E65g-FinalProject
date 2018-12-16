@@ -7,7 +7,7 @@ import Foundation
 
 // Limitations of NSUserDefaults: No custom types or object hierarchiesß
 class Persistence {
-    static let ModelFileName = "Final_Project_rterry.serialized"
+    static let ModelFileName = "Final_Project_rterry.json"
     static let FileMgr = FileManager.default
     
     // Resources on disk: URLs: "file:///path/to/file"
