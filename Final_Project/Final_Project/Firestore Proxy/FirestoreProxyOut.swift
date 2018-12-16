@@ -11,7 +11,7 @@ import Foundation
 import Firebase
 
 extension FirebaseProxy {
-
+    
     
     // Called app startup...
     // 1) Determines P1 & P2 2) Sets maxNum of turns 3) Uploads each player's name 4) Sets P1's name
@@ -30,7 +30,7 @@ extension FirebaseProxy {
             } catch let fetchError as NSError {
                 errorPointer?.pointee = fetchError
                 Factory.displayAlert(target: GameBoardVC.self, error: fetchError)
-
+                
                 return (nil,nil, nil)
             }
             guard let leaderBit = document.data()?["leader_bit"] as? Bool else {
@@ -178,8 +178,8 @@ extension FirebaseProxy {
         // Fetch as Epoch time so it's simply a number, convert to string
         
         // Not currently used; kept for future implementation
-//        let gameMoves = "\(Date().timeIntervalSince1970)"
-//        copyGameMoves(referenceName: gameMoves )
+        //        let gameMoves = "\(Date().timeIntervalSince1970)"
+        //        copyGameMoves(referenceName: gameMoves )
         
         var imageData: Data? = nil
         // This should be passed in Via listener or something but use here for temporary
@@ -279,8 +279,8 @@ extension FirebaseProxy {
             }
         }
     }
-
     
     
-
+    
+    
 }

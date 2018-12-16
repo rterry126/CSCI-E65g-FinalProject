@@ -10,9 +10,9 @@
 import Firebase
 
 extension FirebaseProxy {
-
+    
     /************** Inbound (mostly) Firestore Functions  ****************/
-
+    
     func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
         print("opponent move Firestore function")
         
