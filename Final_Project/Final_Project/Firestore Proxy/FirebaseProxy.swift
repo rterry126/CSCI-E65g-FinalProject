@@ -44,6 +44,9 @@ class FirebaseProxy {
         }
     }
     
+    
+    //MARK: - Instances
+    
     // Use this for now but would eventually like to pass preferences in via VC
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("FirebaseProxy ==> Preferences Model: instantiate")
@@ -90,22 +93,7 @@ class FirebaseProxy {
         }
     }
     
-    
-    
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    
+
     
     // Async closure so call completion handler when done to continue
     func requestInitialize()  {
@@ -198,93 +186,12 @@ class FirebaseProxy {
         }
     
     
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    /************** Outbound (mostly) Firestore Functions  ****************/
-    func storeGameBoardImage(image: UIImage) {
-        
-        let resizedImage = resizeImage(image: image, newWidth: 80.0)
-        let imageData = resizedImage?.pngData()
-        var docData = [String: Data]()
-        
-        // TODO: - Since this is unwrapped, only try to store it below if the unwrapping was successful.
-        // Might have to move storing into the 'if let' statement.
-        
-        // Will address later when this is moved into the storing of entire history.
-        if let imageToStore = imageData {
-            docData = ["gameBoardView": imageToStore]
-        }
-        
-        // Update one field, creating the document if it does not exist.
-        Firestore.firestore().collection("history_test").document("WOqD3gIpLTBn0pxljXqJ").setData(docData, merge: true) { err in
-            if let err = err {
-                print("Error writing document: \(err)")
-            }
-            else {
-                print("Document successfully written!")
-            }
-        }
-    }
-    
-    func storeMoveFirestore(row: Int?, column: Int?, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
-        
-        var docData: [String: Any] = ["moveTime": FieldValue.serverTimestamp(), "player": playerID]
-        
-        // Coordinates are optionals, in case of forfeited move. Only store the fields IF they have values. Will make checking
-        // much easier for the other player...
-        if let rowExists = row, let columnExists = column {
-            docData["row"] = rowExists
-            docData["column"] = columnExists
-            
-        }
-        for item in docData {
-            print(item.value)
-        }
-        
-        // Update one field, creating the document if it does not exist.
-        // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
-        // If successful then we will update our board logical state and view state and change our state Machine
-        
-        
-        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: false) { err in
-            if let err = err {
-                print("Error writing document: \(err)")
-                completion(err)
-            }
-            else {
-                Util.log("Document successfully written!")
-                completion(nil)
-            }
-        }
-    }
-    
-    
 }
 
 
-// Put in helper functions eventually
 
-func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
-    
-    let newHeight = newWidth // Make it square. Current thumbnail looks strange
-    UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-    image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return newImage
-    
-}
+
+
 
 
 

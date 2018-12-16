@@ -165,5 +165,17 @@ func timeFormatted(_ totalSeconds: Int) -> String {
 
 }
 
+// Resize image of game board to thumbnail size
+func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
+    
+    let newHeight = newWidth // Make it square. Current thumbnail looks strange
+    UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+    image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    return newImage
+    
+}
+
 
  

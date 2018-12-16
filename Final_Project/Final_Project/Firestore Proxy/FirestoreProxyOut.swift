@@ -106,6 +106,37 @@ extension FirebaseProxy {
     }
     
     
+    func storeMoveFirestore(row: Int?, column: Int?, playerID: String, moveNumber: Int, completion: @escaping (Error?) -> Void) {
+        
+        var docData: [String: Any] = ["moveTime": FieldValue.serverTimestamp(), "player": playerID]
+        // Coordinates are optionals, in case of forfeited move. Only store the fields IF they have values. Will make checking
+        // much easier for the other player...
+        if let rowExists = row, let columnExists = column {
+            docData["row"] = rowExists
+            docData["column"] = columnExists
+            
+        }
+        for item in docData {
+            print(item.value)
+        }
+        // Update one field, creating the document if it does not exist.
+        // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
+        // If successful then we will update our board logical state and view state and change our state Machine
+        
+        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: false) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+                completion(err)
+            }
+            else {
+                Util.log("Document successfully written!")
+                completion(nil)
+            }
+        }
+    }
+    
+    
+    
     // Have to brute force delete the game move (document) by move. Cannot just delete the collection
     func deleteCompletedGame() {
         

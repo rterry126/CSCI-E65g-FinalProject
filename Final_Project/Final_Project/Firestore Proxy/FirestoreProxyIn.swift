@@ -6,7 +6,7 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 import Firebase
 
 extension FirebaseProxy {
@@ -62,8 +62,4 @@ extension FirebaseProxy {
             }
         }
     }
- 
-    
-    
-    
 }
