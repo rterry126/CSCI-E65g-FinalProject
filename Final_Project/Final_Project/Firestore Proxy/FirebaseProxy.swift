@@ -19,6 +19,30 @@ import Firebase
 
 class FirebaseProxy {
     
+    //MARK: - Stored Properties
+    private var documents: [DocumentSnapshot] = []
+    private var listenerHistory : ListenerRegistration!
+    var listener : ListenerRegistration!
+    
+    
+    // Set Firestore listener
+    var historyQuery: Query? {
+        didSet {
+            if let listener = listenerHistory{
+                listener.remove()
+            }
+        }
+    }
+    
+    // Set Firestore listener
+    var moveQuery: Query? {
+        didSet {
+            if let listener = listener {
+                listener.remove()
+            }
+        }
+    }
+    
     // Use this for now but would eventually like to pass preferences in via VC
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("FirebaseProxy ==> Preferences Model: instantiate")
@@ -76,78 +100,7 @@ class FirebaseProxy {
     
     
     
-    // Called app startup...
-    // 1) Determines P1 & P2 2) Sets maxNum of turns 3) Uploads each player's name 4) Sets P1's name
-    // when for P2 when it calls.
-    func electPlayerOne(completion: @escaping ( Bool, String ) -> Void ) {
-        
-        let reference = FirebaseProxy.db.collection("elect_leader").document("123456")
-        let maxTurns = self.modelGameLogic.maxTurns
-        var playerOneName = self.modelGamePrefs.myNameIs
-        let playerTwoName = self.modelGamePrefs.myNameIs
-        
-        FirebaseProxy.db.runTransaction({ (transaction, errorPointer) -> (Bool?, String?) in
-            let document: DocumentSnapshot
-            do {
-                try document = transaction.getDocument(reference)
-            } catch let fetchError as NSError {
-                errorPointer?.pointee = fetchError
-                return (nil,nil)
-            }
-            guard let leaderBit = document.data()?["leader_bit"] as? Bool else {
-                
-                let error = NSError(
-                    domain: "AppErrorDomain",
-                    code: -1,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Unable to retrieve leader_bit from snapshot \(document)"
-                    ]
-                )
-                errorPointer?.pointee = error
-                return (nil,nil)
-            }
-            print("leader Bit from Firestore \(leaderBit)")
-            // leaderBit is current false, i.e. no player one. Go ahead and set
-            if !leaderBit {
-                Util.log("\nUpdated leader bit\n")
-                
-                let dataToUpdate = ["leader_bit": true,"gameStarted": false, "maxTurns": maxTurns, "playerOneName": playerOneName] as [String : Any]
-                transaction.updateData(dataToUpdate, forDocument: reference)
-
-            }
-            // Else this is Player 2 logic
-            else {
-                
-                Util.log("\nUpdated leader reset for next game\n")
-                // Download number of turns
-                guard let maxTurns = document.data()?["maxTurns"] as? Int else {
-                    fatalError("Could not set maximum number of turns")
-                }
-                //TODO:  This sets maxTurns for Player 2. Not sure how to get it out of here...
-                self.modelGameLogic.maxTurns = maxTurns
-                
-                playerOneName = document.data()?["playerOneName"] as? String ?? "Player 11"
-                    
-               let dataToUpdate = ["leader_bit": false, "playerTwoName": playerTwoName] as [String : Any]
-               
-                transaction.updateData(dataToUpdate, forDocument: reference)
-            }
-            return (!leaderBit, playerOneName) // Ideally this should return True and in completion block below we set in model
-        })
-        {(object, error) in
-            guard let object = object as? (leaderBit: Bool, playerOneName: String) else {
-                Util.log("Unable to set leader bit")
-                return
-            }
-            if let error = error {
-                Util.log("Transaction failed: \(error)")
-            } else {
-                Util.log("Transaction successfully committed!")
-                completion(object.leaderBit, object.playerOneName)
-
-            }
-        }
-    }
+   
     
     
     
@@ -339,75 +292,75 @@ class FirebaseProxy {
 
 
 
-    /************** Inbound (mostly) Firestore Functions  ****************/
-    
-    private var documents: [DocumentSnapshot] = []
-    
-    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
-    // It automatically updates
-    private var listenerHistory : ListenerRegistration!
-    var listener : ListenerRegistration!
-
-    
-    // Set Firestore listener
-    var historyQuery: Query? {
-        didSet {
-            if let listener = listenerHistory{
-                listener.remove()
-            }
-        }
-    }
-    
-    // Set Firestore listener
-    var moveQuery: Query? {
-        didSet {
-            if let listener = listener {
-                listener.remove()
-            }
-        }
-    }
-    
-    
-    func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
-        print("opponent move Firestore function")
-        
-        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
-        
-        listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
-                guard let snapshot = querySnapshot else {
-                    print("Error fetching snapshots: \(String(describing: error))")
-                    return
-                }
-//                print(snapshot.documentChanges.count)
-            
-           
-            snapshot.documentChanges.forEach { diff in
-                
-                var temp: [String: Any]
-                
-                    if (diff.type == .added) {
-                        print("New move: \(diff.document.data())")
-                        temp = diff.document.data()
-                        print("temp is \(temp)")
-                        completion(temp, self.listener)
-
-                    }
-//                    if (diff.type == .modified) {
+//    /************** Inbound (mostly) Firestore Functions  ****************/
+//
+//    private var documents: [DocumentSnapshot] = []
+//
+//    // Pretty cool. Because of listener we don't have to refresh tableView when data is added on backend
+//    // It automatically updates
+//    private var listenerHistory : ListenerRegistration!
+//    var listener : ListenerRegistration!
+//
+//
+//    // Set Firestore listener
+//    var historyQuery: Query? {
+//        didSet {
+//            if let listener = listenerHistory{
+//                listener.remove()
+//            }
+//        }
+//    }
+//
+//    // Set Firestore listener
+//    var moveQuery: Query? {
+//        didSet {
+//            if let listener = listener {
+//                listener.remove()
+//            }
+//        }
+//    }
+//
+//
+//    func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
+//        print("opponent move Firestore function")
+//
+//        moveQuery = Firestore.firestore().collection("activeGame").order(by: "moveTime", descending: true ).limit(to: 1)
+//
+//        listener =  moveQuery?.addSnapshotListener { querySnapshot, error in
+//                guard let snapshot = querySnapshot else {
+//                    print("Error fetching snapshots: \(String(describing: error))")
+//                    return
+//                }
+////                print(snapshot.documentChanges.count)
+//
+//
+//            snapshot.documentChanges.forEach { diff in
+//
+//                var temp: [String: Any]
+//
+//                    if (diff.type == .added) {
+//                        print("New move: \(diff.document.data())")
 //                        temp = diff.document.data()
-//
-////                        print("Modified city: \(diff.document.data())")
-//                        completion(temp)
+//                        print("temp is \(temp)")
+//                        completion(temp, self.listener)
 //
 //                    }
-//                    if (diff.type == .removed) {
-//                        print("Removed city: \(diff.document.data())")
-//                    }
-                
-                
-                }
-        }
-    }
-    
+////                    if (diff.type == .modified) {
+////                        temp = diff.document.data()
+////
+//////                        print("Modified city: \(diff.document.data())")
+////                        completion(temp)
+////
+////                    }
+////                    if (diff.type == .removed) {
+////                        print("Removed city: \(diff.document.data())")
+////                    }
+//
+//
+//                }
+//        }
+//    }
+//
     
     
     // Stores game results in Firestore; moves are stored in a separate colleciton with a reference to them.

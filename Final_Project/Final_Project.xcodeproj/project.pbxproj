@@ -20,6 +20,8 @@
 		E178D865219734D700DA4E93 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E178D864219734D700DA4E93 /* GoogleService-Info.plist */; };
 		E1915B272195AAEA00730B95 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1915B262195AAEA00730B95 /* Notifications.swift */; };
 		E197209E21BC81EA00A79AA7 /* HistoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E197209D21BC81EA00A79AA7 /* HistoryDetailView.swift */; };
+		E1A183AC21C70B4400789489 /* FirestoreProxyIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A183AB21C70B4400789489 /* FirestoreProxyIn.swift */; };
+		E1A183AE21C70D4600789489 /* FirestoreProxyOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A183AD21C70D4500789489 /* FirestoreProxyOut.swift */; };
 		E1B00AC6218E4A8B0032A66E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1B00AAF218E4A8A0032A66E /* Assets.xcassets */; };
 		E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */; };
 		E1B00AC9218E4A8B0032A66E /* ModelGamePref.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B00AB2218E4A8A0032A66E /* ModelGamePref.swift */; };
@@ -61,6 +63,8 @@
 		E178D864219734D700DA4E93 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E1915B262195AAEA00730B95 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		E197209D21BC81EA00A79AA7 /* HistoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDetailView.swift; sourceTree = "<group>"; };
+		E1A183AB21C70B4400789489 /* FirestoreProxyIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreProxyIn.swift; sourceTree = "<group>"; };
+		E1A183AD21C70D4500789489 /* FirestoreProxyOut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreProxyOut.swift; sourceTree = "<group>"; };
 		E1B00A9A218E4A370032A66E /* Final_Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Final_Project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B00AAF218E4A8A0032A66E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1B00AB0218E4A8A0032A66E /* GameBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
@@ -162,6 +166,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		E1A183AA21C70AE500789489 /* Firestore Proxy */ = {
+			isa = PBXGroup;
+			children = (
+				E157847921977DF400F142CA /* FirebaseProxy.swift */,
+				E1A183AB21C70B4400789489 /* FirestoreProxyIn.swift */,
+				E1A183AD21C70D4500789489 /* FirestoreProxyOut.swift */,
+			);
+			path = "Firestore Proxy";
+			sourceTree = "<group>";
+		};
 		E1B00A91218E4A370032A66E = {
 			isa = PBXGroup;
 			children = (
@@ -184,11 +198,11 @@
 		E1B00A9C218E4A370032A66E /* Final_Project */ = {
 			isa = PBXGroup;
 			children = (
+				E1A183AA21C70AE500789489 /* Firestore Proxy */,
 				E181BDF121B5EEAE002659B8 /* Views */,
 				E173AA3221AADEE300BA00F9 /* Models */,
 				E173AA3121AADDD200BA00F9 /* View Controllers */,
 				E1B00AB6218E4A8A0032A66E /* AppDelegate.swift */,
-				E157847921977DF400F142CA /* FirebaseProxy.swift */,
 				E1B00AB4218E4A8A0032A66E /* Delegates.swift */,
 				E1915B262195AAEA00730B95 /* Notifications.swift */,
 				E1B00AB1218E4A8A0032A66E /* Info.plist */,
@@ -364,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E10BAA7F218F1F5100FDCC27 /* HelpVC.swift in Sources */,
+				E1A183AC21C70B4400789489 /* FirestoreProxyIn.swift in Sources */,
 				E110CE3A21B490140037D1FF /* ModelCalculateScore.swift in Sources */,
 				E1B00AD2218E4A8B0032A66E /* ColorPickerExtensions.swift in Sources */,
 				E1915B272195AAEA00730B95 /* Notifications.swift in Sources */,
@@ -393,6 +408,7 @@
 				E1B00AC7218E4A8B0032A66E /* GameBoardView.swift in Sources */,
 				E157847A21977DF400F142CA /* FirebaseProxy.swift in Sources */,
 				E1B00ACF218E4A8B0032A66E /* ColorPickerModel.swift in Sources */,
+				E1A183AE21C70D4600789489 /* FirestoreProxyOut.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,7 +32,7 @@ extension GameBoardVC: GameStateMachine {
         
         
         Util.log("Player election function called in proxy")
-        sharedFirebaseProxy.electPlayerOne() { success, name in
+        sharedFirebaseProxy.electPlayerOne() { success, name, maxTurns in
             
             if success {
                 self.modelGameLogic.amIPlayerOne = true
@@ -45,6 +45,7 @@ extension GameBoardVC: GameStateMachine {
             // Player 2 logic
             else {
                 self.modelGamePrefs.playerOneName = " \(name) "
+                self.modelGameLogic.maxTurns = maxTurns
                 // Set own name
                 self.modelGamePrefs.playerTwoName = " \(self.modelGamePrefs.myNameIs) "
             }
@@ -54,7 +55,7 @@ extension GameBoardVC: GameStateMachine {
             StateMachine.state = .initializing
             
             let player =  success ? "Player One" : "Player Two"
-            Factory.displayAlert(target: self, message: "You are \(player).", title: "Election Complete")
+            Factory.displayAlert(target: self, message: "You are \(player). \(self.modelGameLogic.maxTurns )", title: "Election Complete")
             
         } // End of callback closure
     }
