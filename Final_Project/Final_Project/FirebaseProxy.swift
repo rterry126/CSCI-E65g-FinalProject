@@ -11,6 +11,7 @@
 // Sources - basic code to delete documents in a collection - https://stackoverflow.com/questions/51792471/cloud-firestore-swift-how-to-delete-a-query-of-documents?rq=1
 
 // Sources - resize UIImage (thumbnail creation) - https://stackoverflow.com/questions/31966885/resize-uiimage-to-200x200pt-px
+// Sources - Firestore batch writing - https://firebase.google.com/docs/firestore/manage-data/transactions
 
 import Foundation  // needed for notification center
 import UIKit // needed for alerts
@@ -63,6 +64,90 @@ class FirebaseProxy {
             Util.log("Firebase Proxy --> db handle created")
             return self._db
         }
+    }
+    
+    
+    func uploadGame(_ gameModel: GameLogicModelProtocol) {
+        
+        
+//     print(gameModel.gameBoard)
+        var fakeMoveNumber = 1
+        // Get new write batch
+        let batch = Firestore.firestore().batch()
+        
+        for row in 0..<gameModel.gameBoard.count {
+            for column in 0..<gameModel.gameBoard[0].count {
+                
+                let grid = gameModel.gameBoard[row][column]
+                if grid != .empty {
+                    
+                    print("\(gameModel.gameBoard[row][column].rawValue) \(row) \(column)")
+                    
+                    // Write the moves as a batch. We won't have the actual move time as it wasn't persisted, however I'm going to
+                    // add a moveTime field to keep the data consistent. Move numbers won't correspond to the actual move numbers
+                    // but this doesn't matter, we're just resetting the board state.
+                    
+                    // Create moves to upload
+                    
+                    let dataToStore:[String : Any] = ["moveTime": FieldValue.serverTimestamp(),"column": column, "row": row, "player": gameModel.gameBoard[row][column].rawValue ]
+                    
+                    
+                    // Setup our moves document
+                    let gameMoves = Firestore.firestore().collection("activeGame").document("\(fakeMoveNumber)")
+                    batch.setData(dataToStore, forDocument: gameMoves)
+                    
+                    fakeMoveNumber += 1
+                }
+            }
+        }
+        
+        // Commit the batch
+        batch.commit() { err in
+            if let err = err {
+                print("Error writing batch \(err)")
+            } else {
+                print("Batch write succeeded.")
+            }
+        }
+        
+        
+//        var docData: [String: Any] = ["moveTime": FieldValue.serverTimestamp(), "player": playerID]
+//
+//        // Coordinates are optionals, in case of forfeited move. Only store the fields IF they have values. Will make checking
+//        // much easier for the other player...
+//        if let rowExists = row, let columnExists = column {
+//            docData["row"] = rowExists
+//            docData["column"] = columnExists
+//
+//        }
+//        for item in docData {
+//            print(item.value)
+//        }
+//
+//        // Update one field, creating the document if it does not exist.
+//        // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
+//        // If successful then we will update our board logical state and view state and change our state Machine
+//
+//
+//        Firestore.firestore().collection("activeGame").document("\(moveNumber + 1)").setData(docData, merge: false) { err in
+//            if let err = err {
+//                print("Error writing document: \(err)")
+//                completion(err)
+//            }
+//            else {
+//                Util.log("Document successfully written!")
+//                completion(nil)
+//            }
+//        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
     
     // Called at end of game

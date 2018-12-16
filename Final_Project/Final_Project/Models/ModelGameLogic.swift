@@ -31,12 +31,13 @@ class GameLogicModel: NSObject, Codable {
     // Used to retrieve game board size. It has to be set internally vice from an external initializer.
     let defaults = UserDefaults.standard
     
-    // So Codeabel will use the keys below to ONLY code these values
+    // So Codeable will use the keys below to ONLY code these values
     // CaseIterable added to know what values to save to Firestore
     enum CodingKeys: String, CodingKey, CaseIterable {
         case _gameBoard
         case _moveCount
         case _whoseTurn
+        case _maxTurns
         // case - add power square used??
 //        case _gameState
     }
@@ -50,19 +51,19 @@ class GameLogicModel: NSObject, Codable {
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
         let moveCountVal: Int = try container.decode(Int.self, forKey: ._moveCount) // extracting the data
         let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
+        let maxTurnsVal: Int = try container.decode(Int.self, forKey: ._maxTurns) // extracting the data
 //        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
         
         // Now set the 4 items that we decided were important enough to save
         _gameBoard = gameBoardVal
         _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
+        _maxTurns = maxTurnsVal
         // - add power square used??
 //        _gameState = gameStateVal
         
-        //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
-        _maxTurns = 10
         _amIPlayerOne = false
-        _powerSquareUsed = false
+        _powerSquareUsed = false // For simplicity we'll just let both players use power square again...
         
         super.init()
     }

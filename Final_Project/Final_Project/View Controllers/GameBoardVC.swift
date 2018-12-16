@@ -306,26 +306,29 @@ extension GameBoardVC {
         
       
         // Below commented on 11/9 when implementing singleton pattern
-//        do {
-//            let restoredObject = try Persistence.restore()
-//            guard let mdo = restoredObject as? GameLogicModelProtocol else {
-//                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
-//                return
-//            }
-//            // Let's try setting a reference to our restored state
-//            modelGameLogic = mdo
-//
-//            print("Success: in restoring game state")
-//        }
-//        catch let e {
-//            print("Restore failed: \(e).")
-//
-//            // So evidently if it fails here to restore saved model it uses the default init()
-//            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
-//
+        do {
+            let restoredObject = try Persistence.restore()
+            guard let mdo = restoredObject as? GameLogicModelProtocol else {
+                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
+                return
+            }
+            // Let's try setting a reference to our restored state
+            modelGameLogic = mdo
+            
+            // Call proxy to upload state to Firestore
+            sharedFirebaseProxy.uploadGame(modelGameLogic)
+
+            print("Success: in restoring game state")
+        }
+        catch let e {
+            print("Restore failed: \(e).")
+
+            // So evidently if it fails here to restore saved model it uses the default init()
+            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+
 //            var modelGameLogic: GameLogicModelProtocol =
-//               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-//        }
+//               GameLogicModel()
+        }
 
         
         // Setup Custom View, i.e. game board
@@ -368,14 +371,14 @@ extension GameBoardVC {
         // not fully thought out
         
         //commented 11/9
-//        for y in 0..<numOfGridRows {
-//            for x in 0..<numOfGridColumns {
-//                gameView.changeGridState(x: x, y: y)
-//            }
-//        }
-//
-//        // Now that I've told it above what colors belong to each square set a 'needs update'
-//        gameView.reloadAllSquares()
+        for row in 0..<numOfGridRows {
+            for column in 0..<numOfGridColumns {
+                gameView.changeGridState(x: column, y: row)
+            }
+        }
+
+        // Now that I've told it above what colors belong to each square set a 'needs update'
+        gameView.reloadAllSquares()
         
         // Initialize state of board - colors, game status, etc
         updateUI()
