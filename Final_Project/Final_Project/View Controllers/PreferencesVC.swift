@@ -14,6 +14,7 @@
 // Sources - Dismiss Keyboard via Tap gesture - https://medium.com/@KaushElsewhere/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
 // Sources - Extensions review - https://docs.swift.org/swift-book/LanguageGuide/Extensions.html
 // Sources - Adding bottom constraint to scroll view - https://stackoverflow.com/questions/43835290/ios-scroll-view-allows-scrolling-past-content
+// Sources - UISwitch - https://stackoverflow.com/questions/48623771/loading-ison-or-isoff-for-a-uiswitch-using-swift-4
 
 
 // Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
@@ -48,6 +49,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var spacerLabel3: UILabel!
     @IBOutlet weak var spacerLabel4: UILabel!
     @IBOutlet weak var spacerLabel5: UILabel!
+    @IBOutlet weak var spacerLabel6: UILabel!
     
     @IBOutlet weak var gameNameText: UITextField!
     @IBOutlet weak var myNameIsText: UITextField!
@@ -57,6 +59,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var rowsSlider: UISlider!
     @IBOutlet weak var columnsSlider: UISlider!
     @IBOutlet weak var timerSlider: UISlider!
+    @IBOutlet weak var localHistory: UISwitch!
     
     
     @IBOutlet weak var rowsText: UILabel!
@@ -74,7 +77,6 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     }
     @IBAction func timerSliderSet(_ sender: Any) {
         timerText.text = Int(timerSlider.value).description
-        
     }
 
     // Need to reset Firestore. Could use proxy but this is easier and since we are using singletons...
@@ -189,6 +191,8 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
             prefModel.numColumns = Int(columnsSlider.value)
             prefModel.moveTime = Int(timerSlider.value)
             
+            prefModel.localHistory = localHistory.isOn
+            
             self.navigationController?.popToRootViewController(animated: true)
             // Listeners set in model for changes in names/colors. Less important since I don't
             // set individual player names here anymore...
@@ -227,6 +231,7 @@ extension PreferencesVC {
         spacerLabel3.border()
         spacerLabel4.border()
         spacerLabel5.border()
+        spacerLabel6.border()
 
 
         
@@ -243,6 +248,7 @@ extension PreferencesVC {
             columnsText.text = Int(columnsSlider.value).description
             timerSlider.value = Float(prefModel.moveTime) 
             timerText.text = Int(timerSlider.value).description
+            self.localHistory.setOn(prefModel.localHistory, animated: true)
             
             playerOneColorBtn.backgroundColor = hsbToUIColor(color: prefModel.playerOneColor)
             playerTwoColorBtn.backgroundColor = hsbToUIColor(color: prefModel.playerTwoColor)

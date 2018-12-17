@@ -9,6 +9,7 @@
 //Sources - Webview - Local file access - https://stackoverflow.com/questions/49638653/load-local-web-files-resources-in-wkwebview
 //Sources - Activity view - https://www.ioscreator.com/tutorials/activity-indicator-ios-tutorial-ios12
 // http://www.thomashanning.com/uiactivityindicatorview/
+// Sources - Code from class also used and modified for this.
 
 import WebKit  // WKWebView
 

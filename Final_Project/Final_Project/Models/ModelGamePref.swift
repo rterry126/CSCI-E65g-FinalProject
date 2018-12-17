@@ -71,6 +71,8 @@ class GamePrefModel {
             _numColumns = PrefKeys.BoardSize.columns.rawValue
         }
         
+        _localHistory = defaults.bool(forKey: "localHistory") // Returns false if not existent
+        
     }
     
     
@@ -190,10 +192,29 @@ class GamePrefModel {
         }
     }
     
+    private var _localHistory: Bool {
+        didSet {
+            print("Model ==> Model: didSet(_localHistory) updated to \(_localHistory)")
+            
+            // Persist name anytime it is changed
+            defaults.set("\(_localHistory)", forKey: "localHistory")
+            
+        }
+    }
+    
 }
 
 //MARK: Extension - Game Model Protocol
 extension GamePrefModel: GamePrefModelProtocol {
+    
+    var localHistory: Bool {
+        get {
+            return _localHistory
+        }
+        set {
+            _localHistory = newValue
+        }
+    }
     
     var moveTime: Int {
         get {

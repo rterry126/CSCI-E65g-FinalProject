@@ -77,6 +77,8 @@ protocol GameLogicModelProtocol: class, Codable {
 
 protocol GamePrefModelProtocol: class {
     
+    var localHistory: Bool { get set }
+    
     var moveTime: Int { get set }
     
     var myNameIs:String { get set }

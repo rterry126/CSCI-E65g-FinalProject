@@ -6,7 +6,7 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
-import UIKit
+import UIKit // Needed for UIColor and Data types
 
 //MARK: - GameGridView Data Source extension
 extension GameBoardVC: GameGridViewDataSource {
@@ -46,10 +46,10 @@ extension GameBoardVC: GameGridViewDelegate {
         // Power squares are same color, just drop the opacity
             
         case .playerOnePower:
-            return hsbToUIColor(color: modelGamePrefs.playerOneColor, alpha: 0.5)
+            return hsbToUIColor(color: modelGamePrefs.playerOneColor, alpha: 0.6)
             
         case .playerTwoPower:
-            return hsbToUIColor(color: modelGamePrefs.playerTwoColor, alpha: 0.5)
+            return hsbToUIColor(color: modelGamePrefs.playerTwoColor, alpha: 0.6)
             
             
         case .empty:
@@ -66,14 +66,9 @@ extension GameBoardVC: GameGridViewDelegate {
             // observer implanted in .executeMove
             try modelGameLogic.executeMove(playerID: modelGameLogic.whoseTurn, moveCoordinates: (location.row, location.column))
             
-            // 11/24 the function below should only run and update the board color after confirmation
-            //from the cloud...
-            
-            // Update the board state. Ideally I'd like to do this in updateUI, however not sure how to
-            // pass the coordinates to updateUI....
-            
-            //
+            // So now the board AND model are updated via the listener .moveStoredFirestore
 //            gameView?.changeGridState(x: location.column, y: location.row)
+            
         }
             
         catch let e {
@@ -86,42 +81,7 @@ extension GameBoardVC: GameGridViewDelegate {
 }
 
 
-//MARK: - PreferencesVC Delegate extension
 
-// Because I don't want to expose the model to PreferencesVC I use a delegate.
-// It returns a Bool which we can use on the other end (I use it to inform the user of success if the save
-// was the same.
-
-extension GameBoardVC: PreferencesVCDelegate {
-    
-    // Commented out 12.11.18 - Cleaning up Preferences and don't need a specific save button
-    // since game saves on each move
-//    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool {
-//        var success: Bool
-//
-//        // First time run: nothing was saved from before
-//        print("First run. Creating and saving \(modelGameLogic)")
-//
-//        // Data is optional
-//        if let data = modelGameLogic.toJSONData() {
-//            do {
-//                try Persistence.save(data)
-//                success = true
-//            }
-//            catch let e {
-//                print("Sving failed: \(e)")
-//                success = false
-//            }
-//
-//        }
-//        else {
-//            print("Unable to unwrap model prior to saving")
-//            return false
-//        }
-//        return success
-//    }
-    
-}
 
 // Source cited but was having issues passing model to encode function. This is hacky but got it
 // to work.

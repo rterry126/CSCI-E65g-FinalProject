@@ -49,9 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
-        // Reset certain items in Firestore if user quits prior to end of game
-//        Util.log("applicationWillTerminate called")
-//        FirebaseProxy.instance.resetPlayerOne()
+        
     }
 
 
