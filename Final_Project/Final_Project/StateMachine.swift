@@ -10,7 +10,7 @@ import Foundation
 class StateMachine: StateMachineProtocol {
     
     // Create Singleton instance
-//    static let instance: StateMachineProtocol = StateMachine()
+    //    static let instance: StateMachineProtocol = StateMachine()
     
     private static let _instance: StateMachineProtocol = StateMachine()
     private init() {}
@@ -21,10 +21,10 @@ class StateMachine: StateMachineProtocol {
     
     static var state: State = .uninitialized {
         didSet {
-        
-        // Get the notification name when the case is valid and then post at the bottom of didSet block
-        // This just keeps from having to post in each case statement...
-    
+            
+            // Get the notification name when the case is valid and then post at the bottom of didSet block
+            // This just keeps from having to post in each case statement...
+            
             let notificationName: NSNotification.Name
             
             switch state {
@@ -35,7 +35,7 @@ class StateMachine: StateMachineProtocol {
             case .electPlayerOne: // Added before the game is initialized. Whoever is player one will upload saved game, if it exists.
                 notificationName = Notification.Name.electPlayerOne
                 Util.log("state changed to .electPlayerOne")
-
+                
             case .initializing:
                 notificationName = Notification.Name.initializing
                 Util.log("state changed to .initializing")
@@ -47,31 +47,31 @@ class StateMachine: StateMachineProtocol {
             case .waitingForGameStart: // ONLY Player 2. Basically same as ready for game but no button
                 notificationName = Notification.Name.waitingForGameStart
                 Util.log("state changed to .waitingForGameStart")
-
+                
             case .readyForGame:
                 notificationName = Notification.Name.readyForGame
                 Util.log("state changed to .readyForGame")
-
+                
             case .waitingForUserMove:
                 notificationName = Notification.Name.waitingForUserMove
                 Util.log("state changed to .waitingForUserMove")
-
+                
             case .waitingForMoveConfirmation:
-//                notificatonName = Notification.Name.waitingForMoveConfirmation
+                //                notificatonName = Notification.Name.waitingForMoveConfirmation
                 //This listener is embeded in the model logic function executeMove, as it needs the move coordinates, etc to pass to selector function
                 return
                 
             case .initialSnapshotOfGameBoard:
                 notificationName = Notification.Name.initialSnapshotOfGameBoard
                 Util.log("state changed to .initial snapshot of board")
-
-
+                
+                
             case .waitingForOpponentMove:
                 Util.log("state changed to .waitingForOpponentMove")
-
-//                notificatonName = Notification.Name.waitingForOpponentMove
+                
+                //                notificatonName = Notification.Name.waitingForOpponentMove
                 return
-
+                
             case .gameOver:
                 notificationName = Notification.Name.gameOver
                 Util.log("state changed to .gameOver")

@@ -14,6 +14,7 @@ import UIKit
 // Source - Enumeration and user defaults - https://medium.com/swift-programming/swift-userdefaults-protocol-4cae08abbf92
 // Source - use of getHue - https://www.hackingwithswift.com/example-code/uicolor/how-to-read-the-red-green-blue-and-alpha-color-components-from-a-uicolor
 // Source - Time format - https://teamtreehouse.com/community/swift-countdown-timer-of-60-seconds
+// Source - Resize image - https://stackoverflow.com/questions/31966885/resize-uiimage-to-200x200pt-px
 
 
 
@@ -162,7 +163,7 @@ func arrayToTuple(_ hsbArray: [Double]) -> HSBColor {
 func timeFormatted(_ totalSeconds: Int) -> String {
     let seconds: Int = totalSeconds % 60
     return String(format: " :%02d", seconds)
-
+    
 }
 
 // Resize image of game board to thumbnail size
@@ -178,4 +179,4 @@ func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
 }
 
 
- 
+
