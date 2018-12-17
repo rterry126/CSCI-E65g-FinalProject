@@ -12,6 +12,7 @@
 // Sources - ScrollView - https://www.youtube.com/watch?v=nfHBCQ3c4Mg
 // Sources - Dismiss Keyboard via Return - https://stackoverflow.com/questions/24180954/how-to-hide-keyboard-in-swift-on-pressing-return-key
 // Sources - Dismiss Keyboard via Tap gesture - https://medium.com/@KaushElsewhere/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
+// Sources - Extensions review - https://docs.swift.org/swift-book/LanguageGuide/Extensions.html
 
 
 // Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
@@ -44,6 +45,8 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var spacerLabel1: UILabel!
     @IBOutlet weak var spacerLabel2: UILabel!
     @IBOutlet weak var spacerLabel3: UILabel!
+    @IBOutlet weak var spacerLabel4: UILabel!
+    @IBOutlet weak var spacerLabel5: UILabel!
     
     @IBOutlet weak var gameNameText: UITextField!
     @IBOutlet weak var myNameIsText: UITextField!
@@ -110,6 +113,15 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         
         self.present(alert, animated: true)
     }
+    
+    @IBAction func deleteSavedGame(_ sender: Any) {
+    }
+    
+    
+    @IBAction func resetFirestore(_ sender: Any) {
+    }
+    
+    
     
     @IBAction func dismissRequest(_ sender: Any) {
         
@@ -190,25 +202,20 @@ extension PreferencesVC {
 
         
         // A better preferences page would use a table view; however since this VC was already in program it was easier to modify
-        // to look like a table. Below is just code to give certain cells a border.
-        gameNameLabel.layer.borderWidth = 0.5
-        gameNameLabel.layer.borderColor = UIColor.black.cgColor
-        nameLabel.layer.borderWidth = 0.5
-        nameLabel.layer.borderColor = UIColor.black.cgColor
-        player1ColorLabel.layer.borderWidth = 0.5
-        player1ColorLabel.layer.borderColor = UIColor.black.cgColor
-        player2ColorLabel.layer.borderWidth = 0.5
-        player2ColorLabel.layer.borderColor = UIColor.black.cgColor
-        gridSizeLabel.layer.borderWidth = 0.5
-        gridSizeLabel.layer.borderColor = UIColor.black.cgColor
-        moveTimerLabel.layer.borderWidth = 0.5
-        moveTimerLabel.layer.borderColor = UIColor.black.cgColor
-        spacerLabel1.layer.borderWidth = 0.5
-        spacerLabel1.layer.borderColor = UIColor.black.cgColor
-        spacerLabel2.layer.borderWidth = 0.5
-        spacerLabel2.layer.borderColor = UIColor.black.cgColor
-        spacerLabel3.layer.borderWidth = 0.5
-        spacerLabel3.layer.borderColor = UIColor.black.cgColor
+        // to look like a table. Wrote quick extension to clean up code (included at end of file)
+        gameNameLabel.border()
+        nameLabel.border()
+        player1ColorLabel.border()
+        player2ColorLabel.border()
+        gridSizeLabel.border()
+        moveTimerLabel.border()
+        spacerLabel1.border()
+        spacerLabel2.border()
+        spacerLabel3.border()
+        spacerLabel4.border()
+        spacerLabel5.border()
+
+
         
         
         // Have preferences setter reflect the current values stored in the model...
@@ -274,7 +281,13 @@ extension PreferencesVC: ColorPickerChoiceListener {
     }
 }
 
-
+// Quick hard coded extension to give my labels a border. Just cleans up the code above
+extension UILabel {
+    func border() {
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = UIColor.black.cgColor
+    }
+}
 
 
 
