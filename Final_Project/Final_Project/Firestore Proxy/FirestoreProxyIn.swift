@@ -62,4 +62,39 @@ extension FirebaseProxy {
             }
         }
     }
+    
+    
+    func downloadHistory( completion: @escaping ([Game], Error?) -> Void) {
+        
+        print("Function downloadHistory called")
+        
+        var resultsArray = [Game]()
+        // Create query.
+        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: 10)
+        
+        listenerHistory =  historyQuery?.addSnapshotListener { ( documents, error) in
+            
+            guard let snapshot = documents else {
+                if let error = error {
+                    print(error)
+                    // Return error to async calling closure in HistoryMasterVC
+                    completion(resultsArray, error)
+                }
+                return
+            }
+            // Basically go through the sequence and pull out the data...
+            resultsArray = snapshot.documents.map { (document) -> Game in
+                if let game = Game(dictionary: document.data(), id: document.documentID) {
+                    return game
+                }
+                else {
+                    fatalError("Unable to initialize type \(Game.self) with dictionary \(document.data())")
+                }
+            }
+            // Return results to async calling closure in HistoryMasterVC
+            print("results array size is \(resultsArray.count)")
+            completion(resultsArray, nil)
+        }
+    }
+    
 }
