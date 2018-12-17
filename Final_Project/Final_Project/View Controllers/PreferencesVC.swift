@@ -105,6 +105,16 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func deleteSavedGame(_ sender: Any) {
+        
+        do {
+            Util.log("Delete game button pressed from Preferences")
+            try Persistence.deleteSavedGame()
+            Factory.displayAlert(target: self, message: "Game successfully deleted", title: "")
+        }
+        catch let e {
+            Util.log("Deleting  game failed: \(e)")
+            Factory.displayAlert(target: self, message: "Unable to delete (maybe no saved game?)", title: "")
+        }
     }
     
     
@@ -173,16 +183,15 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
                 print("Button 2 background color not set. Unable to save to preferences")
             }
             
-            // UPdate our game grid size rows/colunns. This won't be reflected immediately as it's
+            // Update our game grid size rows/colunns. This won't be reflected immediately as it's
             // only used when the view is be initialized
             prefModel.numRows = Int(rowsSlider.value)
             prefModel.numColumns = Int(columnsSlider.value)
             prefModel.moveTime = Int(timerSlider.value)
             
             self.navigationController?.popToRootViewController(animated: true)
-            // Initially set a nameChanged listener here but made more sense to set in the model where
-            // the name actually changes.
-            
+            // Listeners set in model for changes in names/colors. Less important since I don't
+            // set individual player names here anymore...
             
         }
     }
@@ -262,6 +271,7 @@ extension PreferencesVC {
         }
     }
     
+    // Remove keyboard on 'Return'. Sources cited above
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
