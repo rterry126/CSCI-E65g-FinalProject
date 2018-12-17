@@ -75,6 +75,12 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         timerText.text = Int(timerSlider.value).description
         
     }
+
+    // Need to reset Firestore. Could use proxy but this is easier and since we are using singletons...
+    var sharedFirebaseProxy: FirebaseProxy = {
+            Util.log("GameBoardVC ==> FirebaseProxy: get Singleton")
+            return FirebaseProxy.instance
+        }()
     
     
     
@@ -119,6 +125,20 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     
     
     @IBAction func resetFirestore(_ sender: Any) {
+            
+        let alert = UIAlertController(title: "Reset Firestore?", message: "Do you really want to reset Firestore?", preferredStyle: .alert)
+        
+        // .destructive to color 'Yes' in red...
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: {
+            action in
+            self.sharedFirebaseProxy.deleteCompletedGame()
+            self.sharedFirebaseProxy.resetElection()
+            
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true)
+            
     }
     
     

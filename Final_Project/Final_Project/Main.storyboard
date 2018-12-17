@@ -160,7 +160,6 @@
                                                     <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="deletePrefsBtn:" destination="bAJ-Sm-LUu" eventType="touchUpInside" id="r5u-Jr-J4E"/>
                                                     <action selector="deleteSavedGame:" destination="bAJ-Sm-LUu" eventType="touchUpInside" id="97X-wb-pJF"/>
                                                 </connections>
                                             </button>
@@ -173,7 +172,6 @@
                                                     <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="deletePrefsBtn:" destination="bAJ-Sm-LUu" eventType="touchUpInside" id="KwZ-6x-iLP"/>
                                                     <action selector="resetFirestore:" destination="bAJ-Sm-LUu" eventType="touchUpInside" id="9J5-w5-WAH"/>
                                                 </connections>
                                             </button>
