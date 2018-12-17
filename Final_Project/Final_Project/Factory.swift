@@ -4,67 +4,17 @@
 //
 //  Created by Robert Terry on 11/12/18.
 //
-// Source - https://medium.com/swiftworld/swift-world-design-patterns-singleton-b1dc663f4fdd
 
-import Foundation
 import UIKit        // Alert creaton function
-import AVFoundation // Used to notify when timer/turn is about to expire via audio.
 
 
-// Initially just created for Singleton generation, however was creating observers and
-// timers using convenience code so move that here as well.
+// Not sure if these are really 'Factories', however anytime I was creating more than 1 of an object I just put the code here to simplify
 class Factory {
     
-   // Singleton Creation
-//    static let sharedInstance: GameLogicModelProtocol = {
-//        let instance = GameLogicModel()
-//        return instance
-//    }()
-    
-    //Changed on 12.8.18
-//    private static var _model: GameLogicModelProtocol = {
-//        let m: GameLogicModelProtocol
-////        if let obj = Persistence.createModelFromPersistedData() {
-////            m = obj
-////        }
-////        else {
-////            m = Model()
-////        }
-//        m = GameLogicModel()
-//        return m
-//    }()
-//
-//    public static var sharedModel: GameLogicModelProtocol {
-//        get {
-//            return _model
-//        }
-//    }
-    
-//    private static let stateInstance: StateMachineProtocol = {
-//        let instance = StateMachine()
-//        return instance
-//        
-//    }()
+   
     
     
-//    private static let _model = GameLogicModel()
-//    
-//    
-//    // This is a “lock for honest people"
-////    public var readOnlyModel: ReadOnlyModelProtocol {
-////        get {
-////            return _model
-////        }
-////    }
-//    
-//    public  var instance: GameLogicModel {
-//        get {
-//            return SingletonFactory._model
-//        }
-//    }
-    
-    /********* Observer factory *********/
-    
+    // Pass an array of observers to set
     static func createObserver(observer: Any, listeners: observerArray)  {
         
         // Loop through and subscribe to each listener. 'Observer' (normally 'self') is the same for each item in the array passed in.
@@ -82,7 +32,7 @@ class Factory {
         }
     }
     
-    
+    // During the end of game state, functioning observers were causing issues. So stateEndOfGame just kills them all.
     static func killObserver(observer: Any, listeners: observerArray)  {
     
         // If array is 'empty' it isn't nil (I tested this) so let's log that an empty array was passed.
@@ -100,36 +50,15 @@ class Factory {
     
     /********* Timer factory *********/
     
-    
-    
-    // A move timer, visual Countdown,  and a 2 second (until move expires) timer are created and returned via tuple.
-    // Purpose of timerWarning is to play audio alert so it's action is 'hardcoded' in the closure.
-    
-    // Commented out 12.8.18 - Only use one timer now
-    
-    
-//    static func createTimers(timeToMakeMove timeInterval: TimeInterval, target: Any, functionToRun selector: Selector,
-//                             countDownTimer selectorCountDown: Selector ) -> (Timer,Timer, Timer) {
-//
-//        let timerMove = Timer.scheduledTimer(timeInterval: timeInterval, target: target, selector: selector, userInfo: nil, repeats: false)
-//
-//        let timerWarning = Timer.scheduledTimer(withTimeInterval: timeInterval - 2.0, repeats: false) { timer2 in
-//            AudioServicesPlayAlertSound(SystemSoundID(1103))
-//        }
-//
-//        let timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: target, selector: selectorCountDown, userInfo: nil, repeats: true)
-//
-//        // Supposedly if timing isn't critical this is energy efficient.
-//        timerMove.tolerance = 0.4
-//        timerWarning.tolerance = 0.2
-//        timerCountDown.tolerance = 0.1
-//
-//        return (timerMove, timerWarning, timerCountDown)
-//    }
+    // Superceded by code simplificaiton
     
     /************** Alert Factory *********************/
     
    
+    // With overloads and default values, I essentially have 4 functions here
+    // Alerts that have more extensive action (handler isn't nil) don't use these (PreferencesVC)
+    
+    // Used to pass error messages
     static func displayAlert(target: AnyObject, error: Error, title: String = "Firestore Error") {
         
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
@@ -137,14 +66,13 @@ class Factory {
         target.present(alert, animated: true, completion: nil)
     }
     
+    
+    // Used to pass strings
     static func displayAlert(target: AnyObject, message: String, title: String = "Game Error") {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
         target.present(alert, animated: true, completion: nil)
     }
-    
-
-    
     
 }
