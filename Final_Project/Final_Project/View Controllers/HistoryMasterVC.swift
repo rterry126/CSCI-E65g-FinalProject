@@ -15,6 +15,8 @@ import Firebase
 // use of tutorial from above and Google Firestore examples...
 
 class GameHistoryTableViewCell: UITableViewCell {
+    
+    // MARK: - Cell Outlets
     @IBOutlet weak var dateTime: UILabel!
     @IBOutlet weak var time: UILabel!
     @IBOutlet weak var playerOneName: UILabel!
@@ -23,13 +25,17 @@ class GameHistoryTableViewCell: UITableViewCell {
     @IBOutlet weak var playerTwoScore: UILabel!
     @IBOutlet weak var gameView: UIImageView!
     
+    
 }
 
 
-//MARK: -
 class HistoryMasterViewController: UIViewController {
     
     public var games: [Game] = []
+    let tableSections = 1
+    
+    @IBOutlet weak var gameHistoryTableView: UITableView!
+    
     
     var sharedFirebaseProxy: FirebaseProxy = {
         Util.log("HistoryMasterVC ==> FirebaseProxy: get Singleton")
@@ -39,9 +45,6 @@ class HistoryMasterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,56 +59,26 @@ class HistoryMasterViewController: UIViewController {
                 self.games = resultsArray
                 self.gameHistoryTableView.reloadData()
             }
-
     }
     
-    override func viewDidAppear(_ animated: Bool) {
 
-    }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 //        self.listener.remove()
     }
     
-    
-    let tableSections = 1
-    
-    //MARK: - Methods
-    
-    func updateUI() {}
-    
-    
-    // MARK: - Outlets
-    
-    @IBOutlet weak var gameHistoryTableView: UITableView!
-    
-    
-    
     // MARK: - Segues
-    //TODO: - Source Master-Detail project starter code.
+    // Source Master-Detail project starter code.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueHistoryDetail" {
-            if let indexPath = gameHistoryTableView.indexPathForSelectedRow {
-                let game = games[indexPath.row].playerOneName
+            if let /*indexPath*/ _ = gameHistoryTableView.indexPathForSelectedRow {
+//                let game = games[indexPath.row].playerOneName
 //                let game2 = games[indexPath.row].gameBoard
                 
-                // 12.8.18 Commented out for now until I get detailview to work
-                
-//                let detailVC = /*(segue.destination as! UINavigationController).topViewController*/ segue.destination as? HistoryDetailVC
-//                detailVC?.username = game
-                
-                
-//                detailVC?.gameBoard = game2
-//                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-//                controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }
-    
- 
-    
-    
 }
 
 
@@ -121,7 +94,6 @@ extension HistoryMasterViewController: UITableViewDataSource {
     func tableView(_ gameHistoryTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // Number of history items retrieved
-        
         Util.log("\(games.count)")
         return games.count
     }
@@ -174,16 +146,6 @@ extension HistoryMasterViewController: UITableViewDataSource {
         // Return it to iOS to render
         return cell
     }
-    
-    
-    // Select a row and segue to the detail page
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//
-//        //TODO: - Fix this for better nameing later
-//        let tempVariable = games[indexPath.row].playerOneName
-//        print(tempVariable)
-//        self.performSegue(withIdentifier: "segueHistoryDetail", sender: tempVariable)
-//    }
     
     
     // Allow Deletion

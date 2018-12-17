@@ -11,6 +11,8 @@ import Firebase
 
 extension FirebaseProxy {
     
+    
+    
     /************** Inbound (mostly) Firestore Functions  ****************/
     
     func opponentMoveFirestore(completion: @escaping ([String: Any], ListenerRegistration) -> Void ) {
@@ -70,7 +72,7 @@ extension FirebaseProxy {
         
         var resultsArray = [Game]()
         // Create query.
-        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: 10)
+        historyQuery = Firestore.firestore().collection("history").order(by: "gameDate", descending: true ).limit(to: historyLimit)
         
         listenerHistory =  historyQuery?.addSnapshotListener { ( documents, error) in
             

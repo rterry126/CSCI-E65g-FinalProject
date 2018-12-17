@@ -12,15 +12,15 @@ import Foundation
 
 
 /*
-     Class Requirements:
-     
-     1) When game is over, it should store the player names, scores, date, and game state to the cloud.
-     Need an observer to trigger this?
-     
-     2) Provide methods to retrieve the necessary history items for the historyTableView from the cloud OR
-     simply download the entire history in it's model and the table can access this directly??
+ Class Requirements:
  
-*/
+ 1) When game is over, it should store the player names, scores, date, and game state to the cloud.
+ Need an observer to trigger this?
+ 
+ 2) Provide methods to retrieve the necessary history items for the historyTableView from the cloud OR
+ simply download the entire history in it's model and the table can access this directly??
+ 
+ */
 
 // Used to format game history retrieved. Structures it so that it can be easier displayed in the tableView for history
 struct Game {
@@ -63,4 +63,4 @@ extension Game {
         self.init(playerOneName: playerOneName, playerTwoName: playerTwoName, playerOneScore: playerOneScore, playerTwoScore: playerTwoScore, gameBoardView: gameBoardView, gameDate: gameDate, id: id)
     }
 }
-    
+

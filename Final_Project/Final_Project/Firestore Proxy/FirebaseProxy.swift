@@ -24,6 +24,7 @@ class FirebaseProxy {
     var listenerHistory : ListenerRegistration!
     var listener : ListenerRegistration!
     var listenerJoin : ListenerRegistration!
+    var historyLimit = 10
     
     
     // Set Firestore listener
