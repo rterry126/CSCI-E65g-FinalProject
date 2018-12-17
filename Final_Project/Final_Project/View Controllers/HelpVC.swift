@@ -10,8 +10,6 @@
 //Sources - Activity view - https://www.ioscreator.com/tutorials/activity-indicator-ios-tutorial-ios12
 // http://www.thomashanning.com/uiactivityindicatorview/
 
-
-import UIKit
 import WebKit  // WKWebView
 
 class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
@@ -19,11 +17,7 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
     // Create the Activity Indicator
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     
-    
-    
     let myURL = URL(string:"https://storage.googleapis.com/rterry126_helpfiles/help.html")
-//    private static let myLocalURL = Bundle.main.url(forResource: "Help_file_backup", withExtension: "html")
-    
     
     private lazy var webView: WKWebView = {
         let wv = WKWebView()
@@ -32,7 +26,7 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
     
     
     override func loadView() {
-
+        
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.uiDelegate = self
@@ -41,11 +35,13 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
         
         
     }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         activityIndicator.color = UIColor.gray
-
+        
         view.addSubview(activityIndicator)
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +53,7 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
         view.addConstraint(verticalConstraint)
         
         activityIndicator.startAnimating()  // Start animation as soon as view loads
-
+        
         if let myURL = myURL {
             let myRequest = URLRequest(url: myURL)
             webView.load(myRequest)
@@ -65,8 +61,8 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
         else {
             print("Unable to retrieve help page.")
         }
-        
     }
+    
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
@@ -74,12 +70,3 @@ class HelpVC: UIViewController, WKUIDelegate, WKNavigationDelegate  {
     }
 }
 
-/* Want fallback to local file OR local HTML string if network or website is unreachable.
- 
- Two links below should help determine status of original request
- 
- https://iosdevcenters.blogspot.com/2016/05/creating-simple-browser-with-wkwebview.html
- 
- https://developer.apple.com/documentation/webkit/wknavigationdelegate
- 
- */
