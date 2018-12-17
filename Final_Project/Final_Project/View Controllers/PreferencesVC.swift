@@ -30,8 +30,8 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     // as it can't be guaranteed that object was created or passed.
     var modelGamePrefs: GamePrefModelProtocol?
     
-//    // Delegate to save the model state. This VC has no knowledge of the model
-//    weak open var delegate: PreferencesVCDelegate?// default is nil. weak reference
+    //    // Delegate to save the model state. This VC has no knowledge of the model
+    //    weak open var delegate: PreferencesVCDelegate?// default is nil. weak reference
     
     // Used to determine which button was pressed for color picker
     var buttonTag: Int = 0 //  Set to 0 (Player 1 button) so we can declare it here. Otherwise it needs to go into init() or viewDidLoad
@@ -76,12 +76,12 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         timerText.text = Int(timerSlider.value).description
         
     }
-
+    
     // Need to reset Firestore. Could use proxy but this is easier and since we are using singletons...
     var sharedFirebaseProxy: FirebaseProxy = {
-            Util.log("GameBoardVC ==> FirebaseProxy: get Singleton")
-            return FirebaseProxy.instance
-        }()
+        Util.log("GameBoardVC ==> FirebaseProxy: get Singleton")
+        return FirebaseProxy.instance
+    }()
     
     
     // 'Delete preferences' button. Added alert to give user chance to 'opt out'
@@ -119,7 +119,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     
     
     @IBAction func resetFirestore(_ sender: Any) {
-            
+        
         let alert = UIAlertController(title: "Reset Firestore?", message: "Do you really want to reset Firestore? You will need to retart app to redo the election.", preferredStyle: .alert)
         
         // .destructive to color 'Yes' in red...
@@ -132,7 +132,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         
         self.present(alert, animated: true)
-            
+        
     }
     
     
@@ -212,7 +212,7 @@ extension PreferencesVC {
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tap.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tap)
-
+        
         
         // A better preferences page would use a table view; however since this VC was already in program it was easier to modify
         // to look like a table. Wrote quick extension to clean up code (included at end of file)
@@ -227,14 +227,14 @@ extension PreferencesVC {
         spacerLabel3.border()
         spacerLabel4.border()
         spacerLabel5.border()
-
-
+        
+        
         
         
         // Have preferences setter reflect the current values stored in the model...
         
         if let prefModel = modelGamePrefs {
-           
+            
             myNameIsText.text = prefModel.myNameIs
             gameNameText.text = prefModel.gameName
             rowsSlider.value = Float(prefModel.numRows)
