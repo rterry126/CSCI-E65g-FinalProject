@@ -5,8 +5,7 @@
 ////  Created by Robert Terry on 10/11/18.
 ////  Copyright © 2018 Robert Terry. All rights reserved.
 ////
-//
-import Foundation
+
 import Firebase
 
 //Used for delegate for view
@@ -15,9 +14,6 @@ import UIKit
 protocol StateMachineProtocol: class {
     
     static var state: StateMachine.State { get set }
-    //var instance: StateMachineProtocol { get }
-    
-    
     
 }
 
@@ -30,7 +26,7 @@ protocol GameLogicModelObserver: class {
 
 
 protocol GamePrefModelObserver: class {
-   
+    
     func namesChanged()
     func colorsChanged()
 }
@@ -46,14 +42,14 @@ protocol GameStateMachine: class {
     func stateWaitingForMoveConfirmation(_ notification :Notification)
     func stateWaitingForOpponent()
     func stateEndOfGame()
-
+    
 }
 
 
 
 
 protocol GameLogicModelProtocol: class, Codable {
-        
+    
     var bounds: GridCoord { get }
     
     var whoseTurn: GridState { get }
@@ -66,8 +62,6 @@ protocol GameLogicModelProtocol: class, Codable {
     
     func setTurn()
     
-//    var gameState: GameState { get }
-    
     func resetModel()
     
     var moveCount: Int { get }
@@ -75,7 +69,7 @@ protocol GameLogicModelProtocol: class, Codable {
     
     var amIPlayerOne: Bool { get set }
     
-    var maxTurns: Int { get set } // Need to make this public. Player 1 sets this randomly, need to now set it in player 2 via Firestore
+    var maxTurns: Int { get set }
     
     
 }
@@ -110,13 +104,14 @@ protocol GameGridViewProtocol: class {
     var rows: Int { get }
     var columns: Int { get }
     
-//    func reloadOneSquare(_ rect: CGRect)
-//
-//    func reloadAllSquares()
+    
 }
 
+// So I was going to have the detail page of the history play back the game. For this I needed parts of the custom view. I pulled out
+// what I though I might need and put in a protocol extension so I wouldn't have to duplicate code.
+// That project never came to fruition, however I decided to keep this 'common' code in the extension.
 
-// TODO: - https://blog.bobthedeveloper.io/protocol-oriented-programming-view-in-swift-3-8bcb3305c427
+// Source - https://blog.bobthedeveloper.io/protocol-oriented-programming-view-in-swift-3-8bcb3305c427
 extension GameGridViewProtocol where Self: UIView {
     
     
@@ -190,6 +185,8 @@ extension GameGridViewProtocol where Self: UIView {
 }
 
 
+
+
 // Source - Protocols were copied from pickerView and modified accordingly
 // NSObjectProtocol - from what I read, it's not necessary but there is no downside to having it conform
 protocol GameGridViewDataSource : NSObjectProtocol {
@@ -219,15 +216,4 @@ protocol GameGridViewDelegate : NSObjectProtocol {
     func gameGridView(in gameGridView: GameBoardView, at location: GridCoord)
     
 }
-
-// I want the 'Save Game State' button in preferences, ostensible for space issues but
-// don't want to expose the logic model to that view controller
-protocol PreferencesVCDelegate : NSObjectProtocol {
-    
-// Removed 12.11.18 - See other comments on this date in PreferencesVC
-    //    @available(iOS 2.0, *)
-//
-//    func preferencesVC(in preferencesVC: PreferencesVC) -> Bool
-}
-
 
