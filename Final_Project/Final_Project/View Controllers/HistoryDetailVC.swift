@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-
+// Awaiting additional functionality, i.e. game playback...
 class HistoryDetailVC: UIViewController {
 
     override func viewDidLoad() {

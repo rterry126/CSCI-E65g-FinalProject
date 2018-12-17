@@ -7,6 +7,8 @@
 //
 // Sources - https://code.tutsplus.com/tutorials/getting-started-with-cloud-firestore-for-ios--cms-30910
 // Sources - Date Formatting - https://stackoverflow.com/questions/35700281/date-format-in-swift
+// Sources - UISwitch - https://stackoverflow.com/questions/48623771/loading-ison-or-isoff-for-a-uiswitch-using-swift-4
+// Sources - local or cloud storage - https://firebase.google.com/docs/firestore/manage-data/enable-offline
 
 import UIKit
 import Firebase
@@ -42,23 +44,48 @@ class HistoryMasterViewController: UIViewController {
         return FirebaseProxy.instance
     }()
     
+    var modelGamePrefs: GamePrefModelProtocol = {
+        Util.log("HistoryVC ==> Preferences Model: instantiate")
+        return GamePrefModel.instance
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    // So this was a last minute not well thought out option to let user determine where history was stored
+    // in Google, or locally. UISwitch in Preferences. While it temporarily works here, network access
+    // is turned back on in viewWillDisappear. Firestore is smart enough to sync at that point even
+    // though view is not active. 
     override func viewWillAppear(_ animated: Bool) {
-       
+        
+        if modelGamePrefs.localHistory {
+            Firestore.firestore().disableNetwork { (error) in
+                // Do offline things
+                // ...
+                // Retrieve data for table asychronously. Reload table when results are returned
+                self.sharedFirebaseProxy.downloadHistory() { resultsArray, error in
+                    if let error = error {
+                        Util.log("\(error.localizedDescription)")
+                        return
+                    }
+                    self.games = resultsArray
+                    self.gameHistoryTableView.reloadData()
+                }
+            }
+        }
+        else {
             // Retrieve data for table asychronously. Reload table when results are returned
-            sharedFirebaseProxy.downloadHistory() { resultsArray, error in
+            self.sharedFirebaseProxy.downloadHistory() { resultsArray, error in
                 if let error = error {
                     Util.log("\(error.localizedDescription)")
                     return
                 }
-                
                 self.games = resultsArray
                 self.gameHistoryTableView.reloadData()
             }
+        }
     }
     
 
@@ -66,6 +93,12 @@ class HistoryMasterViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 //        self.listener.remove()
+        
+        // Turn access back on
+        Firestore.firestore().enableNetwork { (error) in
+            // Do online things
+            // ...
+        }
     }
     
     // MARK: - Segues
@@ -161,5 +194,12 @@ extension HistoryMasterViewController: UITableViewDataSource {
             _ = Firestore.firestore().collection("history").document(singeGameToDelete.id).delete()
         }
     }
+}
+
+// MARK: - Table View code: Delegates
+extension HistoryMasterViewController: UITableViewDelegate {
+    
+    // Here as a placeholder. All functions are evidently optional.
+
 }
 

@@ -49,6 +49,7 @@ enum PrefKeys: CaseIterable {
     enum GameTime: Int, CaseIterable {
         case moveTime = 5
     }
+   
     
     enum Colors: RawRepresentable, CaseIterable {
         case playerOneColor
