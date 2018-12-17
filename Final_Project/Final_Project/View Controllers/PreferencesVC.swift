@@ -13,6 +13,7 @@
 // Sources - Dismiss Keyboard via Return - https://stackoverflow.com/questions/24180954/how-to-hide-keyboard-in-swift-on-pressing-return-key
 // Sources - Dismiss Keyboard via Tap gesture - https://medium.com/@KaushElsewhere/how-to-dismiss-keyboard-in-a-view-controller-of-ios-3b1bfe973ad1
 // Sources - Extensions review - https://docs.swift.org/swift-book/LanguageGuide/Extensions.html
+// Sources - Adding bottom constraint to scroll view - https://stackoverflow.com/questions/43835290/ios-scroll-view-allows-scrolling-past-content
 
 
 // Note - Preferences restyles to more resemble iOS settings. Ideally these would be in a table for this
@@ -83,23 +84,6 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         }()
     
     
-    
-    // Commented out 12.11.18 - Game is automatically saved after each turn
-//    @IBAction func saveGameBtn(_ sender: Any) {
-//
-//        // Let user know that game was successfully saved or Not
-//        // Use the ternery operator so that we can use just one 'alert'
-//        if let success = delegate?.preferencesVC(in: self) {
-////            if success {
-//            let alert = UIAlertController(title: success ? "Success!" : "Failure", message: success ? "Game state was successfully saved." : "Unable to save game state", preferredStyle: .alert)
-//
-//            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-//            self.present(alert, animated: true)
-////            }
-//        }
-//    }
-    
-    
     // 'Delete preferences' button. Added alert to give user chance to 'opt out'
     @IBAction func deletePrefsBtn(_ sender: Any) {
         let alert = UIAlertController(title: "Delete Preferences?", message: "Do you really want to delete your preferences?", preferredStyle: .alert)
@@ -126,7 +110,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
     
     @IBAction func resetFirestore(_ sender: Any) {
             
-        let alert = UIAlertController(title: "Reset Firestore?", message: "Do you really want to reset Firestore?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Reset Firestore?", message: "Do you really want to reset Firestore? You will need to retart app to redo the election.", preferredStyle: .alert)
         
         // .destructive to color 'Yes' in red...
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: {

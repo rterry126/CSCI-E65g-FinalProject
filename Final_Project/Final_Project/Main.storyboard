@@ -142,14 +142,14 @@
             <objects>
                 <viewController restorationIdentifier="PreferencesVC" storyboardIdentifier="PreferencesVC" id="bAJ-Sm-LUu" customClass="PreferencesVC" customModule="Final_Project" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5hE-5k-lsn">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6dQ-AW-f8m">
-                                <rect key="frame" x="0.0" y="64" width="375" height="736"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="936"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrH-QV-Hec" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="736"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="650"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SYC-U7-umf">
                                                 <rect key="frame" x="8" y="530" width="359" height="30"/>
@@ -203,6 +203,7 @@
                                             <constraint firstItem="abc-cO-1nQ" firstAttribute="top" secondItem="JHe-OV-xd9" secondAttribute="bottom" id="9tw-Lw-pwo"/>
                                             <constraint firstItem="e8R-fX-qG2" firstAttribute="top" secondItem="abc-cO-1nQ" secondAttribute="bottom" id="Dht-rG-C8t"/>
                                             <constraint firstAttribute="trailing" secondItem="abc-cO-1nQ" secondAttribute="trailing" constant="8" id="Ec0-00-W1N"/>
+                                            <constraint firstAttribute="bottom" secondItem="e8R-fX-qG2" secondAttribute="bottom" id="FJr-ot-cjY"/>
                                             <constraint firstItem="abc-cO-1nQ" firstAttribute="leading" secondItem="BrH-QV-Hec" secondAttribute="leading" constant="8" id="QRB-35-yq8"/>
                                             <constraint firstAttribute="trailing" secondItem="e8R-fX-qG2" secondAttribute="trailing" id="VKB-Ir-koT"/>
                                             <constraint firstAttribute="trailing" secondItem="SYC-U7-umf" secondAttribute="trailing" constant="8" id="VVm-Op-6TV"/>
@@ -546,7 +547,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="zUj-2E-toW"/>
                     </view>
-                    <size key="freeformSize" width="375" height="800"/>
+                    <size key="freeformSize" width="375" height="1000"/>
                     <connections>
                         <outlet property="columnsSlider" destination="8Ug-XP-9c4" id="q9w-7f-DV4"/>
                         <outlet property="columnsText" destination="WtP-19-Ybz" id="H1S-6q-ma2"/>
@@ -588,7 +589,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="osY-Mj-IaD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="452" y="905"/>
+            <point key="canvasLocation" x="452" y="1035"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="zt0-cc-aHz">
