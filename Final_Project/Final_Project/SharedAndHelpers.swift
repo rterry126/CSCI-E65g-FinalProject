@@ -187,5 +187,38 @@ extension UILabel {
     }
 }
 
+func restoreModel(_ modelGameLogic: inout GameLogicModelProtocol) -> Bool {
+    
+    var success = false
+    do {
+        let restoredObject = try Persistence.restore()
+        guard let mdo = restoredObject as? GameLogicModelProtocol else {
+            print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
+            success = false
+            return success
+        }
+        // Let's try setting a reference to our restored state
+        modelGameLogic = mdo
+
+        print("Success: in restoring game state")
+        success = true
+        print(modelGameLogic.gameBoard)
+        return success
+    }
+    catch let e {
+        print("Restore failed: \(e).")
+
+        // So evidently if it fails here to restore saved model it uses the default init()
+        // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
+
+//            var modelGameLogic: GameLogicModelProtocol =
+//               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
+    }
+    
+    print("Printing whether or not model to restore found from restoreModel func")
+    print(success)
+    return success
+}
+
 
 

@@ -331,6 +331,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         }
         set {
             _amIPlayerOne = newValue
+            print("amIPlayerOne set via setter. Value is \(_amIPlayerOne)")
         }
     }
     

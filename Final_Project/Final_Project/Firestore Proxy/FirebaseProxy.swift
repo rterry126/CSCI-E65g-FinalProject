@@ -95,8 +95,24 @@ class FirebaseProxy {
     
     
     
+    func requestInitialize() {
+        
+        if modelGameLogic.amIPlayerOne {
+            
+            // if there is saved game
+            if restoreModel(&modelGameLogic) {
+                uploadGame(modelGameLogic) { [unowned self] in
+                    print("printing from initialize")
+                    print(self.modelGameLogic.gameBoard)
+                    self.requestInitialize2()
+                    
+                }
+            }
+        }
+    }
+    
     // Async closure so call completion handler when done to continue
-    func requestInitialize()  {
+    func requestInitialize2()  {
         
         //        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
@@ -122,6 +138,8 @@ class FirebaseProxy {
                 // Initializing is successful, change state
                 //                StateMachine.state = .readyForGame
                 if self.modelGameLogic.amIPlayerOne {
+                    
+                    
                     StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
                 }
                 else {
@@ -138,8 +156,8 @@ class FirebaseProxy {
             
             self.activeRootObj = rootCollectionRef.document(rootID)
             
-            // Initializing is successful, change state
-            //            StateMachine.state = .readyForGame
+            print("printing from initialize2")
+            print(self.modelGameLogic.gameBoard)
             if self.modelGameLogic.amIPlayerOne {
                 StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
             }

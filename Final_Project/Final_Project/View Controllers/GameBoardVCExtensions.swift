@@ -80,6 +80,11 @@ extension GameBoardVC: GameStateMachine {
     // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
     // Let's players know game is ready to start AND updates Player 2's name in Player 1 device
     @objc func stateWaitingToStartGame() {
+        
+//        print(self.modelGameLogic.gameBoard)
+        redrawView()
+        
+        
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
         self.activityIndicator.stopAnimating()
         

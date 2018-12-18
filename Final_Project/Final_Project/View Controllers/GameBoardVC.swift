@@ -132,10 +132,7 @@ class GameBoardVC: UIViewController {
     
     
     //MARK:- Instances Created - Singletons
-    var modelGameLogic: GameLogicModelProtocol = {
-        Util.log("GameBoardVC ==> Preferences Model: instantiate")
-        return GameLogicModel.instance
-    }()
+    var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("GameBoardVC ==> Preferences Model: instantiate")
@@ -305,32 +302,7 @@ extension GameBoardVC {
         Factory.createObserver(observer: self, listeners: observerStateMachine)
         
         StateMachine.state = .electPlayerOne
-
-
         
-      
-        // Below commented on 11/9 when implementing singleton pattern
-//        do {
-//            let restoredObject = try Persistence.restore()
-//            guard let mdo = restoredObject as? GameLogicModelProtocol else {
-//                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
-//                return
-//            }
-//            // Let's try setting a reference to our restored state
-//            modelGameLogic = mdo
-//
-//            print("Success: in restoring game state")
-//        }
-//        catch let e {
-//            print("Restore failed: \(e).")
-//
-//            // So evidently if it fails here to restore saved model it uses the default init()
-//            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
-//
-//            var modelGameLogic: GameLogicModelProtocol =
-//               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-//        }
-
         
         // Setup Custom View, i.e. game board
         // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
