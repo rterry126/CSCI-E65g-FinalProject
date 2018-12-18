@@ -81,8 +81,6 @@ extension GameBoardVC: GameStateMachine {
     // Let's players know game is ready to start AND updates Player 2's name in Player 1 device
     @objc func stateWaitingToStartGame() {
         
-//        print(self.modelGameLogic.gameBoard)
-        redrawView()
         
         
         Util.log("View Controller initializing. State changed to  -> \(StateMachine.state)")
@@ -97,6 +95,12 @@ extension GameBoardVC: GameStateMachine {
             // 1) IF Player 1, 2) try to get the leader_bit 3) IF it's false, then P2 has joined
             // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
+                
+                // Not successful with previous restore, suspect scope issues. Hack to make it work
+                _ = restoreModel(&self.modelGameLogic)
+                print(self.modelGameLogic.gameBoard)
+                self.redrawView()
+                self.modelGameLogic.amIPlayerOne = true // this is overwritten by the restore
                 
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {

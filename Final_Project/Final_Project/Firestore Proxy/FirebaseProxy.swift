@@ -104,6 +104,7 @@ class FirebaseProxy {
                 uploadGame(modelGameLogic) { [unowned self] in
                     print("printing from initialize")
                     print(self.modelGameLogic.gameBoard)
+                    self.modelGameLogic.amIPlayerOne = true // overwritten by restore
                     self.requestInitialize2()
                     
                 }
