@@ -6,7 +6,7 @@
 //  Copyright © 2018 Robert Terry. All rights reserved.
 //
 
-import UIKit // Needed for UIColor and Data types
+import UIKit
 
 //MARK: - GameGridView Data Source extension
 extension GameBoardVC: GameGridViewDataSource {
