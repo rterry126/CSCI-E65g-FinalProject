@@ -99,11 +99,7 @@ class GamePrefModel {
             
             // So we will use the same observer as for the names... No reason to make a separate one.
             
-//            NotificationCenter.default.post(name: .namesChanged, object: self)
-            
         }
-        
-        
     }
     
     private var _playerOneName: String {

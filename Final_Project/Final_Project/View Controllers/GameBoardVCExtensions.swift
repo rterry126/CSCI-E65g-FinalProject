@@ -32,7 +32,7 @@ extension GameBoardVC: GameStateMachine {
         
         
         Util.log("Player election function called in proxy")
-        sharedFirebaseProxy.electPlayerOne() { success, name, maxTurns in
+        sharedFirebaseProxy.electPlayerOne() { [unowned self] /*avoid strong reference to self in closure*/ success, name, maxTurns in
             
             if success {
                 self.modelGameLogic.amIPlayerOne = true
@@ -55,7 +55,7 @@ extension GameBoardVC: GameStateMachine {
             StateMachine.state = .initializing
             
             let player =  success ? "Player One" : "Player Two"
-            Factory.displayAlert(target: self, message: "You are \(player). \(self.modelGameLogic.maxTurns )", title: "Election Complete")
+            Factory.displayAlert(target: self, message: "You are \(player).", title: "Election Complete")
             
         } // End of callback closure
     }
@@ -84,7 +84,7 @@ extension GameBoardVC: GameStateMachine {
         self.activityIndicator.stopAnimating()
         
         // This lets each player know 1) 2nd Player has joined 2) When Player 1 has initiated start of game
-        sharedFirebaseProxy.listenPlayersJoin() {data, error, listener in
+        sharedFirebaseProxy.listenPlayersJoin() { [unowned self] /*avoid strong reference to self in closure*/ data, error, listener in
             
             // Different logic depending on whether waiting on player OR are Joinee
             
@@ -203,7 +203,7 @@ extension GameBoardVC: GameStateMachine {
         // 2) Attempt to store in Firestore
         // 3) Closure is called from completion() in the async
         sharedFirebaseProxy.storeMoveFirestore(row: coordinates?.row, column: coordinates?.column,
-                                                  playerID: playerID.rawValue, moveNumber: moveNumber ) { err in
+                    playerID: playerID.rawValue, moveNumber: moveNumber ) {  [unowned self] err in
                                                     
             // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler
             if let error = err {
@@ -304,7 +304,7 @@ extension GameBoardVC: GameStateMachine {
         
         // So we don't have double history entries
         if modelGameLogic.amIPlayerOne {
-            sharedFirebaseProxy.storeGameResults(gameImage) { err in
+            sharedFirebaseProxy.storeGameResults(gameImage) { [unowned self] err in
                 
                 if let error = err {
                     // Runs asychronously after move is written to Firestore and coonfirmation is received. This is the completion handler

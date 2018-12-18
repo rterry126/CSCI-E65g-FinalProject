@@ -56,7 +56,6 @@ class FirebaseProxy {
     
     var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
-    // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
     
     // Set preferences
     lazy var documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
