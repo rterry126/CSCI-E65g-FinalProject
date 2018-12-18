@@ -127,7 +127,7 @@ internal class PreferencesVC : UIViewController, UITextFieldDelegate {
         // .destructive to color 'Yes' in red...
         alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: {
             action in
-            self.sharedFirebaseProxy.deleteCompletedGame()
+            self.sharedFirebaseProxy.deleteCompletedGame() {}
             self.sharedFirebaseProxy.resetElection()
 
         }))

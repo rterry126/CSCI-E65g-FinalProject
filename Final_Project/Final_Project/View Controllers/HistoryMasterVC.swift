@@ -61,7 +61,7 @@ class HistoryMasterViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         if modelGamePrefs.localHistory {
-            Firestore.firestore().disableNetwork { (error) in
+            Firestore.firestore().disableNetwork { [unowned self] (error) in
                 // Do offline things
                 // ...
                 // Retrieve data for table asychronously. Reload table when results are returned

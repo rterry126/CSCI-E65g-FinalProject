@@ -99,11 +99,7 @@ class GamePrefModel {
             
             // So we will use the same observer as for the names... No reason to make a separate one.
             
-//            NotificationCenter.default.post(name: .namesChanged, object: self)
-            
         }
-        
-        
     }
     
     private var _playerOneName: String {
@@ -239,7 +235,6 @@ extension GamePrefModel: GamePrefModelProtocol {
             return _playerOneName
         }
         set {
-            print("setting _playerOneName via newValue")
             _playerOneName = newValue
         }
     }
@@ -300,7 +295,6 @@ extension GamePrefModel: GamePrefModelProtocol {
     
     func deletePreferences() {
         
-        print("testing that deletePreferences was triggered")
         
         // So there's no way that I can find to iterate through a nested enum, so this is ugly...
         // Brute force delete by all of the known keys

@@ -50,10 +50,9 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var readyPlayerOne: UIImageView!
     @IBOutlet weak var readyPlayerTwo: UIImageView!
     @IBOutlet weak var textTimer: UILabel! // Initially hidden via storyboard...
+    @IBOutlet weak var newGameBtnText: UIButton!
     
     
-    // Modifed and commented out 12.13.18 - Don't think we need player 2 or logic here as only button
-    // is for Player 1
     @IBAction func newGameButton(_ sender: UIButton) {
         
         // New game button pressed. Change state
@@ -63,7 +62,7 @@ class GameBoardVC: UIViewController {
         sharedFirebaseProxy.startGame {
             StateMachine.state = .waitingForUserMove
         }
-     
+        
     }
     
     
@@ -100,17 +99,17 @@ class GameBoardVC: UIViewController {
     // 'observerArray' is type alias
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
-                                            /* (.gameState, #selector(endOfGame)), */
-                                             /*(.moveExecuted, #selector(successfulBoardMove))*/]
+                                             /* (.gameState, #selector(endOfGame)), */
+        /*(.moveExecuted, #selector(successfulBoardMove))*/]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)), (.waitingForPlayer2, #selector(stateWaitingToStartGame)),
-        (.waitingForGameStart, #selector(stateWaitingToStartGame)), (.readyForGame, #selector(stateReadyForGame)),(.waitingForUserMove, #selector(stateWaitingForUserMove)),
-        (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
-        (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
-        (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),(.gameOver, #selector(stateEndOfGame))]
+                                               (.waitingForGameStart, #selector(stateWaitingToStartGame)), (.readyForGame, #selector(stateReadyForGame)),(.waitingForUserMove, #selector(stateWaitingForUserMove)),
+                                               (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+                                               (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
+                                               (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),(.gameOver, #selector(stateEndOfGame))]
     
     
     //MARK: - Init()
@@ -132,10 +131,7 @@ class GameBoardVC: UIViewController {
     
     
     //MARK:- Instances Created - Singletons
-    var modelGameLogic: GameLogicModelProtocol = {
-        Util.log("GameBoardVC ==> Preferences Model: instantiate")
-        return GameLogicModel.instance
-    }()
+    var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
     var modelGamePrefs: GamePrefModelProtocol = {
         Util.log("GameBoardVC ==> Preferences Model: instantiate")
@@ -150,10 +146,7 @@ class GameBoardVC: UIViewController {
     
     
     
-    
-    
     //MARK: - Functions
-    
     
     func updateUI() {
         
@@ -169,17 +162,17 @@ class GameBoardVC: UIViewController {
         case .playerOne:
             textPlayer1.border(2.5, colorP1)
             textPlayer2.border(0.0)
-
-
+            
+            
             // Only display dot when it's player's turn
             readyPlayerOne.isHidden = modelGameLogic.amIPlayerOne ? false : true
             readyPlayerTwo.isHidden = true
-
+            
             
         case .playerTwo:
             textPlayer2.border(2.5, colorP2)
             textPlayer1.border(0.0)
-
+            
             readyPlayerTwo.isHidden = !modelGameLogic.amIPlayerOne ? false : true
             readyPlayerOne.isHidden = true
             
@@ -197,7 +190,6 @@ class GameBoardVC: UIViewController {
     }
 }
 
-// TODO:- Look at what additional info needs to be saved to restore (maxmoves at a minimum...)
 // Used to save game state after each turn. Threaded to not block main game or affect UX
 func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     
@@ -223,11 +215,170 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 
 
 
-
+extension GameBoardVC {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Pass our state observers and selectors to our factory function to create the observers
+        Factory.createObserver(observer: self, listeners: observerStateMachine)
+        
+        StateMachine.state = .electPlayerOne
+        
+        
+        // Setup Custom View, i.e. game board
+        // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
+        let gameView = GameBoardView()
+        
+        gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 )
+        
+        view.addSubview(gameView) // View hierarchy
+        Util.log("Added custom view - gameView")
+        
+        self.gameView = gameView
+        
+        gameView.dataSource = self
+        gameView.delegate = self
+        
+        // Initialize grid in view
+        gameView.createGrid()
+        
+        
+        
+        
+        // Pass our observers and selectors to our factory function to create the observers
+        Factory.createObserver(observer: self, listeners: observerLogicModel)
+        Factory.createObserver(observer: self, listeners: observerPreferencesModel)
+        
+        
+        // Initialize state of board - colors, game status, etc
+        updateUI()
+        
+    } // End viewDidLoad
+    
+    
+    
+    
+    
+    // Segue to the Preferences view....
+    // Pass reference to modelGamePrefs to PreferencesVC (injection dependancy?).
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let preferencesVC = segue.destination as? PreferencesVC {
+            preferencesVC.modelGamePrefs = modelGamePrefs
+            
+            // Add our delegate here 
+            //preferencesVC.delegate = self  // Commented out 12.11.18 due to cleaning up Preferences page. Don't need button to save
+        }
+    }
+    
+    
+    
+    // Time fired, turn is forfeited. Need to bypass most of move logic, but still advance the game state.
+    
+    // @objc required because this is passed to #selector
+    @objc func timerTurnForfeitedFired() {
+        Util.log("Move Timer Fired, turn forfeited")
+        
+        // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
+        // coordinates, empty move to change the state to waiting for move confirmation.
+        // we need some type of move posted in Firestore to change state of both users.
+        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": modelGameLogic.whoseTurn, "moveCount": modelGameLogic.moveCount ])
+        
+        
+        
+    }
+    
+    //TODO: - Figure out best place to place this
+    
+    @objc func updateGameView(_ notification :Notification) {
+        
+        Util.log("update Game View called via listener")
+        
+        // 1) Get coordinates, only update view if we have coordinates, otherwise forfeited move so skip
+        if let location = notification.userInfo?["coordinates"] as? (row:Int, column:Int) {
+            
+            
+            guard let playerID = notification.userInfo?["playerID"] as? GridState else {
+                Factory.displayAlert(target: self, message: "Error retrieving or unwrapping playerID", title: "Move Confirmation")
+                fatalError("Cannot retrieve playerID")
+                
+            }
+            
+            // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
+            
+            // 2) Update the Logic Model Array
+            modelGameLogic.gameBoard[location.row][location.column] = playerID
+            
+            // 3) Update the View Grid
+            gameView?.changeGridState(x: location.column, y: location.row)
+            
+            // 4) Still need to update the game state, via listenr that triggers this function
+            
+        }
+        
+        // Otherwise do NOT update board view or game model, as move was FORFEITED (no coordinates passed)
+        
+    }
+    
+    
+    @objc func startTimer() {
+        
+        timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
+        
+        // Supposedly if timing isn't critical this is energy efficient.
+        
+        timerCountDown.tolerance = 0.1
+    }
+    
+    
+    
+    @objc func displayTimer () {
+        // Since this is called every 1 seconds, we need a persistent variable to 'remember' where in the countdown we are:
+        
+        // This is here so visual timer is in sync
+        textTimer.isHidden = false // initialized as hidden via storyboard
+        
+        
+        // timeDisplay is modified and we need it to persist.  It's a global variable.
+        
+        textTimer.text = "\(timeFormatted(timeDisplay))" // Helper fuction to format
+        
+        if timeDisplay == 2 { // play warning...
+            AudioServicesPlayAlertSound(SystemSoundID(1103))
+        }
+        
+        if timeDisplay != 0 {
+            timeDisplay -= 1
+        }
+        else {
+            textTimer.isHidden = true
+            timerCountDown.invalidate()
+            //TODO: this is slopppy I think
+            timeDisplay = Int(timeToMakeMove) // Reset for next move....
+            timerTurnForfeitedFired()
+        }
+    }
+    
+    
+    // Used when game is resumed. Logic model is correct but view doesn't reflect it.
+    func redrawView() {
+        
+        for y in 0..<numOfGridRows {
+            for x in 0..<numOfGridColumns {
+                gameView?.changeGridState(x: x, y: y)
+            }
+        }
+        
+        // Now that I've told it above what colors belong to each square set a 'needs update'
+        gameView?.reloadAllSquares()
+        
+    }
+    
+}
 
 //MARK: - GameLogicModel Observer extension
 extension GameBoardVC: GameLogicModelObserver {
-   
+    
     
     @objc func successfulBoardMove() {
         
@@ -236,7 +387,7 @@ extension GameBoardVC: GameLogicModelObserver {
         // 1. Player makes move within alloted time. Invalidate timer
         // 2. Player does NOT make move in time. This triggers (via timer) func timerExpired and it handles the logic
         
-
+        
         textTimer.isHidden = true
         timeDisplay = Int(timeToMakeMove) // Reset for next move....
         textTimer.text = "\(timeFormatted(timeDisplay))" // label has reset time value for next time
@@ -249,7 +400,7 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // First increment count. If moves are remaining then a observer to update the player will be called
         // Otherwise, if last move, a observer to execute end of game routines will be called
-       
+        
         // Set timer for next move. If end of game then these will be invalidated in endOfGame.
         
         // First increment count. If moves are remaining then a listener to update the player will be called
@@ -258,9 +409,9 @@ extension GameBoardVC: GameLogicModelObserver {
         
         // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
         // 2) if not end of game then updatePlayer is run
-       
+        
     }
-   
+    
     
     
     // Called by .incrementMoveCount. It's not the end of game so call update player logic
@@ -290,205 +441,8 @@ extension GameBoardVC: GamePrefModelObserver {
         // vice the whole board. However when colors are changed, this leaves the old and new colors
         // on the board. Call reloadAllSquares (which is really wrapper for setNeedsDisplay() ) so that the whole board will be redrawn with a new color
         
-        //TODO: - Look at replacing this with an observer in the view for colors changed
         gameView?.reloadAllSquares()
         updateUI()
-    }
-}
-
-extension GameBoardVC {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Pass our state observers and selectors to our factory function to create the observers
-        Factory.createObserver(observer: self, listeners: observerStateMachine)
-        
-        StateMachine.state = .electPlayerOne
-
-
-        
-      
-        // Below commented on 11/9 when implementing singleton pattern
-//        do {
-//            let restoredObject = try Persistence.restore()
-//            guard let mdo = restoredObject as? GameLogicModelProtocol else {
-//                print("Got the wrong type: \(type(of: restoredObject)), giving up on restoring")
-//                return
-//            }
-//            // Let's try setting a reference to our restored state
-//            modelGameLogic = mdo
-//
-//            print("Success: in restoring game state")
-//        }
-//        catch let e {
-//            print("Restore failed: \(e).")
-//
-//            // So evidently if it fails here to restore saved model it uses the default init()
-//            // defined in the model. Code below isn't needed (saved as a reminder as to flow of init)
-//
-//            var modelGameLogic: GameLogicModelProtocol =
-//               GameLogicModel(numOfRows: numOfGridRows, numOfColumns: numOfGridColumns)
-//        }
-
-        
-        // Setup Custom View, i.e. game board
-        // A height of 75% of the screen size gives us enough room at the bottm for names, controls, etc.
-        let gameView = GameBoardView()
-        
-        gameView.frame = CGRect(x: 0, y: 94, width: screenWidth, height: screenHeight * 0.75 )
-        
-        view.addSubview(gameView) // View hierarchy
-        Util.log("Added custom view - gameView")
-        
-        self.gameView = gameView
-        
-        gameView.dataSource = self
-        gameView.delegate = self
-        
-        // Initialize grid in view
-        gameView.createGrid()
-        
-        
-        
-        
-        // Pass our observers and selectors to our factory function to create the observers
-        Factory.createObserver(observer: self, listeners: observerLogicModel)
-        Factory.createObserver(observer: self, listeners: observerPreferencesModel)
-        
-
-
-        
-        
-        
-        // Now redraw the view
-        
-        //TODO: - This is not well thought out. Fix in next iteration.
-        
-        // So when the game is restored, the underlying logic is correct, i.e. which squares are
-        // occupied and by whom. However the custom view doens't reflect this, so we have an 'empty'
-        // viewable board overlying an occupied board. This forces the view to go over each square
-        // and determine it's color. Last minute to get the restore working; where it fits in MVC
-        // not fully thought out
-        
-        //commented 11/9
-//        for y in 0..<numOfGridRows {
-//            for x in 0..<numOfGridColumns {
-//                gameView.changeGridState(x: x, y: y)
-//            }
-//        }
-//
-//        // Now that I've told it above what colors belong to each square set a 'needs update'
-//        gameView.reloadAllSquares()
-        
-        // Initialize state of board - colors, game status, etc
-        updateUI()
-        
-        
-
-    }
-    
-    
-    // Segue to the Preferences view....
-    // Pass reference to modelGamePrefs to PreferencesVC (injection dependancy?).
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let preferencesVC = segue.destination as? PreferencesVC {
-            preferencesVC.modelGamePrefs = modelGamePrefs
-            
-            // Add our delegate here 
-            //preferencesVC.delegate = self  // Commented out 12.11.18 due to cleaning up Preferences page. Don't need button to save
-        }
-    }
-    
-    
-    
-    // Time fired, turn is forfeited. Need to bypass most of move logic, but still advance the game state.
-    
-    // @objc required because this is passed to #selector
-    @objc func timerTurnForfeitedFired() {
-        Util.log("Move Timer Fired, turn forfeited")
-
-        
-        // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
-        // coordinates, empty move to change the state to waiting for move confirmation.
-        // we need some type of move posted in Firestore to change state of both users.
-        NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": modelGameLogic.whoseTurn, "moveCount": modelGameLogic.moveCount ])
-        
-        
-        
-    }
-    
-    //TODO: - Figure out best place to place this
-    
-    @objc func updateGameView(_ notification :Notification) {
-        
-        Util.log("update Game View called via listener")
-        
-        // 1) Get coordinates, only update view if we have coordinates, otherwise forfeited move so skip
-        if let location = notification.userInfo?["coordinates"] as? (row:Int, column:Int) {
-            
-            // TODO: - Should be able to remove this later
-//            print("Coordinates printing from updateGameView \(location)")
-            guard let playerID = notification.userInfo?["playerID"] as? GridState else {
-                Factory.displayAlert(target: self, message: "Error retrieving or unwrapping playerID", title: "Move Confirmation")
-                fatalError("Cannot retrieve playerID")
-                
-            }
-            
-           // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
-        
-            // 2) Update the Logic Model Array
-            modelGameLogic.gameBoard[location.row][location.column] = playerID
-            
-            // 3) Update the View Grid
-            gameView?.changeGridState(x: location.column, y: location.row)
-        
-            // 4) Still need to update the game state, via listenr that triggers this function
-            
-        }
-        
-        // Otherwise do NOT update board view or game model, as move was FORFEITED (no coordinates passed)
-        
-    }
-    
-    
-    //TODO: - Cleanup this and put it in appropriate place
-    @objc func startTimer() {
-
-        timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
-        
-        // Supposedly if timing isn't critical this is energy efficient.
-       
-        timerCountDown.tolerance = 0.1
-        
-    }
-    
-    @objc func displayTimer () {
-        // Since this is called every 1 seconds, we need a persistent variable to 'remember' where in the countdown we are:
-        
-        // This is here so visual timer is in sync
-        textTimer.isHidden = false // initialized as hidden via storyboard
-        
-        
-        // timeDisplay is modified and we need it to persist.  It's a global variable.
-        
-        textTimer.text = "\(timeFormatted(timeDisplay))" // Helper fuction to format
-        
-        if timeDisplay == 2 { // play warning...
-            AudioServicesPlayAlertSound(SystemSoundID(1103))
-        }
-        
-        if timeDisplay != 0 {
-            timeDisplay -= 1
-        }
-        else {
-            textTimer.isHidden = true
-            timerCountDown.invalidate()
-            //TODO: this is slopppy I think
-            timeDisplay = Int(timeToMakeMove) // Reset for next move....
-            timerTurnForfeitedFired()
-        }
-        
     }
 }
 

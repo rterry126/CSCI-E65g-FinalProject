@@ -89,6 +89,101 @@ extension FirebaseProxy {
         }
     }
     
+    // Resume a game; only Player 1 can upload a game
+    func uploadGame(_ gameModel: GameLogicModelProtocol, completion: @escaping () -> Void) {
+        
+        
+        var fakeMoveNumber = 1
+        // Get new write batch
+        let batch = Firestore.firestore().batch()
+        
+        // Create 'header' document
+        let headerToStore: [String : Any] = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp(), "moveCount": gameModel.moveCount ]
+        
+        // Setup our header document
+        let header = Firestore.firestore().collection("activeGame").document("\(0)")
+        batch.setData(headerToStore, forDocument: header)
+        
+        for row in 0..<gameModel.gameBoard.count {
+            for column in 0..<gameModel.gameBoard[0].count {
+                
+                let grid = gameModel.gameBoard[row][column]
+                if grid != .empty {
+                    
+                    
+                    // Write the moves as a batch. We won't have the actual move time as it wasn't persisted, however I'm going to
+                    // add a moveTime field to keep the data consistent. Move numbers won't correspond to the actual move numbers
+                    // but this doesn't matter, we're just resetting the board state.
+                    
+                    
+                    // Create moves to upload
+                    let dataToStore:[String : Any] = ["moveTime": FieldValue.serverTimestamp(),"column": column, "row": row, "player": gameModel.gameBoard[row][column].rawValue ]
+                    
+                    
+                    // Setup our moves document
+                    let gameMoves = Firestore.firestore().collection("activeGame").document("\(fakeMoveNumber)")
+                    batch.setData(dataToStore, forDocument: gameMoves)
+                    
+                    fakeMoveNumber += 1
+                }
+            }
+        }
+        
+        // Commit the batch
+        batch.commit() { err in
+            if let err = err {
+                print("Error writing batch \(err)")
+            } else {
+                print("Batch write succeeded.")
+                completion()
+            }
+        }
+    }
+    
+    func restorePlayerTwo(completion: @escaping () -> Void) {
+        
+        
+        FirebaseProxy.db.collection("activeGame").getDocuments() { (querySnapshot, err) in
+            
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                guard let snapShot = querySnapshot?.documents else {
+                    print("Error restoring Player 2")
+                    fatalError("Cannot restore Player 2 ")
+                }
+                for document in snapShot {
+                    if document.documentID != "\(0)" {
+                        
+                        let move = document.data()
+                        
+                        guard let gridState = move["player"] as? String else {
+                            print("Error retrieving move player ID")
+                            return
+                        }
+                        let player = GridState(rawValue: gridState) ?? .empty
+                        guard let row = move["row"] as? Int else {
+                            print("Error retrieving move row")
+                            return
+                        }
+                        guard let column = move["column"] as? Int  else {
+                            print("Error retrieving move column")
+                            return
+                        }
+                        
+                        self.modelGameLogic.gameBoard[row][column] = player
+                        // Hack as I can't sync the maxTurns on restart...
+                        self.modelGameLogic.maxTurns = self.modelGameLogic.moveCount + 10
+                    }
+                    
+                }
+            }
+        }
+        completion()
+        
+    }
     
     
     // Used to let Player 2 know game has started
@@ -116,9 +211,7 @@ extension FirebaseProxy {
             docData["column"] = columnExists
             
         }
-        for item in docData {
-            print(item.value)
-        }
+        
         // Update one field, creating the document if it does not exist.
         // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
         // If successful then we will update our board logical state and view state and change our state Machine
@@ -138,7 +231,7 @@ extension FirebaseProxy {
     
     
     // Have to brute force delete the game move (document) by move. Cannot just delete the collection
-    func deleteCompletedGame() {
+    func deleteCompletedGame(completion: @escaping () -> Void) {
         
         let oldGame = Firestore.firestore().collection("activeGame")
         oldGame.getDocuments() { (querySnapshot, err) in
@@ -153,6 +246,7 @@ extension FirebaseProxy {
                     }
                 }
             }
+            completion()
         }
     }
     
@@ -246,8 +340,5 @@ extension FirebaseProxy {
             }
         }
     }
-    
-    
-    
     
 }

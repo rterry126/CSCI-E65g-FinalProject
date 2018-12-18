@@ -56,7 +56,6 @@ class FirebaseProxy {
     
     var modelGameLogic: GameLogicModelProtocol = GameLogicModel.instance
     
-    // Don't necessarily like having proxy go directly to the model. Would like to pass in via VC
     
     // Set preferences
     lazy var documentData = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
@@ -96,12 +95,38 @@ class FirebaseProxy {
     
     
     
+    func requestInitialize() {
+        
+        if modelGameLogic.amIPlayerOne {
+            
+            deleteCompletedGame() { [unowned self] in // cleanup first
+            
+                // if there is saved game
+                if restoreModel(&self.modelGameLogic) {
+                    self.uploadGame(self.modelGameLogic) { [unowned self] in
+                        print("printing from initialize")
+                        self.modelGameLogic.amIPlayerOne = true // overwritten by restore
+                        self.requestInitialize2()
+                        
+                    }
+                }
+                else {
+                    // No game to restore. Initialize normally
+                    self.requestInitialize2()
+                }
+            }
+        }
+        //Player 2
+        else {
+            self.requestInitialize2()
+        }
+    }
+    
     // Async closure so call completion handler when done to continue
-    func requestInitialize()  {
+    func requestInitialize2()  {
         
         //        let rootCollectionRef: CollectionReference = Firestore.firestore().collection("activeGame")
         let rootCollectionRef: CollectionReference = FirebaseProxy.db.collection("activeGame")
-        
         
         rootCollectionRef.getDocuments { [unowned self] // avoid strong reference to self in closure
             
@@ -109,20 +134,18 @@ class FirebaseProxy {
             
             guard let rootObjSnapshot: QueryDocumentSnapshot = snapshot?.documents.first else {
                 
-                //TODO:- Move this to calling function and return the error.
-                //                UIViewController.present(Factory.createAlert(error), animated: true, completion: nil)
                 
                 NSLog("Cannot find active game: \(error?.localizedDescription ?? "Missing Error")")
                 
-                // Robert - so if there is no active game we'll need to initialize the activeRoot
-                // when the game is started I think...
-                //                self.activeRootObj = nil // see didSet observer for handling
-                
+    
+
                 //No active game to upload the preferences into document zero '0'
                 rootCollectionRef.document("\(0)").setData(self.documentData, mergeFields: self.mergeFields, completion: nil)
                 // Initializing is successful, change state
                 //                StateMachine.state = .readyForGame
                 if self.modelGameLogic.amIPlayerOne {
+                    
+                    
                     StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
                 }
                 else {
@@ -139,12 +162,20 @@ class FirebaseProxy {
             
             self.activeRootObj = rootCollectionRef.document(rootID)
             
-            // Initializing is successful, change state
-            //            StateMachine.state = .readyForGame
+            print("printing from initialize2")
             if self.modelGameLogic.amIPlayerOne {
                 StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
             }
             else {
+                
+                if let documentCount = snapshot?.count{
+                    if documentCount > 1 {
+                        self.restorePlayerTwo() {
+                            StateMachine.state = .waitingForGameStart // Player2's start
+                        }
+                    }
+                    
+                }
                 StateMachine.state = .waitingForGameStart // Player2's start
             }
             
@@ -157,26 +188,7 @@ class FirebaseProxy {
         didSet {
             
             if let _ = activeRootObj {
-                
-                
-                //                    activeRootObj?.setData(documentData, mergeFields: mergeFields, completion: nil)
-                
                 Util.log("activeRootObj didSet run, preferences loaded into Firebase")
-                
-                
-                // Robert - So this is if there is an active game???
-                // If so then it shouldn't go to readForGame but pick up game in route...
-                
-                // Switch state from initializing to initialized; notify everyone
-                //                    StateMachine.state = .readyForGame
-                //                    if self.modelGameLogic.amIPlayerOne {
-                //                        StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
-                //                    }
-                //                    else {
-                //                        StateMachine.state = .waitingForGameStart // Player2's state
-                //                    }
-                
-                
                 
             }
             else {
