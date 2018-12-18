@@ -89,6 +89,59 @@ extension FirebaseProxy {
         }
     }
     
+    // Resume a game; only Player 1 can upload a game
+    func uploadGame(_ gameModel: GameLogicModelProtocol, completion: @escaping () -> Void) {
+        
+        
+        //     print(gameModel.gameBoard)
+        var fakeMoveNumber = 1
+        // Get new write batch
+        let batch = Firestore.firestore().batch()
+        
+        // Create 'header' document
+        let headerToStore: [String : Any] = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
+        
+        // Setup our header document
+        let header = Firestore.firestore().collection("activeGame").document("\(0)")
+        batch.setData(headerToStore, forDocument: header)
+        
+        for row in 0..<gameModel.gameBoard.count {
+            for column in 0..<gameModel.gameBoard[0].count {
+                
+                let grid = gameModel.gameBoard[row][column]
+                if grid != .empty {
+                    
+                    print("\(gameModel.gameBoard[row][column].rawValue) \(row) \(column)")
+                    
+                    // Write the moves as a batch. We won't have the actual move time as it wasn't persisted, however I'm going to
+                    // add a moveTime field to keep the data consistent. Move numbers won't correspond to the actual move numbers
+                    // but this doesn't matter, we're just resetting the board state.
+                    
+                    
+                    // Create moves to upload
+                    let dataToStore:[String : Any] = ["moveTime": FieldValue.serverTimestamp(),"column": column, "row": row, "player": gameModel.gameBoard[row][column].rawValue ]
+                    
+                    
+                    // Setup our moves document
+                    let gameMoves = Firestore.firestore().collection("activeGame").document("\(fakeMoveNumber)")
+                    batch.setData(dataToStore, forDocument: gameMoves)
+                    
+                    fakeMoveNumber += 1
+                }
+            }
+        }
+        
+        // Commit the batch
+        batch.commit() { err in
+            if let err = err {
+                print("Error writing batch \(err)")
+            } else {
+                print("Batch write succeeded.")
+                completion()
+            }
+        }
+    }
+    
     
     
     // Used to let Player 2 know game has started
