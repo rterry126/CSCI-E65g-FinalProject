@@ -129,7 +129,7 @@ class GameLogicModel: NSObject, Codable {
             
             print("Model ==> Model: didSet(_moveCount) updated to \(_moveCount.description)")
             
-            if oldValue == (_maxTurns - 1)  {
+            if oldValue >= (_maxTurns - 1)  {
                 
                 Util.log("getting ready to initialize .gameOver state")
                 StateMachine.state = .gameOver

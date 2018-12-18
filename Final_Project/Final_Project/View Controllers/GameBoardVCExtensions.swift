@@ -96,11 +96,18 @@ extension GameBoardVC: GameStateMachine {
             // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
                 
-                // Not successful with previous restore, suspect scope issues. Hack to make it work
+                // Not successful with restore in proxy (model not visible here), suspect scope issues. Hack to make it work
                 _ = restoreModel(&self.modelGameLogic)
                 print(self.modelGameLogic.gameBoard)
                 self.redrawView()
+                
+                
+                //Cleanup items from restore
                 self.modelGameLogic.amIPlayerOne = true // this is overwritten by the restore
+                // For state model simplicity, I'm just assigning turn to player 1
+                if self.modelGameLogic.whoseTurn == GridState.playerTwo {
+                    self.modelGameLogic.setTurn()
+                }
                 
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {
@@ -128,6 +135,15 @@ extension GameBoardVC: GameStateMachine {
                 
                 // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
                 // the other player's move (via the .initialSnapshot... state)
+                self.redrawView()
+                
+                //Cleanup items from restore
+                self.modelGameLogic.amIPlayerOne = false // this is overwritten by the restore
+                // For state model simplicity, I'm just assigning turn to player 1
+                if self.modelGameLogic.whoseTurn == GridState.playerTwo {
+                    self.modelGameLogic.setTurn()
+                }
+
                 if let gameStarted = (data["gameStarted"]) as? Bool {
                     if gameStarted {
                         listener.remove()
@@ -324,7 +340,7 @@ extension GameBoardVC: GameStateMachine {
                     // 4) Successful write to Firestore so continue with deleting old game
                 else {
                     
-                    self.sharedFirebaseProxy.deleteCompletedGame()
+                    self.sharedFirebaseProxy.deleteCompletedGame() {}
                 }
             }
         }

@@ -99,7 +99,7 @@ extension FirebaseProxy {
         let batch = Firestore.firestore().batch()
         
         // Create 'header' document
-        let headerToStore: [String : Any] = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp() ]
+        let headerToStore: [String : Any] = ["playerOneName": modelGamePrefs.playerOneName, "playerTwoName": modelGamePrefs.playerTwoName, "moveTime": FieldValue.serverTimestamp(), "moveCount": gameModel.moveCount ]
         
         // Setup our header document
         let header = Firestore.firestore().collection("activeGame").document("\(0)")
@@ -142,7 +142,54 @@ extension FirebaseProxy {
         }
     }
     
-    
+    func restorePlayerTwo(completion: @escaping () -> Void) {
+        
+        let reference = FirebaseProxy.db.collection("elect_leader").document("\(123456)")
+                
+        guard let maxTurns = reference.value(forKey: "maxTurns") as? Int else {
+            print("Player 2 error retrieving max turns")
+            return
+        }
+        FirebaseProxy.db.collection("activeGame").getDocuments() { (querySnapshot, err) in
+            
+            
+            if let err = err {
+                print("Error getting documents: \(err)")
+            }
+            else {
+                
+                for document in querySnapshot!.documents {
+                    if document.documentID != "\(0)" {
+                        print("\(document.documentID) => \(document.data())")
+                        
+                        let move = document.data()
+                        
+                        guard let gridState = move["player"] as? String else {
+                            print("Error retrieving move player ID")
+                            return
+                        }
+                        let player = GridState(rawValue: gridState) ?? .empty
+                        guard let row = move["row"] as? Int else {
+                            print("Error retrieving move row")
+                            return
+                        }
+                        guard let column = move["column"] as? Int  else {
+                            print("Error retrieving move column")
+                            return
+                        }
+                        
+                        self.modelGameLogic.gameBoard[row][column] = player
+                        self.modelGameLogic.maxTurns = maxTurns
+                    }
+                    
+                    // Restore player 2 function goes here
+                }
+            }
+        }
+        completion()
+        
+    }
+
     
     // Used to let Player 2 know game has started
     func startGame(completion: @escaping () -> Void) {
@@ -191,7 +238,7 @@ extension FirebaseProxy {
     
     
     // Have to brute force delete the game move (document) by move. Cannot just delete the collection
-    func deleteCompletedGame() {
+    func deleteCompletedGame(completion: @escaping () -> Void) {
         
         let oldGame = Firestore.firestore().collection("activeGame")
         oldGame.getDocuments() { (querySnapshot, err) in
@@ -206,6 +253,7 @@ extension FirebaseProxy {
                     }
                 }
             }
+            completion()
         }
     }
     
@@ -299,8 +347,5 @@ extension FirebaseProxy {
             }
         }
     }
-    
-    
-    
     
 }
