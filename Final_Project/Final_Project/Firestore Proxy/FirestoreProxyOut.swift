@@ -150,8 +150,11 @@ extension FirebaseProxy {
                 print("Error getting documents: \(err)")
             }
             else {
-                
-                for document in querySnapshot!.documents {
+                guard let snapShot = querySnapshot?.documents else {
+                    print("Error restoring Player 2")
+                    fatalError("Cannot restore Player 2 ")
+                }
+                for document in snapShot {
                     if document.documentID != "\(0)" {
                         
                         let move = document.data()
