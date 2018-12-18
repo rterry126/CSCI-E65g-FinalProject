@@ -234,8 +234,6 @@ extension PreferencesVC {
         spacerLabel6.border()
 
 
-
-
         // Have preferences setter reflect the current values stored in the model...
 
         if let prefModel = modelGamePrefs {
