@@ -13,7 +13,7 @@ import Foundation
 
 
 enum GameLogicError: String,Error {
-//    case gameOver = "The game is over."
+    //    case gameOver = "The game is over."
     case outOfTurn = "It's not your turn to move."
     case invalidLocation = "You have clicked on a location that is out of bounds. Try again"
     case gridOccupied = "That square is already occupied. Try again"
@@ -26,7 +26,6 @@ class GameLogicModel: NSObject, Codable {
     static let instance: GameLogicModelProtocol = GameLogicModel()
     
     
-    //TODO: Look at other instances which conform to more restrictive protocols, i.e. read only???
     
     // Used to retrieve game board size. It has to be set internally vice from an external initializer.
     let defaults = UserDefaults.standard
@@ -38,7 +37,7 @@ class GameLogicModel: NSObject, Codable {
         case _moveCount
         case _whoseTurn
         // case - add power square used??
-//        case _gameState
+        //        case _gameState
     }
     
     // Set game state from persisted data IF it exists
@@ -50,14 +49,13 @@ class GameLogicModel: NSObject, Codable {
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
         let moveCountVal: Int = try container.decode(Int.self, forKey: ._moveCount) // extracting the data
         let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
-//        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
+        //        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
         
         // Now set the 4 items that we decided were important enough to save
         _gameBoard = gameBoardVal
         _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
-        // - add power square used??
-//        _gameState = gameStateVal
+        //        _gameState = gameStateVal
         
         //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
         _maxTurns = 10
@@ -100,9 +98,6 @@ class GameLogicModel: NSObject, Codable {
         _amIPlayerOne = false
         _powerSquareUsed = false
         
-        // This will need to be replaced by state machine variable when restoring game, which will vary
-        // depending on turn
-//        _gameState = GameState.ongoing
         
         super.init()
     }
@@ -111,7 +106,7 @@ class GameLogicModel: NSObject, Codable {
     
     private var _gameBoard = [[ GridState ]]()
     
-
+    
     
     private func inBounds(untrustedInput: GridCoord) -> Bool {
         
@@ -141,7 +136,7 @@ class GameLogicModel: NSObject, Codable {
             }
             else {
                 
-                // TODO: - 12.1.18 This is ugly too, however if it's not the end of game then change to appropriate state...
+                // 12.1.18 This is ugly too, however if it's not the end of game then change to appropriate state...
                 if StateMachine.state == .waitingForOpponentMove {
                     StateMachine.state = .waitingForUserMove
                 }
@@ -149,10 +144,10 @@ class GameLogicModel: NSObject, Codable {
                     StateMachine.state = .initialSnapshotOfGameBoard
                 }
                 
-                //TODO: - 12.1.18 Eventually get rid of this and incorporate into simplier logic
+                //- 12.1.18 Eventually get rid of this and incorporate into simplier logic
                 NotificationCenter.default.post(name: .turnCountIncreased, object: self)
                 
-
+                
                 
             }
         }
@@ -176,8 +171,6 @@ class GameLogicModel: NSObject, Codable {
 extension GameLogicModel: GameLogicModelProtocol {
     
     
-    
-    
     // Size of game board
     var bounds: GridCoord {
         return ( row: _gameBoard.count,  column: _gameBoard[0].count)
@@ -186,7 +179,6 @@ extension GameLogicModel: GameLogicModelProtocol {
     
     // Public implementation of locationState. Might modify in future
     func gridState(at location: GridCoord) -> GridState {
-        
         return  _gameBoard[location.row][location.column]
     }
     
@@ -197,7 +189,7 @@ extension GameLogicModel: GameLogicModelProtocol {
     // Called by tap handler delegate
     func executeMove(playerID ID: GridState, moveCoordinates coordinates: GridCoord) throws  {
         /*
-            Check if game is over
+         Check if game is over
          2. Check if valid player
          3. Check if valid location, i.e. on the board
          4. Check if valid location, i.e. unoccupied.
@@ -209,15 +201,11 @@ extension GameLogicModel: GameLogicModelProtocol {
          
          
          */
-        // Commented out 12.1.18 If game is over then board is locked, plus this variable is depreciated
-//        guard _gameState == .ongoing else {
-//            // Game is over
-//            throw GameLogicError.gameOver
-//        }
+        
         // Need to modify ID for power square, assign to local variable
         var localID = ID
         
-        guard localID == _whoseTurn else {
+        guard localID == _whoseTurn else { // probably not needed any more but keep in for now
             // Play out of turn
             throw GameLogicError.outOfTurn
         }
@@ -233,7 +221,7 @@ extension GameLogicModel: GameLogicModelProtocol {
                 throw GameLogicError.gridOccupied
             }
                 
-            // else powerSquare NOT used
+                // else powerSquare NOT used
             else {
                 switch localID {
                     
@@ -245,34 +233,24 @@ extension GameLogicModel: GameLogicModelProtocol {
                     return
                 }
                 powerSquareUsed = true
-               
+                
             }
             
             print("\(localID.rawValue)")
+            // Normal move
             // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
             NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
             return
         }
         
         
-        // 12.1.18 moved to stateWaitingForMoveConfirmation for cleanliness
-//        StateMachine.state = .waitingForMoveConfirmation
-
+        
+        // This is for GridState.empty, i.e. forfeited move
         // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
         NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
         
         
         
-        // 11/24 Since move is valid  we send the move to the cloud. ONLY after confirmation from the cloud
-        // do we do updating below...
-        
-        
-//        _gameBoard[coordinates.row][coordinates.column] = ID
-//
-//
-//        // Notify controller that successful move was executed
-//        NotificationCenter.default.post(name: .moveExecuted, object: self)
-
         
         print("Player who just moved was \(ID)")
         print("move at \(coordinates)")
@@ -293,7 +271,7 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
-    // Used if want to play another game. Just copied default init(); seems to be no way to trigger acutal init again so duplicating code.
+    // Used if want to play another game. Just copied default init(); seems to be no way to trigger acutal init again so duplicating code. Drawback of singleton...
     func resetModel() {
         
         //Board Size, retrieve from preferences
@@ -321,22 +299,14 @@ extension GameLogicModel: GameLogicModelProtocol {
         
     }
     
-    // Called by .executiveMove. Needs to know whose turn it is...
-    //TODO: -
-    // 11/25 Ideally we can eliminate this for network version as the device making the move will
-    // be assigned P1 or P2. We're don't need to manually alternate the player in the model
+    
+    // Used to track certain display items, plus useful for saving/restoring game.
     var whoseTurn:GridState {
         get {
             return _whoseTurn
         }
     }
     
-//    var gameState: GameState {
-//        get {
-//            return _gameState
-//        }
-//
-//    }
     
     var moveCount: Int {
         get {
