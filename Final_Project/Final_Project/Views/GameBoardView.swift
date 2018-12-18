@@ -94,7 +94,6 @@ class GameBoardView: UIView, GameGridViewProtocol {
     
     @objc func handleTap(sender: UITapGestureRecognizer) {
         
-        print("Got a tap, Location in sample view: \(sender.location(in: self)), setting color")
         let logicalRow = (Int(sender.location(in: self).y / shortSide))
         let logicalColumn = (Int(sender.location(in: self).x / shortSide))
         

@@ -93,7 +93,6 @@ extension FirebaseProxy {
     func uploadGame(_ gameModel: GameLogicModelProtocol, completion: @escaping () -> Void) {
         
         
-        //     print(gameModel.gameBoard)
         var fakeMoveNumber = 1
         // Get new write batch
         let batch = Firestore.firestore().batch()
@@ -111,7 +110,6 @@ extension FirebaseProxy {
                 let grid = gameModel.gameBoard[row][column]
                 if grid != .empty {
                     
-                    print("\(gameModel.gameBoard[row][column].rawValue) \(row) \(column)")
                     
                     // Write the moves as a batch. We won't have the actual move time as it wasn't persisted, however I'm going to
                     // add a moveTime field to keep the data consistent. Move numbers won't correspond to the actual move numbers
@@ -144,12 +142,7 @@ extension FirebaseProxy {
     
     func restorePlayerTwo(completion: @escaping () -> Void) {
         
-        let reference = FirebaseProxy.db.collection("elect_leader").document("\(123456)")
-                
-        guard let maxTurns = reference.value(forKey: "maxTurns") as? Int else {
-            print("Player 2 error retrieving max turns")
-            return
-        }
+        
         FirebaseProxy.db.collection("activeGame").getDocuments() { (querySnapshot, err) in
             
             
@@ -179,17 +172,17 @@ extension FirebaseProxy {
                         }
                         
                         self.modelGameLogic.gameBoard[row][column] = player
-                        self.modelGameLogic.maxTurns = maxTurns
+                        // Hack as I can't sync the maxTurns on restart...
+                        self.modelGameLogic.maxTurns = self.modelGameLogic.moveCount + 10
                     }
                     
-                    // Restore player 2 function goes here
                 }
             }
         }
         completion()
         
     }
-
+    
     
     // Used to let Player 2 know game has started
     func startGame(completion: @escaping () -> Void) {
@@ -216,9 +209,7 @@ extension FirebaseProxy {
             docData["column"] = columnExists
             
         }
-        for item in docData {
-            print(item.value)
-        }
+        
         // Update one field, creating the document if it does not exist.
         // setData runs asynchronously. completion() is the 'callback' function to let us know that it was or not successful.
         // If successful then we will update our board logical state and view state and change our state Machine

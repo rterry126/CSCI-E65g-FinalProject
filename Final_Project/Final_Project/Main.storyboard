@@ -55,7 +55,7 @@
                                 <rect key="frame" x="177.5" y="493" width="20" height="20"/>
                             </activityIndicatorView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ycv-Ta-BxU">
-                                <rect key="frame" x="150" y="488" width="75" height="30"/>
+                                <rect key="frame" x="130" y="488" width="115" height="30"/>
                                 <state key="normal" title="New Game"/>
                                 <connections>
                                     <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7h2-fY-Mhh"/>
@@ -95,9 +95,9 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7zv-oR-2Ia" secondAttribute="trailing" constant="8" id="7PG-gx-OHT"/>
                             <constraint firstItem="S8K-8s-rTw" firstAttribute="centerY" secondItem="wra-gC-ZpN" secondAttribute="centerY" id="D8V-Q9-nu1"/>
                             <constraint firstItem="wra-gC-ZpN" firstAttribute="leading" secondItem="sUe-LP-L5Y" secondAttribute="trailing" constant="6.5" id="IrV-X5-wPh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ycv-Ta-BxU" secondAttribute="trailing" constant="150" id="JcY-6B-quP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ycv-Ta-BxU" secondAttribute="trailing" constant="130" id="JcY-6B-quP"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="cCr-qn-d4a" secondAttribute="bottom" constant="44" id="Nj2-iL-sKg"/>
-                            <constraint firstItem="Ycv-Ta-BxU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="150" id="PL1-xR-qqH"/>
+                            <constraint firstItem="Ycv-Ta-BxU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="130" id="PL1-xR-qqH"/>
                             <constraint firstItem="7zv-oR-2Ia" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="QkX-3u-feA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="DfO-uU-b7I" secondAttribute="bottom" constant="20" id="TxI-An-7w9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerX" secondItem="wra-gC-ZpN" secondAttribute="trailing" constant="40" id="W9b-1y-Tta"/>
@@ -123,6 +123,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="ohF-vU-2RU" id="bev-a5-1V8"/>
+                        <outlet property="newGameBtnText" destination="Ycv-Ta-BxU" id="Nit-EA-QPo"/>
                         <outlet property="newGameButtonOutlet" destination="Ycv-Ta-BxU" id="i6U-1h-Yrm"/>
                         <outlet property="readyPlayerOne" destination="sUe-LP-L5Y" id="PJ4-Yc-FQE"/>
                         <outlet property="readyPlayerTwo" destination="uOW-pm-bFJ" id="n6E-M9-FKG"/>

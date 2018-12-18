@@ -96,10 +96,13 @@ extension GameBoardVC: GameStateMachine {
             // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
                 
-                // Not successful with restore in proxy (model not visible here), suspect scope issues. Hack to make it work
-                _ = restoreModel(&self.modelGameLogic)
-                print(self.modelGameLogic.gameBoard)
-                self.redrawView()
+                // Not successful with restoring data in proxy (model not visible here), suspect scope issues. Hack to make it work
+                if restoreModel(&self.modelGameLogic) { 
+                    self.newGameButtonOutlet.setTitle("Resume Game", for: .normal)
+                    self.modelGameLogic.maxTurns = self.modelGameLogic.moveCount + 10
+                    self.redrawView()
+                }
+                
                 
                 
                 //Cleanup items from restore
@@ -273,8 +276,6 @@ extension GameBoardVC: GameStateMachine {
                 
                 // else we have an actual move
             else {
-                
-                //                print("\(move)")
                 
                 if let gridState = move["player"] as? String {
                     userInfo["playerID"] = GridState(rawValue: gridState)

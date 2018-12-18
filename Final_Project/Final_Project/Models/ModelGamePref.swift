@@ -235,7 +235,6 @@ extension GamePrefModel: GamePrefModelProtocol {
             return _playerOneName
         }
         set {
-            print("setting _playerOneName via newValue")
             _playerOneName = newValue
         }
     }
@@ -296,7 +295,6 @@ extension GamePrefModel: GamePrefModelProtocol {
     
     func deletePreferences() {
         
-        print("testing that deletePreferences was triggered")
         
         // So there's no way that I can find to iterate through a nested enum, so this is ugly...
         // Brute force delete by all of the known keys

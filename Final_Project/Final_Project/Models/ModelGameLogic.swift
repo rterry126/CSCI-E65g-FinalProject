@@ -49,15 +49,13 @@ class GameLogicModel: NSObject, Codable {
         let gameBoardVal: [[GridState]] = try container.decode([[GridState]].self, forKey: ._gameBoard)
         let moveCountVal: Int = try container.decode(Int.self, forKey: ._moveCount) // extracting the data
         let whoseTurnVal: GridState = try container.decode(GridState.self, forKey: ._whoseTurn) // extracting the data
-        //        let gameStateVal: GameState = try container.decode(GameState.self, forKey: ._gameState)
         
         // Now set the 4 items that we decided were important enough to save
         _gameBoard = gameBoardVal
         _moveCount = moveCountVal
         _whoseTurn = whoseTurnVal
-        //        _gameState = gameStateVal
         
-        //TODO: - Placeholder for _maxTurns to get it to compile. Working on non-persisted first
+        //Having issues setting this for both devices on re-start so hard code it to make it work.
         _maxTurns = 10
         _amIPlayerOne = false
         _powerSquareUsed = false
@@ -215,7 +213,6 @@ extension GameLogicModel: GameLogicModelProtocol {
         let state = locationState(at: coordinates)
         guard state == GridState.empty else {
             
-            print(gameBoard)
             // Determine if Power Square is available, previously used or already a Power Square
             if powerSquareUsed || state == GridState.playerOnePower || state == GridState.playerTwoPower {
                 throw GameLogicError.gridOccupied
@@ -236,7 +233,6 @@ extension GameLogicModel: GameLogicModelProtocol {
                 
             }
             
-            print("\(localID.rawValue)")
             // Normal move
             // 11/24 so set a listener here to trigger cloud call, add move positions and ID to listener
             NotificationCenter.default.post(name: .executeMoveCalled, object: self, userInfo: ["playerID": localID, "coordinates": coordinates, "moveCount": moveCount ])
@@ -294,8 +290,6 @@ extension GameLogicModel: GameLogicModelProtocol {
         _powerSquareUsed = false
         
         Util.log("Model has been reset")
-        print("printing game board after reseting")
-        print(_gameBoard)
         
     }
     

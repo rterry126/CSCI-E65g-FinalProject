@@ -105,7 +105,6 @@ class FirebaseProxy {
                 if restoreModel(&self.modelGameLogic) {
                     self.uploadGame(self.modelGameLogic) { [unowned self] in
                         print("printing from initialize")
-                        print(self.modelGameLogic.gameBoard)
                         self.modelGameLogic.amIPlayerOne = true // overwritten by restore
                         self.requestInitialize2()
                         
@@ -164,7 +163,6 @@ class FirebaseProxy {
             self.activeRootObj = rootCollectionRef.document(rootID)
             
             print("printing from initialize2")
-            print(self.modelGameLogic.gameBoard)
             if self.modelGameLogic.amIPlayerOne {
                 StateMachine.state = .waitingForPlayer2 // added to wait until 2nd player joins
             }

@@ -50,6 +50,7 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var readyPlayerOne: UIImageView!
     @IBOutlet weak var readyPlayerTwo: UIImageView!
     @IBOutlet weak var textTimer: UILabel! // Initially hidden via storyboard...
+    @IBOutlet weak var newGameBtnText: UIButton!
     
     
     // Modifed and commented out 12.13.18 - Don't think we need player 2 or logic here as only button
@@ -376,8 +377,7 @@ extension GameBoardVC {
         // 1) Get coordinates, only update view if we have coordinates, otherwise forfeited move so skip
         if let location = notification.userInfo?["coordinates"] as? (row:Int, column:Int) {
             
-            // TODO: - Should be able to remove this later
-//            print("Coordinates printing from updateGameView \(location)")
+            
             guard let playerID = notification.userInfo?["playerID"] as? GridState else {
                 Factory.displayAlert(target: self, message: "Error retrieving or unwrapping playerID", title: "Move Confirmation")
                 fatalError("Cannot retrieve playerID")
