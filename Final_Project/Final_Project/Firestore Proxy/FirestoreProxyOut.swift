@@ -153,7 +153,6 @@ extension FirebaseProxy {
                 
                 for document in querySnapshot!.documents {
                     if document.documentID != "\(0)" {
-                        print("\(document.documentID) => \(document.data())")
                         
                         let move = document.data()
                         

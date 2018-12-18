@@ -53,8 +53,6 @@ class GameBoardVC: UIViewController {
     @IBOutlet weak var newGameBtnText: UIButton!
     
     
-    // Modifed and commented out 12.13.18 - Don't think we need player 2 or logic here as only button
-    // is for Player 1
     @IBAction func newGameButton(_ sender: UIButton) {
         
         // New game button pressed. Change state
@@ -64,7 +62,7 @@ class GameBoardVC: UIViewController {
         sharedFirebaseProxy.startGame {
             StateMachine.state = .waitingForUserMove
         }
-     
+        
     }
     
     
@@ -101,17 +99,17 @@ class GameBoardVC: UIViewController {
     // 'observerArray' is type alias
     
     var observerLogicModel: observerArray = [(.turnCountIncreased, #selector(updatePlayer)),
-                                            /* (.gameState, #selector(endOfGame)), */
-                                             /*(.moveExecuted, #selector(successfulBoardMove))*/]
+                                             /* (.gameState, #selector(endOfGame)), */
+        /*(.moveExecuted, #selector(successfulBoardMove))*/]
     
     var observerPreferencesModel: observerArray = [(.namesChanged, #selector(namesChanged)),
                                                    (.colorsChanged, #selector(colorsChanged))]
     
     var observerStateMachine: observerArray = [(.stateChanged, #selector(updateGameStateLabel)),(.electPlayerOne, #selector(stateElectPlayerOne)),(.initializing, #selector(stateInitializing)), (.waitingForPlayer2, #selector(stateWaitingToStartGame)),
-        (.waitingForGameStart, #selector(stateWaitingToStartGame)), (.readyForGame, #selector(stateReadyForGame)),(.waitingForUserMove, #selector(stateWaitingForUserMove)),
-        (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
-        (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
-        (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),(.gameOver, #selector(stateEndOfGame))]
+                                               (.waitingForGameStart, #selector(stateWaitingToStartGame)), (.readyForGame, #selector(stateReadyForGame)),(.waitingForUserMove, #selector(stateWaitingForUserMove)),
+                                               (.waitingForUserMove, #selector(startTimer)), (.executeMoveCalled, #selector(stateWaitingForMoveConfirmation)),
+                                               (.moveStoredFirestore, #selector(updateGameView)),(.moveStoredFirestore, #selector(successfulBoardMove)),
+                                               (.initialSnapshotOfGameBoard , #selector(stateWaitingForOpponent)),(.gameOver, #selector(stateEndOfGame))]
     
     
     //MARK: - Init()
@@ -148,10 +146,7 @@ class GameBoardVC: UIViewController {
     
     
     
-    
-    
     //MARK: - Functions
-    
     
     func updateUI() {
         
@@ -167,17 +162,17 @@ class GameBoardVC: UIViewController {
         case .playerOne:
             textPlayer1.border(2.5, colorP1)
             textPlayer2.border(0.0)
-
-
+            
+            
             // Only display dot when it's player's turn
             readyPlayerOne.isHidden = modelGameLogic.amIPlayerOne ? false : true
             readyPlayerTwo.isHidden = true
-
+            
             
         case .playerTwo:
             textPlayer2.border(2.5, colorP2)
             textPlayer1.border(0.0)
-
+            
             readyPlayerTwo.isHidden = !modelGameLogic.amIPlayerOne ? false : true
             readyPlayerOne.isHidden = true
             
@@ -195,7 +190,6 @@ class GameBoardVC: UIViewController {
     }
 }
 
-// TODO:- Look at what additional info needs to be saved to restore (maxmoves at a minimum...)
 // Used to save game state after each turn. Threaded to not block main game or affect UX
 func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
     
@@ -220,79 +214,6 @@ func saveGameState(_ modelGameLogic: GameLogicModelProtocol) {
 
 
 
-
-
-
-//MARK: - GameLogicModel Observer extension
-extension GameBoardVC: GameLogicModelObserver {
-   
-    
-    @objc func successfulBoardMove() {
-        
-        
-        // A couple of possibilities here:
-        // 1. Player makes move within alloted time. Invalidate timer
-        // 2. Player does NOT make move in time. This triggers (via timer) func timerExpired and it handles the logic
-        
-
-        textTimer.isHidden = true
-        timeDisplay = Int(timeToMakeMove) // Reset for next move....
-        textTimer.text = "\(timeFormatted(timeDisplay))" // label has reset time value for next time
-        // otherwise it would have old/previous value before it's updated.
-        
-        
-        // Model informs controller successful move has occurred then controller
-        // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
-        Util.log("GameModel ==> GameBoardVC: successful move executed:")
-        
-        // First increment count. If moves are remaining then a observer to update the player will be called
-        // Otherwise, if last move, a observer to execute end of game routines will be called
-       
-        // Set timer for next move. If end of game then these will be invalidated in endOfGame.
-        
-        // First increment count. If moves are remaining then a listener to update the player will be called
-        // Otherwise, if last move, a listener to execute end of game routines will be called
-        modelGameLogic.incrementMoveCount()
-        
-        // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
-        // 2) if not end of game then updatePlayer is run
-       
-    }
-   
-    
-    
-    // Called by .incrementMoveCount. It's not the end of game so call update player logic
-    @objc func updatePlayer() {
-        
-        // Simple function that alternates turns and returns whose turn it is
-        modelGameLogic.setTurn()
-        
-        // Save game state in background and asynchronously
-        saveGameState(modelGameLogic)
-        updateUI()
-    }
-}
-
-
-
-//MARK: - GamePrefModel Observer extension
-extension GameBoardVC: GamePrefModelObserver {
-    
-    
-    @objc func namesChanged() {
-        updateUI()
-    }
-    
-    @objc func colorsChanged() {
-        // So in the game view, the 'board' is normally only set to draw new squares, setNeedsDisplay(rect)
-        // vice the whole board. However when colors are changed, this leaves the old and new colors
-        // on the board. Call reloadAllSquares (which is really wrapper for setNeedsDisplay() ) so that the whole board will be redrawn with a new color
-        
-        //TODO: - Look at replacing this with an observer in the view for colors changed
-        gameView?.reloadAllSquares()
-        updateUI()
-    }
-}
 
 extension GameBoardVC {
     
@@ -357,7 +278,6 @@ extension GameBoardVC {
     // @objc required because this is passed to #selector
     @objc func timerTurnForfeitedFired() {
         Util.log("Move Timer Fired, turn forfeited")
-
         
         // Post a notificaton just identical to one in .executeMove in Model EXCEPT we won't pass
         // coordinates, empty move to change the state to waiting for move confirmation.
@@ -384,14 +304,14 @@ extension GameBoardVC {
                 
             }
             
-           // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
-        
+            // Reminder - this is only running IF there are coordinates, i.e. IF move wasn't forfeited
+            
             // 2) Update the Logic Model Array
             modelGameLogic.gameBoard[location.row][location.column] = playerID
             
             // 3) Update the View Grid
             gameView?.changeGridState(x: location.column, y: location.row)
-        
+            
             // 4) Still need to update the game state, via listenr that triggers this function
             
         }
@@ -401,13 +321,12 @@ extension GameBoardVC {
     }
     
     
-    //TODO: - Cleanup this and put it in appropriate place
     @objc func startTimer() {
-
+        
         timerCountDown = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayTimer), userInfo: nil, repeats: true)
         
         // Supposedly if timing isn't critical this is energy efficient.
-       
+        
         timerCountDown.tolerance = 0.1
     }
     
@@ -449,15 +368,82 @@ extension GameBoardVC {
                 gameView?.changeGridState(x: x, y: y)
             }
         }
-
+        
         // Now that I've told it above what colors belong to each square set a 'needs update'
         gameView?.reloadAllSquares()
         
     }
     
+}
+
+//MARK: - GameLogicModel Observer extension
+extension GameBoardVC: GameLogicModelObserver {
+    
+    
+    @objc func successfulBoardMove() {
+        
+        
+        // A couple of possibilities here:
+        // 1. Player makes move within alloted time. Invalidate timer
+        // 2. Player does NOT make move in time. This triggers (via timer) func timerExpired and it handles the logic
+        
+        
+        textTimer.isHidden = true
+        timeDisplay = Int(timeToMakeMove) // Reset for next move....
+        textTimer.text = "\(timeFormatted(timeDisplay))" // label has reset time value for next time
+        // otherwise it would have old/previous value before it's updated.
+        
+        
+        // Model informs controller successful move has occurred then controller
+        // 1) tells model to change player turn 2) Update turn count 3) updates the view via updatePlayer()
+        Util.log("GameModel ==> GameBoardVC: successful move executed:")
+        
+        // First increment count. If moves are remaining then a observer to update the player will be called
+        // Otherwise, if last move, a observer to execute end of game routines will be called
+        
+        // Set timer for next move. If end of game then these will be invalidated in endOfGame.
+        
+        // First increment count. If moves are remaining then a listener to update the player will be called
+        // Otherwise, if last move, a listener to execute end of game routines will be called
+        modelGameLogic.incrementMoveCount()
+        
+        // .incrementMoveCount has two observers set 1) if it's end of game, then that function is run
+        // 2) if not end of game then updatePlayer is run
+        
+    }
     
     
     
+    // Called by .incrementMoveCount. It's not the end of game so call update player logic
+    @objc func updatePlayer() {
+        
+        // Simple function that alternates turns and returns whose turn it is
+        modelGameLogic.setTurn()
+        
+        // Save game state in background and asynchronously
+        saveGameState(modelGameLogic)
+        updateUI()
+    }
+}
+
+
+
+//MARK: - GamePrefModel Observer extension
+extension GameBoardVC: GamePrefModelObserver {
+    
+    
+    @objc func namesChanged() {
+        updateUI()
+    }
+    
+    @objc func colorsChanged() {
+        // So in the game view, the 'board' is normally only set to draw new squares, setNeedsDisplay(rect)
+        // vice the whole board. However when colors are changed, this leaves the old and new colors
+        // on the board. Call reloadAllSquares (which is really wrapper for setNeedsDisplay() ) so that the whole board will be redrawn with a new color
+        
+        gameView?.reloadAllSquares()
+        updateUI()
+    }
 }
 
 

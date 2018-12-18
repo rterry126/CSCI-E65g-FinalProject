@@ -79,6 +79,8 @@ extension GameBoardVC: GameStateMachine {
     
     // Called by listeners for both players for 2 states: waitingForPlayer2 & waitingForGameStart
     // Let's players know game is ready to start AND updates Player 2's name in Player 1 device
+    
+    // Admittedly the code in this function is a mess; added onto at the end to make resuming game work.
     @objc func stateWaitingToStartGame() {
         
         
@@ -96,13 +98,13 @@ extension GameBoardVC: GameStateMachine {
             // Stop listening and advance state. .readyForGame gives us button to start game.
             if self.modelGameLogic.amIPlayerOne {
                 
-                // Not successful with restoring data in proxy (model not visible here), suspect scope issues. Hack to make it work
+                /*** Start game resume code */
+                // Not successful with restoring previous game in proxy (model not visible here), suspect scope issues. Hack to make it work
                 if restoreModel(&self.modelGameLogic) { 
                     self.newGameButtonOutlet.setTitle("Resume Game", for: .normal)
                     self.modelGameLogic.maxTurns = self.modelGameLogic.moveCount + 10
                     self.redrawView()
                 }
-                
                 
                 
                 //Cleanup items from restore
@@ -111,7 +113,10 @@ extension GameBoardVC: GameStateMachine {
                 if self.modelGameLogic.whoseTurn == GridState.playerTwo {
                     self.modelGameLogic.setTurn()
                 }
+                // End of game resume code. Now resume normal operations
                 
+                
+                // Waiting on 2nd player to join
                 if let joined = (data["leader_bit"]) as? Bool {
                     if !joined {
                         listener.remove()
@@ -136,17 +141,26 @@ extension GameBoardVC: GameStateMachine {
                 // Player 2's listener triggered
             else {
                 
-                // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
-                // the other player's move (via the .initialSnapshot... state)
+                
+                // A) Either Player 2 has loaded a stored game or not. Redrawing won't affect view
+                // either way.
                 self.redrawView()
                 
-                //Cleanup items from restore
+                // B) Cleanup items from restore, if it happened. Since what I'm setting is the
+                // same if it's a brand new game, only has effect if game is resumed.
+                
                 self.modelGameLogic.amIPlayerOne = false // this is overwritten by the restore
                 // For state model simplicity, I'm just assigning turn to player 1
                 if self.modelGameLogic.whoseTurn == GridState.playerTwo {
                     self.modelGameLogic.setTurn()
                 }
 
+                
+                
+                // Resume normal flow
+                // 1) IF Player 2, 2) try to get the gameStarted bit 3) IF true then advance to waiting for
+                // the other player's move (via the .initialSnapshot... state)
+                
                 if let gameStarted = (data["gameStarted"]) as? Bool {
                     if gameStarted {
                         listener.remove()
@@ -170,10 +184,6 @@ extension GameBoardVC: GameStateMachine {
         newGameButtonOutlet.isEnabled = true
         newGameButtonOutlet.isHidden = false
         
-        //Clear in memory cache
-        // Doubt this is needed for initial first time run, as model is initialed from scratch, but
-        // keep for now.
-        //        modelGameLogic.resetModel()
         
         Util.log("Waiting for New Game button press")
         Util.log("Machine state is \(StateMachine.state.rawValue)")
@@ -295,7 +305,6 @@ extension GameBoardVC: GameStateMachine {
     }
     
     
-    // TODO:- Also much Firestore cleanup and resetting needs to be here...
     @objc func stateEndOfGame() {
         // Called when num of turns in model is increased to max turns.
         // Should be called by both devices simultaneously
@@ -312,16 +321,14 @@ extension GameBoardVC: GameStateMachine {
         //Kill any remaining listeners
         sharedFirebaseProxy.listener.remove()
         
-        //////////
-        //Kill the observers. Needed if play again.
         
-        //TODO: Might not need to kill all of these OR it might affect preferences AND History
+        //Kill the observers. If we play again and they aren't killed, sequencing is affected.
+        
         Factory.killObserver(observer: self, listeners: observerStateMachine)
         Factory.killObserver(observer: self, listeners: observerLogicModel)
         Factory.killObserver(observer: self, listeners: observerPreferencesModel)
         
         updateGameStateLabel() // Listener isn't activating this at game end. Force update for now.
-//        updateUI()
         
         // Save a Thumbnail for the history
         // method is extension of the custom view. Source cited in GameBoardView
@@ -368,9 +375,7 @@ extension GameBoardVC: GameStateMachine {
         
         let alert = UIAlertController(title: "End of Game", message: "Player 1 score is \(scores.playerOne)\n Player 2 score is \(scores.playerTwo)\nPlay Again?", preferredStyle: .alert)
         
-        //        if let gameBoardVC = window?.rootViewController?.children[0] as? GameBoardVC {
-        //            gameBoardVC.modelGamePrefs = GamePrefModel()
-        //        }
+        
         // .destructive to color 'Yes' in red...
         alert.addAction(UIAlertAction(title: "Yes", style: .default , handler: {
             action in
