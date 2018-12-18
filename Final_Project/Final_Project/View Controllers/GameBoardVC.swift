@@ -356,37 +356,14 @@ extension GameBoardVC {
         Factory.createObserver(observer: self, listeners: observerLogicModel)
         Factory.createObserver(observer: self, listeners: observerPreferencesModel)
         
-
-
-        
-        
-        
-        // Now redraw the view
-        
-        //TODO: - This is not well thought out. Fix in next iteration.
-        
-        // So when the game is restored, the underlying logic is correct, i.e. which squares are
-        // occupied and by whom. However the custom view doens't reflect this, so we have an 'empty'
-        // viewable board overlying an occupied board. This forces the view to go over each square
-        // and determine it's color. Last minute to get the restore working; where it fits in MVC
-        // not fully thought out
-        
-        //commented 11/9
-//        for y in 0..<numOfGridRows {
-//            for x in 0..<numOfGridColumns {
-//                gameView.changeGridState(x: x, y: y)
-//            }
-//        }
-//
-//        // Now that I've told it above what colors belong to each square set a 'needs update'
-//        gameView.reloadAllSquares()
         
         // Initialize state of board - colors, game status, etc
         updateUI()
         
-        
-
-    }
+    } // End viewDidLoad
+    
+    
+    
     
     
     // Segue to the Preferences view....
@@ -460,8 +437,9 @@ extension GameBoardVC {
         // Supposedly if timing isn't critical this is energy efficient.
        
         timerCountDown.tolerance = 0.1
-        
     }
+    
+    
     
     @objc func displayTimer () {
         // Since this is called every 1 seconds, we need a persistent variable to 'remember' where in the countdown we are:
@@ -488,8 +466,26 @@ extension GameBoardVC {
             timeDisplay = Int(timeToMakeMove) // Reset for next move....
             timerTurnForfeitedFired()
         }
+    }
+    
+    
+    // Used when game is resumed. Logic model is correct but view doesn't reflect it.
+    func redrawView() {
+        
+        for y in 0..<numOfGridRows {
+            for x in 0..<numOfGridColumns {
+                gameView?.changeGridState(x: x, y: y)
+            }
+        }
+
+        // Now that I've told it above what colors belong to each square set a 'needs update'
+        gameView?.reloadAllSquares()
         
     }
+    
+    
+    
+    
 }
 
 
