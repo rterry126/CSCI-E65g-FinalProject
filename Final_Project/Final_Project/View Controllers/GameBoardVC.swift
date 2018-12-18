@@ -159,12 +159,17 @@ class GameBoardVC: UIViewController {
         
         // Update player colors
         // Boarder stroke taken (mostly) from preferences. Additioal sources cited above.
+        // Use UILabel extension (SharedandHelpers), override defaults to add stroke
+        
+        let colorP1 = hsbToUIColor(color: modelGamePrefs.playerOneColor).cgColor
+        let colorP2 = hsbToUIColor(color: modelGamePrefs.playerTwoColor).cgColor
+        
         switch modelGameLogic.whoseTurn {
             
         case .playerOne:
-            textPlayer1.layer.borderWidth = 2.5
-            textPlayer1.layer.borderColor = hsbToUIColor(color: modelGamePrefs.playerOneColor).cgColor
-            textPlayer2.layer.borderWidth = 0.0
+            textPlayer1.border(2.5, colorP1)
+            textPlayer2.border(0.0)
+
 
             // Only display dot when it's player's turn
             readyPlayerOne.isHidden = modelGameLogic.amIPlayerOne ? false : true
@@ -172,10 +177,9 @@ class GameBoardVC: UIViewController {
 
             
         case .playerTwo:
-            textPlayer2.layer.borderWidth = 2.5
-            textPlayer2.layer.borderColor = hsbToUIColor(color: modelGamePrefs.playerTwoColor).cgColor
-            
-            textPlayer1.layer.borderWidth = 0.0
+            textPlayer2.border(2.5, colorP2)
+            textPlayer1.border(0.0)
+
             readyPlayerTwo.isHidden = !modelGameLogic.amIPlayerOne ? false : true
             readyPlayerOne.isHidden = true
             

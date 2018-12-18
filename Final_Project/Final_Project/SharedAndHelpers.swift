@@ -179,5 +179,13 @@ func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
     
 }
 
+// Quick hard coded extension to give my labels a border. Just cleans up the code above
+extension UILabel {
+    func border(_ width: CGFloat = 0.5, _ color: CGColor = UIColor.black.cgColor) {
+        self.layer.borderWidth = width
+        self.layer.borderColor = color
+    }
+}
+
 
 

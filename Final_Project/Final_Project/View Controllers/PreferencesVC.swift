@@ -301,10 +301,4 @@ extension PreferencesVC: ColorPickerChoiceListener {
     }
 }
 
-// Quick hard coded extension to give my labels a border. Just cleans up the code above
-extension UILabel {
-    func border() {
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.black.cgColor
-    }
-}
+// UILabel extension moved to SharedandHelpers. Going to modify to use with main game board
